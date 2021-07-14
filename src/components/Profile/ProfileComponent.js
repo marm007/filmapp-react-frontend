@@ -3,19 +3,16 @@ import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Col, Row, Spinner} from 'react-bootstrap';
 
-import {config} from "../../config";
-
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {authHeader} from "../../helpers";
-import {PlaylistAddButtonComponent} from "../Playlist/PlaylistAddButtonComponent";
+import PlaylistAddButtonComponent from "../add/add-playlist";
 import TextTruncate from "react-text-truncate";
 import {isMobile} from 'react-device-detect'
 import Snackbar from '@material-ui/core/Snackbar';
 import Button from '@material-ui/core/Button';
-import connect from "react-redux/es/connect/connect";
 import ButtonBase from "@material-ui/core/ButtonBase/ButtonBase";
 
-const pathName = config.pathName;
+const pathName = process.env.REACT_APP_PATH_NAME;
 
 class ProfileComponent extends Component {
 
@@ -102,7 +99,7 @@ class ProfileComponent extends Component {
             headers: authHeader()
         };
 
-        axios.delete(`${config.apiUrl}playlists/${id}`, requestParams)
+        axios.delete(`${process.env.REACT_APP_API_URL}playlists/${id}`, requestParams)
             .then(res => {
                 let playlists = this.state.playlists;
                 playlists.splice(index, 1);
@@ -119,7 +116,7 @@ class ProfileComponent extends Component {
             headers: authHeader()
         };
 
-        axios.delete(`${config.apiUrl}films/${id}`, requestParams)
+        axios.delete(`${process.env.REACT_APP_API_URL}films/${id}`, requestParams)
             .then(res => {
 
                 let films = this.state.films;
@@ -176,7 +173,7 @@ class ProfileComponent extends Component {
 
             const requestOptions = {headers: authHeader()};
 
-            await axios.get(`${config.apiUrl}users/me/films`, requestOptions)
+            await axios.get(`${process.env.REACT_APP_API_URL}users/me/films`, requestOptions)
                 .then(response => {
 
                     let films = response.data;
@@ -194,7 +191,7 @@ class ProfileComponent extends Component {
                 });
 
 
-            await axios.get(`${config.apiUrl}users/me/playlists`, requestOptions)
+            await axios.get(`${process.env.REACT_APP_API_URL}users/me/playlists`, requestOptions)
                 .then(response => {
 
                     let playlists = response.data;
@@ -251,7 +248,7 @@ class ProfileComponent extends Component {
                                         <img
                                             alt=""
                                             className="embed-responsive-item image"
-                                            src={`${config.apiUrl}films/${film.id}/thumbnail/${film.thumbnail._id}?width=small`}
+                                            src={`${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail/${film.thumbnail._id}?width=small`}
                                             onClick={() => this.setRedirect(filmID)}/>
                                     }
                                     <FontAwesomeIcon className="middle" icon="play"
@@ -272,7 +269,7 @@ class ProfileComponent extends Component {
                                     <Col  style={{height: 24 + 'px', width: 24 + "px" , position: 'absolute', right: 28}}
                                          className={"playlist-remove-holder p-0 d-flex text-center justify-content-center align-items-center"}
                                          onClick={() => this.handleRemoveFilm(film.id, index)}>
-                                        <ButtonBase  style={{borderRadius: 20 + "px", width: 30 + "px", height: 24 + "px"}} className="button-my" >
+                                        <ButtonBase  style={{borderRadius: 20 + "px", width: 30 + "px", height: 24 + "px"}} className="m-button" >
                                             {
                                                 <FontAwesomeIcon
                                                     icon="trash-alt"/>
@@ -319,7 +316,7 @@ class ProfileComponent extends Component {
                                         filmID !== null ?
                                         <img alt=""
                                              className="embed-responsive-item image"
-                                             src={`${config.apiUrl}films/${filmID}/thumbnail/${playlist.thumbnail}?width=small`}
+                                             src={`${process.env.REACT_APP_API_URL}films/${filmID}/thumbnail/${playlist.thumbnail}?width=small`}
                                              />
                                             :
                                         <img alt=""
@@ -347,7 +344,7 @@ class ProfileComponent extends Component {
                                                           id="s-c-2"
                                                           className="mb-2 mt-1 title "/>
                                     </Col>
-                                    <ButtonBase  style={{borderRadius: 20 + "px", width: 24 + "px", height: 24 + "px"}} className="button-my" >
+                                    <ButtonBase  style={{borderRadius: 20 + "px", width: 24 + "px", height: 24 + "px"}} className="m-button" >
                                         {
                                             <Col
                                                 style={{width: 30 + "px", height: 24 + "px"}}
@@ -377,7 +374,7 @@ class ProfileComponent extends Component {
                     ((scroll.scrollTop === 0 || scroll.offsetHeight <= scroll.innerHeight) && this.state.hasMore && this.state.isLoaded) &&
                     <Col sm={12} className="text-center">
                         <Button
-                            className="button-my"
+                            className="m-button"
                             variant="contained"
                             disabled={isLoading}
                             onClick={!isLoading ? this.loadData : null}
@@ -426,7 +423,4 @@ function mapStateToProps(state) {
     };
 }
 
-const connectedProfileComponent = connect(mapStateToProps)(ProfileComponent);
-
-
-export {connectedProfileComponent as ProfileComponent};
+export default ProfileComponent

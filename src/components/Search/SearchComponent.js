@@ -3,23 +3,20 @@ import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Col, Collapse, Row, Spinner} from 'react-bootstrap';
 
-import {config} from "../../config";
-
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import connect from "react-redux/es/connect/connect";
 import Button from '@material-ui/core/Button';
 
 import queryString from 'query-string';
 import _ from "lodash";
 
 import "./SearchComponent.css";
-import {PlaylistAddButtonComponent} from "../Playlist/PlaylistAddButtonComponent";
+import PlaylistAddButtonComponent from "../add/add-playlist";
 import Snackbar from "@material-ui/core/Snackbar/Snackbar";
 import TextTruncate from "react-text-truncate";
 import Truncate from "react-truncate";
 import {isMobile} from 'react-device-detect'
 
-const pathName = config.pathName;
+const pathName = process.env.REACT_APP_PATH_NAME;
 
 let filters = [
     {id: 'last_hour', title: 'Last hour'},
@@ -91,7 +88,7 @@ class SearchComponent extends Component {
         }, () => {
 
 
-            axios.get(`${config.apiUrl}films/filter/title/?search=${this.state.search}&sort=${this.state.sort}&filter=${this.state.filter}&dir=${this.state.dir}`,
+            axios.get(`${process.env.REACT_APP_API_URL}films/filter/title/?search=${this.state.search}&sort=${this.state.sort}&filter=${this.state.filter}&dir=${this.state.dir}`,
                 {params: {start: 0, limit: 5}})
                 .then(res => {
                     const films = res.data;
@@ -163,7 +160,7 @@ class SearchComponent extends Component {
                     })
                 }
 
-                axios.get(`${config.apiUrl}films/filter/title/?search=${this.state.search}&sort=${this.state.sort}&filter=${this.state.filter}&dir=${this.state.dir}`,
+                axios.get(`${process.env.REACT_APP_API_URL}films/filter/title/?search=${this.state.search}&sort=${this.state.sort}&filter=${this.state.filter}&dir=${this.state.dir}`,
                     {params: {start: 0, limit: 5}})
                     .then(res => {
                         const films = res.data;
@@ -272,7 +269,7 @@ class SearchComponent extends Component {
 
     loadData = () => {
         this.setState({isLoading: true}, () => {
-            axios.get(`${config.apiUrl}films/filter/title/?search=${this.state.search}&sort=${this.state.sort}&filter=${this.state.filter}&dir=${this.state.dir}`,
+            axios.get(`${process.env.REACT_APP_API_URL}films/filter/title/?search=${this.state.search}&sort=${this.state.sort}&filter=${this.state.filter}&dir=${this.state.dir}`,
                 {
                     params: {
                         start: this.state.films.length,
@@ -427,7 +424,7 @@ class SearchComponent extends Component {
         }
 
 
-        axios.get(`${config.apiUrl}films/filter/title/?search=${this.state.search}&sort=${sort}&filter=${filter}&dir=${dir}`,
+        axios.get(`${process.env.REACT_APP_API_URL}films/filter/title/?search=${this.state.search}&sort=${sort}&filter=${filter}&dir=${dir}`,
             {params: {start: 0, limit: this.state.films.length < 5 ? 5 : this.state.films.length}})
             .then(result => {
                 const films = result.data;
@@ -449,7 +446,7 @@ class SearchComponent extends Component {
                     onClick={() => this.setState({open: !open})}
                     aria-controls="filter-collapse"
                     aria-expanded={open}
-                    className="mt-3 p-2 button-my"><FontAwesomeIcon style={{cursor: "pointer"}} icon="filter"/></Button>
+                    className="mt-3 p-2 m-button"><FontAwesomeIcon style={{cursor: "pointer"}} icon="filter"/></Button>
 
                 <Collapse in={this.state.open}>
                     <Row id="filter-collapse">
@@ -520,7 +517,7 @@ class SearchComponent extends Component {
                                                 <Col xs={8} sm={4}>
                                                     <div className="embed-responsive embed-responsive-16by9 z-depth-1-half">
                                                         <img alt="" id="s-c-1" className="image embed-responsive-item"
-                                                             src={`${config.apiUrl}films/${film.id}/thumbnail/${film.thumbnail._id}?width=small`}/>
+                                                             src={`${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail/${film.thumbnail._id}?width=small`}/>
                                                         <FontAwesomeIcon className="middle" icon="play"/>
                                                     </div>
                                                 </Col>
@@ -562,7 +559,7 @@ class SearchComponent extends Component {
                                                         <div
                                                             className="embed-responsive embed-responsive-16by9 z-depth-1-half">
                                                             <img alt="" id="s-c-1" className="image embed-responsive-item"
-                                                                 src={`${config.apiUrl}films/${film.id}/thumbnail/${film.thumbnail._id}?width=small`}/>
+                                                                 src={`${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail/${film.thumbnail._id}?width=small`}/>
                                                             <FontAwesomeIcon className="middle" icon="play"/>
                                                         </div>
                                                     </Col>
@@ -647,7 +644,4 @@ function mapStateToProps(state) {
     };
 }
 
-const connectedSearchPage = connect(mapStateToProps)(SearchComponent);
-
-
-export {connectedSearchPage as SearchComponent};
+export default SearchComponent

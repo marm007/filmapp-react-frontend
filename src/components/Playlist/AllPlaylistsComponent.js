@@ -3,15 +3,12 @@ import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Col, Row, Spinner} from 'react-bootstrap';
 
-import {config} from "../../config";
-
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Button from '@material-ui/core/Button';
-import connect from "react-redux/es/connect/connect";
 import TextTruncate from "react-text-truncate";
-import ImageBlurredComponent from "../ImageBlurred/ImageBlurredComponent";
+import BlurredImageComponent from "../blurredImage";
 
-const pathName = config.pathName;
+const pathName = process.env.REACT_APP_PATH_NAME;
 
 class AllPlaylistsComponent extends Component {
 
@@ -62,13 +59,13 @@ class AllPlaylistsComponent extends Component {
             else if (windowWidth > 1422)
                 limit = 5;
 
-            axios.get(`${config.apiUrl}playlists/all`, {params: {start: 0, limit: Math.ceil(6 * limit)}})
+            axios.get(`${process.env.REACT_APP_API_URL}playlists/all`, {params: {start: 0, limit: Math.ceil(6 * limit)}})
                 .then(response => {
 
                     let playlists = response.data;
 
                     playlists.forEach(playlist => {
-                        playlist.img = `${config.apiUrl}films/${playlist.filmID}/thumbnail/${playlist.thumbnail}?width=preview`
+                        playlist.img = `${process.env.REACT_APP_API_URL}films/${playlist.filmID}/thumbnail/${playlist.thumbnail}?width=preview`
                     });
 
                     this.setState({
@@ -123,13 +120,13 @@ class AllPlaylistsComponent extends Component {
 
     loadData = () => {
         this.setState({isLoading: true}, () => {
-            axios.get(`${config.apiUrl}playlists/all`, {params: {start: this.state.playlists.length, limit: 6}})
+            axios.get(`${process.env.REACT_APP_API_URL}playlists/all`, {params: {start: this.state.playlists.length, limit: 6}})
                 .then(response => {
 
                     let playlists = response.data;
 
                     playlists.forEach(playlist => {
-                        playlist.img = `${config.apiUrl}films/${playlist.filmID}/thumbnail/${playlist.thumbnail}?width=preview`
+                        playlist.img = `${process.env.REACT_APP_API_URL}films/${playlist.filmID}/thumbnail/${playlist.thumbnail}?width=preview`
                     });
 
                     this.setState({
@@ -185,7 +182,7 @@ class AllPlaylistsComponent extends Component {
                                          className="embed-responsive embed-responsive-16by9 z-depth-1-half container">
                                         {
 
-                                            <ImageBlurredComponent
+                                            <BlurredImageComponent
                                                 image={playlist.img}
                                                 setRedirect={() => this.setRedirect(playlistID, filmID)}/>
                                         }
@@ -222,7 +219,7 @@ class AllPlaylistsComponent extends Component {
                     ((scroll.scrollTop === 0 || scroll.offsetHeight <= scroll.innerHeight) && this.state.hasMore && this.state.isMounted) &&
                     <Col sm={12} className="text-center">
                         <Button
-                            className="button-my"
+                            className="m-button"
                             variant="contained"
                             disabled={isLoading}
                             onClick={!isLoading ? this.loadData : null}
@@ -258,7 +255,4 @@ function mapStateToProps(state) {
     };
 }
 
-const connectedAllPlaylistsComponent = connect(mapStateToProps)(AllPlaylistsComponent);
-
-
-export {connectedAllPlaylistsComponent as AllPlaylistsComponent};
+export default AllPlaylistsComponent

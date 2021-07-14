@@ -7,15 +7,16 @@ import 'react-app-polyfill/ie11';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { App } from './App';
+import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { Provider } from 'react-redux';
-import { store } from "./helpers";
-
+import UserProvider from './helpers/userProvider';
+import ToastProvider from "./helpers/toastProvider";
 ReactDOM.render(
-    <Provider store={store}>
-        <App />
-    </Provider>,
+    <UserProvider>
+        <ToastProvider>
+            <App />
+        </ToastProvider>
+    </UserProvider>,
     document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

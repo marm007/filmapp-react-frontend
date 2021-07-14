@@ -1,15 +1,15 @@
-export function authHeader() {
+export const authHeader = () => {
 
-    let user = JSON.parse(localStorage.getItem('user'));
+    let token = JSON.parse(localStorage.getItem('accessToken'));
 
-    if(user && user.token){
-        return { 'Authorization' : 'Bearer ' + user.token};
+    if(token){
+        return { 'Authorization' : 'Bearer ' + token};
     } else{
         return {};
     }
 }
 
-export function loginHeader(username, password){
+export const loginHeader = (username, password) => {
     let loginToken = window.btoa(username + ':' + password);
     return { 'Authorization':  'Basic ' +  loginToken };
 

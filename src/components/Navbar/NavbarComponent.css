@@ -2,3 +2,24 @@
     margin: 5px;
     cursor: pointer;
 }
+
+.rbt-aux {
+    height: 0;
+    visibility: hidden;
+}
+
+.entry__inner {
+    display: flex;
+    left: 0;
+    right: 0;
+  }
+
+  .entry__text {
+    flex: 1;
+    margin-right: 0.5em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  
