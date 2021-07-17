@@ -8,6 +8,8 @@ const UserProvider = ({ children }) => {
         
         const name = localStorage.getItem('user')
         const token = localStorage.getItem('accessToken')
+       
+        console.log(name)
 
         setUser((user) => ({
             name: name === null ? '' : name ,
@@ -20,7 +22,7 @@ const UserProvider = ({ children }) => {
         localStorage.setItem('accessToken', JSON.stringify(token));
         localStorage.setItem('user', JSON.stringify(name));
         setUser(() => ({
-            name: name,
+            name: JSON.stringify(name),
             auth: true,
         }));
     };

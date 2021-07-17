@@ -1,73 +1,34 @@
-import React, { useState, useEffect, useContext, useReducer } from 'react';
+import React, { useCallback, useEffect, useContext, useReducer } from 'react';
 import { Button, Col, Dropdown, Form, FormControl, Row, ButtonGroup, Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import * as userApi from '../../services/userService'
 import * as playlistApi from '../../services/playlistService'
 
-import '../Playlist/PlaylistComponent.css'
+//import '../Playlist/PlaylistComponent.css'
 import ToastContext from '../../helpers/toastContext';
-import useBottomScroll from '../../helpers/useBottomScroll';
-
-function playlistMenuReducer(state, action) {
-    switch (action.type) {
-        case 'field': {
-            return {
-                ...state,
-                isError: '',
-                [action.fieldName]: action.payload
-            }
-        }
-        case 'load': {
-            return {
-                ...state,
-                isLoading: true,
-                isAllFetched: false,
-            }
-        }
-        case 'success': {
-            return {
-                ...state,
-                playlists: action.payload,
-                isAllFetched: action.count === 0,
-                error: '',
-                isLoading: false
-            }
-        }
-        case 'error':
-            return {
-                ...state,
-                isLoading: false,
-                isAllFetched: false,
-                error: 'Bad',
-                title: ''
-            }
-        default:
-            return state
-
-    }
-}
-
-const initialState = {
-    playlists: [],
-    isAllFetched: false,
-    title: '',
-    isLoading: true,
-    error: '',
-};
+import useBottomScrollListener from '../../helpers/useBottomScrollListener';
+import { playlistMenuReducer, initialState } from './add-playlist-menu-reducer'
+import FilmDispatch from '../filmPage/filmDispatch';
 
 function PlaylistDropdownMenu(props) {
+   
+    const filmDispatch = useContext(FilmDispatch)
 
     const { createToast } = useContext(ToastContext);
     const [state, dispatch] = useReducer(playlistMenuReducer, initialState);
 
-    const { playlists, title, isLoading, error, isAllFetched} = state
+    const { playlists, title, isLoading, isAllFetched, error } = state
 
-    const scrollRef = useBottomScroll(() => {
-        dispatch({
-            type: 'load'
-        })
-    });
+    const handleOnPlaylistDropdownMenuBottom = useCallback(() => {
+        if (!isLoading && !isAllFetched) {
+            dispatch({
+                type: 'load'
+            })
+        }
+    }, [isLoading, isAllFetched])
+
+    const scrollRef = useBottomScrollListener(handleOnPlaylistDropdownMenuBottom);
 
     useEffect(() => {
         async function getMyPlaylists() {
@@ -114,6 +75,11 @@ function PlaylistDropdownMenu(props) {
                     fieldName: 'playlists',
                     payload: tmp
 
+                })
+                filmDispatch({
+                    type: 'field',
+                    fieldName: 'reloadPlaylist',
+                    payload: true
                 })
             })
             .catch(err => console.error(err))
@@ -200,7 +166,6 @@ function PlaylistDropdownMenu(props) {
             <Col className="mb-1 text-right justify-content-end">
                 <Button onClick={handleCreatePlaylist}>Create</Button>
             </Col>
-
 
         </Dropdown.Menu >
 

@@ -9,7 +9,7 @@ import PlaylistDropdownMenu from './add-playlist-menu'
 import UserContext from '../../helpers/userContext';
 import useRipple from "useripple"
 
-import '../Playlist/PlaylistComponent.css'
+import '../playlistsPage/playlist.css'
 
 function PlaylistAddButton(props) {
 
@@ -32,7 +32,7 @@ function PlaylistAddButton(props) {
                 }} className="m-button">
                 <Dropdown.Toggle variant="link" bsPrefix="p-0"
                     className="m-button  m-button-ripple"
-                    style={{ width: 24 + "px", height: 24 + "px", color: "black" }}>
+                    style={{  color: "black" }}>
                     <Col
                         onClick={addRipple}
                         style={{ borderRadius: 20 + "px", width: 24 + "px", height: 24 + "px" }}

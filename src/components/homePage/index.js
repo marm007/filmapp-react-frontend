@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useEffect, useReducer, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Col, Row, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,35 +10,57 @@ import PlaylistAddButtonComponent from "../add/add-playlist";
 import { checkIfPlaylistButtonClick } from '../../helpers'
 
 import * as filmApi from '../../services/filmService'
+import { homePageReducer, initialState } from './reducer';
+import useBottomScrollListener from '../../helpers/useBottomScrollListener';
+
+
 
 function Home(props) {
 
     let history = useHistory()
 
-    const [films, setFilms] = useState([])
+    const homePageRef = useRef(null)
+
+
+    const [state, dispatch] = useReducer(homePageReducer, initialState)
+    const { films, isLoading, isAllFetched, error } = state
+
+
+    const handleOnHomePageData = useCallback(() => {
+        if (!isLoading && !isAllFetched) {
+            dispatch({
+                type: 'load'
+            })
+        }
+    }, [isLoading, isAllFetched])
+
+    useBottomScrollListener(handleOnHomePageData, { triggerOnNoScroll: true })
 
     useEffect(() => {
         async function getAllFilms() {
-            await filmApi.all('').then(res => {
-                let films = res.data;
+            await filmApi.all({skip: films.length, limit: 12}).then(res => {
+                let response = res.data;
 
-                films.forEach(film => {
+                response.forEach(film => {
                     film.img = `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=preview`
 
                 });
 
-                setFilms(films)
+                dispatch({
+                    type: 'success',
+                    payload: response
+                })
             })
         }
-        getAllFilms()
-    }, [])
+        if (isLoading) getAllFilms()
+    }, [isLoading, films])
 
     const handleRedirect = (id) => {
         history.push({ pathname: `${process.env.REACT_APP_PATH_NAME}film/` + id });
     };
 
     return (
-        <Col>
+        <Col ref={homePageRef}>
             <Row className="mt-5 mx-2">
                 {
                     films.map((film, index) => {
@@ -75,6 +97,12 @@ function Home(props) {
                             </p>
                         </Col>
                     })
+                }
+
+                {
+                    !isAllFetched && <div style={{ height: 32 + 'px', width: '100%' }} className="d-flex justify-content-center">
+                        {isLoading && <Spinner animation="border" />}
+                    </div>
                 }
 
             </Row>

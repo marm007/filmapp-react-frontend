@@ -5,9 +5,6 @@ import Avatar from '@material-ui/core/Avatar';
 
 import { Button, Col, Row, Form, Nav, Navbar } from 'react-bootstrap';
 
-import axios from 'axios'
-
-import './NavbarComponent.css';
 import Menu from "@material-ui/core/Menu/Menu";
 import MenuItem from "@material-ui/core/MenuItem/MenuItem";
 
@@ -18,6 +15,8 @@ import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { isMobile } from "react-device-detect";
 
 import UserContext from '../../helpers/userContext'
+
+import './navbar.css';
 
 function NavbarComponent(props) {
 
