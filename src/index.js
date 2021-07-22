@@ -9,12 +9,20 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import UserProvider from './helpers/userProvider';
-import ToastProvider from "./helpers/toastProvider";
+
+import UserProvider from './helpers/user/userProvider';
+import ToastProvider from "./helpers/toast/toastProvider";
+import NavbarProvider from "./helpers/navbar/navbarProvider";
+import WithAxios from "./helpers/components/withAxios";
+
 ReactDOM.render(
     <UserProvider>
         <ToastProvider>
-            <App />
+            <NavbarProvider>
+                <WithAxios>
+                    <App />
+                </WithAxios>
+            </NavbarProvider>
         </ToastProvider>
     </UserProvider>,
     document.getElementById('root'));

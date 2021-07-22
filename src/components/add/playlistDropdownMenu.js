@@ -1,22 +1,23 @@
 import React, { useCallback, useEffect, useContext, useReducer } from 'react';
-import { Button, Col, Dropdown, Form, FormControl, Row, ButtonGroup, Spinner } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button, Col, Dropdown, Form, FormControl, Row, Spinner } from "react-bootstrap";
 
 import * as userApi from '../../services/userService'
 import * as playlistApi from '../../services/playlistService'
 
 //import '../Playlist/PlaylistComponent.css'
-import ToastContext from '../../helpers/toastContext';
-import useBottomScrollListener from '../../helpers/useBottomScrollListener';
-import { playlistMenuReducer, initialState } from './add-playlist-menu-reducer'
-import FilmDispatch from '../filmPage/filmDispatch';
+import ToastContext from '../../helpers/toast/toastContext';
+import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
+import { playlistDropdownMenuReducer, playlistDropdownMenuInitialState } from './playlistDropdownMenuReducer'
+import FilmDispatch from '../../helpers/film/filmContext';
+import UserContext from '../../helpers/user/userContext';
 
 function PlaylistDropdownMenu(props) {
    
+    const { user } = useContext(UserContext)
     const filmDispatch = useContext(FilmDispatch)
 
     const { createToast } = useContext(ToastContext);
-    const [state, dispatch] = useReducer(playlistMenuReducer, initialState);
+    const [state, dispatch] = useReducer(playlistDropdownMenuReducer, playlistDropdownMenuInitialState);
 
     const { playlists, title, isLoading, isAllFetched, error } = state
 
@@ -32,6 +33,8 @@ function PlaylistDropdownMenu(props) {
 
     useEffect(() => {
         async function getMyPlaylists() {
+            if(!user.auth) return 
+            
             await userApi.me({ playlists: true, skip: playlists.length, limit: 10 })
                 .then(res => {
 

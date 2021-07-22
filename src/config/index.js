@@ -1,4 +1,3 @@
-export const config = {
-    apiUrl: 'https://marm007-film-app.herokuapp.com/api/',
-    pathName: '/filmapp_frontend/'
-};
+export const commentsMaxFetchCount = 12
+export const recommendationsMaxFetchCount = 12
+export const config = {}

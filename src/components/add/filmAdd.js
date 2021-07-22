@@ -2,15 +2,15 @@ import React, { useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Col, Form, FormControl, Row } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './AddFilmComponent.css'
+import './filmAdd.css'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import useWindowsWidth from '../../helpers/useWindowsWidth'
+import useWindowsWidth from '../../helpers/hooks/useWindowsWidth'
 
 const CHOOSE_FILM = `Choose a film `;
 const CHOOSE_THUMBNAIL = `Choose a thumbnail `;
 
-function AddFilm() {
+function FilmAdd() {
 
     const onSmallScreen = useWindowsWidth();
 
@@ -253,4 +253,4 @@ function AddFilm() {
     )
 }
 
-export default AddFilm
+export default FilmAdd

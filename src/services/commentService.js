@@ -1,5 +1,6 @@
 import axios from '../helpers/axios'
-import { authHeader } from '../helpers/auth-headers'
+import authHeader from '../helpers/authHeader'
+
 
 export const all = (film_id, params) => axios.get(`films/${film_id}/comments`, {params})
 

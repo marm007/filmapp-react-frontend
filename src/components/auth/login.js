@@ -5,7 +5,7 @@ import { Button, Col, Form, Modal } from 'react-bootstrap';
 
 import * as authApi from '../../services/authService'
 
-import UserContext from '../../helpers/userContext'
+import UserContext from '../../helpers/user/userContext'
 
 function Login(props) {
 
@@ -24,15 +24,18 @@ function Login(props) {
 
         setSubmitted(true)
         if (email && password) {
-            console.log({email, password})
-            authApi.login({email, password})
-            .then(res => {
-                login(res.data.user.name, res.data.token)
-                history.goBack()
-            })
-            .catch(err => {
-                console.error(err)
-            })
+            authApi.login({ email, password })
+                .then(res => {
+                    login(res.data.user.name, res.data.user.id, res.data.token, res.data.refreshToken)
+                    if (!location.state) {
+                        history.goBack();
+                    } else {
+                        history.replace(location.state.from)
+                    }
+                })
+                .catch(err => {
+                    console.error(err)
+                })
         }
     }
 
@@ -45,8 +48,13 @@ function Login(props) {
     };
 
     const modalClose = () => {
+        console.log('close')
         setShow(false)
-        history.goBack();
+        if (!location.state) {
+            history.goBack();
+        } else {
+            history.push('/')
+        }
     };
 
     const handleRegister = () => {

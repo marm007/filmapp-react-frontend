@@ -6,53 +6,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TextTruncate from 'react-text-truncate';
 
 import * as filmApi from '../../services/filmService'
-import PlaylistAddButtonComponent from "../add/add-playlist";
+import PlaylistAddButtonComponent from "../add/playlistAddButton";
 
 import { checkIfPlaylistButtonClick } from '../../helpers'
 
-import useBottomScrollListener from '../../helpers/useBottomScrollListener';
+import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
 
-const filmsMaxFetchCount = 20
-
-const recommendationsInitialState = {
-    films: [],
-    isLoading: true,
-    isAllFetched: false,
-}
-
-function recommendationsReducer(state, action) {
-    switch (action.type) {
-        case 'field': {
-            return {
-                ...state,
-                [action.fieldName]: action.payload
-            }
-        }
-        case 'clear': {
-            return {
-                ...recommendationsInitialState,
-                id: action.payload
-            }
-        }
-        case 'load': {
-
-            return {
-                ...state,
-                isLoading: true,
-                isAllFetched: false
-            }
-        }
-        case 'success': {
-            return {
-                ...state,
-                films: [...state.films, ...action.payload],
-                isLoading: false,
-                isAllFetched: action.payload.length < filmsMaxFetchCount
-            }
-        }
-        default: return state
-    }
-}
+import {recommendationsReducer, recommendationsInitialState} from './reducers/recommendationsReducer'
+import { recommendationsMaxFetchCount } from "../../config"
 
 function FilmsRecommendations(props) {
 
@@ -73,7 +34,7 @@ function FilmsRecommendations(props) {
 
     useEffect(() => {
         async function fetchData() {
-            await filmApi.all({ exclude: props.match.params.id, skip: films.length, limit: filmsMaxFetchCount }).then(res => {
+            await filmApi.all({ exclude: props.match.params.id, skip: films.length, limit: recommendationsMaxFetchCount }).then(res => {
                 let films = res.data;
 
                 films.forEach(film => {

@@ -1,7 +1,7 @@
 import { config } from '../config'
-import { loginHeader } from '../helpers';
 import axios from '../helpers/axios'
-import { authHeader } from '../helpers/auth-headers'
+import authHeader from '../helpers/authHeader'
+
 
 export const me = (params) => axios.get('users/me', {params, headers: authHeader()})
 
@@ -13,7 +13,7 @@ export const userService = {
 
 function login(username, password) {
 
-    let loginHeaderMy =  loginHeader(username, password);
+    let loginHeaderMy =  null
 
     const requestOptions = {
         method: 'POST',

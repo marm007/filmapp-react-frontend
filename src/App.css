@@ -53,6 +53,14 @@
     cursor: pointer;
 }
 
+.film-cursor-default > div > img {
+    cursor: default !important
+}
+
+.film-cursor-default > div > div {
+    cursor: default !important
+}
+
 .film-play-container {
     position: relative;
 }
@@ -286,4 +294,9 @@ mark {
 
 .dropdown-menu {
     box-shadow: 0 10px 10px #666;
+}
+
+.calculeted-width-helper-buttons {
+    flex: 0 0 calc(66.666667% - 24px) !important;
+    max-width: calc(66.666667% - 24px) !important;
 }

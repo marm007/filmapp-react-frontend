@@ -1,113 +1,56 @@
-import React, { useState, useEffect, useReducer, useCallback } from 'react';
+import React, { useContext, useEffect, useReducer, useCallback } from 'react';
 
 import { Button, Col, Dropdown, DropdownButton, Row, Spinner } from "react-bootstrap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import TextField from '@material-ui/core/TextField';
+import ButtonBase from "@material-ui/core/ButtonBase/ButtonBase";
 
 import * as commentApi from '../../services/commentService'
 
-import useBottomScrollListener from '../../helpers/useBottomScrollListener';
-import { initialState } from '../add/add-playlist-menu-reducer';
-
-const commentsMaxFetchCount = 20
-
-const filmCommentsInitialState = {
-    comments: [],
-    commentsLength: 0,
-    isLoading: true,
-    isAllFetched: false,
-    commentsLoaded: false,
-    text: '',
-    isAdding: false,
-}
-
-function filmCommentsReducer(state, action) {
-    switch (action.type) {
-        case 'field': {
-            return {
-                ...state,
-                [action.fieldName]: action.payload
-            }
-        }
-        case 'clear': {
-            return {
-                ...initialState,
-                comments: action.payload,
-                commentsLength: action.payload.length,
-                commentsLoaded: true
-            }
-        }
-        case 'load': {
-            return {
-                ...state,
-                isLoading: true,
-                isAllFetched: false
-            }
-        }
-        case 'load-success': {
-            const newComments = [...state.comments, ...action.payload]
-            return {
-                ...state,
-                comments: newComments,
-                commentsLength: newComments.length,
-                isLoading: false,
-                isAllFetched: action.payload.length < commentsMaxFetchCount
-            }
-        }
-        case 'add': {
-            return {
-                ...state,
-                isAdding: true
-            }
-        }
-        case 'add-success': {
-            return {
-                ...state,
-                text: '',
-                comments: [action.payload, ...state.comments],
-                isAdding: false
-            }
-        }
-        default: return state
-    }
-}
+import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
+import { commentsReducer, commentsInitialState } from './reducers/commentsReducer';
+import { commentsMaxFetchCount } from "../../config"
+import UserContext from '../../helpers/user/userContext';
 
 function Comments(props) {
 
-    const [state, dispatch] = useReducer(filmCommentsReducer, filmCommentsInitialState)
-    const { comments, commentsLength, isLoading, isAllFetched, commentsLoaded, text, isAdding } = state
+    const { user } = useContext(UserContext);
+
+    const [state, dispatch] = useReducer(commentsReducer, commentsInitialState)
+    const { comments, commentsLength, isLoading, isAllFetched, commentsLoaded, text, isAdding, error } = state
 
     const handleOnCommentsBottom = useCallback(() => {
-        if (!isLoading && !isAllFetched && commentsLoaded) {
+        if (!isLoading && !isAllFetched && commentsLoaded && !error) {
             dispatch({
                 type: 'load'
             })
         }
-    }, [isLoading, isAllFetched, commentsLoaded])
+    }, [isLoading, isAllFetched, commentsLoaded, error])
 
     useBottomScrollListener(handleOnCommentsBottom, { triggerOnNoScroll: true })
 
     useEffect(() => {
         if (props.comments === null) return
+
         dispatch({
             type: 'clear',
             payload: props.comments
         })
     }, [props.comments])
 
-
     useEffect(() => {
-        console.log("ccxa")
-
         async function loadComments() {
-            console.log("ds")
-
             await commentApi.all(props.match.params.id, { skip: commentsLength, limit: commentsMaxFetchCount })
                 .then(res => {
-                    console.log(res.data)
                     dispatch({
                         type: 'load-success',
                         payload: res.data,
+                    })
+                })
+                .catch(err => {
+                    dispatch({
+                        type: 'error'
                     })
                 })
         }
@@ -117,7 +60,12 @@ function Comments(props) {
     }, [commentsLength, isLoading, commentsLoaded, props.match.params.id])
 
     const addComment = async () => {
+        if (!user.auth) {
 
+            return
+        }
+
+        if (isAdding) return
         const comment = { text: text }
 
         dispatch({
@@ -130,6 +78,12 @@ function Comments(props) {
                     type: 'add-success',
                     payload: res.data
                 })
+            })
+            .catch(err => {
+                dispatch({
+                    type: 'error'
+                })
+                console.error(err)
             })
     };
 
@@ -162,12 +116,14 @@ function Comments(props) {
         return time;
     };
 
+    const handleRemoveComment = (id) => {
 
+    }
 
     return (
 
         <Col>
-           
+
             <Col className="p-0" sm={12}>
                 <Row>
                     <Col xs={8} sm={10}>
@@ -183,7 +139,9 @@ function Comments(props) {
                         />
                     </Col>
                     <Col xs={2} sm={2}>
-                        <Button className="mt-3" variant="primary"
+                        <Button disabled={isAdding}
+                            className="mt-3" variant="primary"
+
                             onClick={() => addComment()}>
                             Submit
                         </Button>
@@ -216,7 +174,7 @@ function Comments(props) {
 
                 comments && comments.map(comment => {
                     return (
-                        <Col className="p-0 mt-4" sm={12} key={comment.id}>
+                        <Col className="p-0 mt-4 playlist-remove-container" sm={12} key={comment.id}>
                             <Row className="pl-3">
 
                                 <p className="m-0 font-weight-bold">
@@ -225,6 +183,21 @@ function Comments(props) {
                                 <p>
                                     <small className="m-0">{displayDate(comment)}</small>
                                 </p>
+                                {
+                                    user.id === comment.author_id &&
+                                    <Col
+                                        className="playlist-remove-holder p-0 m-0 d-flex justify-content-end"
+                                        style={{ height: 24 + 'px', width: 24 + "px" }}>
+                                        <ButtonBase
+                                            style={{ borderRadius: 20 + "px", width: 24 + "px", height: 24 + "px" }}
+                                            className="m-button "
+                                            onClick={() => handleRemoveComment(comment.id)}>
+                                            {
+                                                <FontAwesomeIcon icon="trash-alt" />
+                                            }
+                                        </ButtonBase>
+                                    </Col>
+                                }
                             </Row>
                             <p>
                                 <small>{comment.text}</small>

@@ -1,4 +1,4 @@
-export function playlistMenuReducer(state, action) {
+export function playlistDropdownMenuReducer(state, action) {
     switch (action.type) {
         case 'field': {
             return {
@@ -37,7 +37,7 @@ export function playlistMenuReducer(state, action) {
     }
 }
 
-export const initialState = {
+export const playlistDropdownMenuInitialState = {
     playlists: [],
     isAllFetched: false,
     title: '',

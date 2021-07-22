@@ -2,11 +2,8 @@ import React, { useState, useContext } from 'react';
 import { Col, Dropdown, Toast } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import * as userApi from '../../services/userService'
-import * as playlistApi from '../../services/playlistService'
-
-import PlaylistDropdownMenu from './add-playlist-menu'
-import UserContext from '../../helpers/userContext';
+import PlaylistDropdownMenu from './playlistDropdownMenu'
+import UserContext from '../../helpers/user/userContext';
 import useRipple from "useripple"
 
 import '../playlistsPage/playlist.css'
@@ -29,7 +26,7 @@ function PlaylistAddButton(props) {
             <Dropdown show={isOpen}
                 onToggle={(isOpen, event, metadata) => {
                     setIsOpen(isOpen)
-                }} className="m-button">
+                }} className="m-button col-sm-2 col-2 p-0" >
                 <Dropdown.Toggle variant="link" bsPrefix="p-0"
                     className="m-button  m-button-ripple"
                     style={{  color: "black" }}>

@@ -1,45 +1,42 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useContext, useReducer } from 'react';
 import { withRouter } from 'react-router-dom'
 
 import { Button, Col, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as filmApi from '../../services/filmService'
+import * as userApi from '../../services/userService'
 
 import { Player } from 'video-react';
 import TextTruncate from 'react-text-truncate';
 
-import FilmDispatch from './filmDispatch'
+import FilmDispatch from '../../helpers/film/filmContext'
 
 import "../../../node_modules/video-react/dist/video-react.css";
+import { initialPreviewState, previewReducer } from './reducers/previewReducer';
+import UserContext from '../../helpers/user/userContext';
 
-const initialFilm = {
-    img: '',
-    film: '',
-    title: '',
-    views: '',
-    likes: '',
-    dislikes: '',
-    description: `\r\n\n\n`
-}
+
 function FilmPreview(props) {
 
-    const dispatch = useContext(FilmDispatch)
+    const { user } = useContext(UserContext)
+
+    const filmDispatch = useContext(FilmDispatch)
 
     const playerRef = useCallback(node => {
-        console.log('Ref updated')
-
         if (node !== null) {
-            dispatch({
+            filmDispatch({
                 type: 'field',
                 fieldName: 'playerHeight',
                 payload: node.getBoundingClientRect().height
             })
             setPlayerNode(node)
         }
-    }, [dispatch])
+    }, [filmDispatch])
 
-    const [film, setFilm] = useState(initialFilm)
-    const [isDescExpanded, setIsDescExpanded] = useState(false)
+    const [state, dispatch] = useReducer(previewReducer, initialPreviewState)
+
+    const { film, isLiked, isDisliked, isLikeButtonClicked, likeAction, isDescExpanded } = state
+
     const [playerNode, setPlayerNode] = useState(null);
 
 
@@ -47,7 +44,7 @@ function FilmPreview(props) {
         if (playerNode) {
 
             const measure = () => {
-                dispatch({
+                filmDispatch({
                     type: 'field',
                     fieldName: 'playerHeight',
                     payload: playerNode.getBoundingClientRect().height
@@ -58,42 +55,109 @@ function FilmPreview(props) {
 
             return () => window.removeEventListener("resize", measure);
         }
-    }, [playerNode, dispatch]);
+    }, [playerNode, filmDispatch]);
 
     useEffect(() => {
         async function handleGetFilm() {
-            await filmApi.index(props.match.params.id).then(res => {
-                let data = res.data
-                data.img = `${process.env.REACT_APP_API_URL}films/${res.data.id}/thumbnail?width=poster`
-                data.video = `${process.env.REACT_APP_API_URL}films/${res.data.id}/video`
-                dispatch({
-                    type: 'field',
-                    fieldName: 'comments',
-                    payload: data.comments
-                })
-                data.views = data.views + 1
-                setFilm(data)
-                return data
-            }).then(async data => {
-                await filmApi.view(data.id).then(res => {
-                    console.log('Views updated')
-                })
+            let requests = [filmApi.index(props.match.params.id), filmApi.view(props.match.params.id)]
+            if(user.auth) requests.push(userApi.me({ details: true }))
+
+            const [filmResponse, filmViewResponse, userResponse] = await Promise.allSettled(requests);
+
+            if (filmResponse.status === "rejected" || filmViewResponse.status === "rejected") {
+                // TODO implement error
+                return
+            }
+            const filmData = filmResponse.value.data
+
+            const film = {
+                ...filmData,
+                img: `${process.env.REACT_APP_API_URL}films/${filmData.id}/thumbnail?width=poster`,
+                video: `${process.env.REACT_APP_API_URL}films/${filmData.id}/video`,
+                views: filmViewResponse.value.data.views
+            }
+            let isLiked = false
+            let isDisliked = false
+
+
+            if ( userResponse && userResponse.status === "fulfilled") {
+                const details = userResponse.value.data.details
+                isLiked = details.liked.indexOf(props.match.params.id) > -1
+                isDisliked = details.disliked.indexOf(props.match.params.id) > -1
+            }
+
+            dispatch({
+                type: 'success',
+                film: film,
+                isLiked: isLiked,
+                isDisliked: isDisliked
+            })
+
+            filmDispatch({
+                type: 'field',
+                fieldName: 'comments',
+                payload: filmData.comments
             })
         }
         handleGetFilm()
-    }, [props.match.params.id, dispatch])
+    }, [props.match.params.id, filmDispatch, user.auth])
+
+    useEffect(() => {
+        async function handleLike() {
+
+            if (likeAction === null) return
+            
+            if(!user.auth) {
+
+                return
+            }
+
+            await filmApi.like(film.id, { action: likeAction })
+                .then(async res => {
+                    let data = res.data
+                    data.img = `${process.env.REACT_APP_API_URL}films/${res.data.id}/thumbnail?width=poster`
+                    data.video = `${process.env.REACT_APP_API_URL}films/${res.data.id}/video`
+                    await userApi.me({ details: true })
+                        .then(res => {
+                            const details = res.data.details
+                            const isLiked = details.liked.indexOf(data.id) > -1
+                            const isDisliked = details.disliked.indexOf(data.id) > -1
+                            dispatch({
+                                type: 'success',
+                                film: data,
+                                isLiked: isLiked,
+                                isDisliked: isDisliked
+                            })
+
+                        })
+                })
+                .catch(err => {
+                    dispatch({
+                        type: 'error'
+                    })
+                    console.error(err)
+                })
+        }
+
+        if (isLikeButtonClicked) handleLike()
+    }, [film.id, isLikeButtonClicked, likeAction])
 
     const handleTruncate = (e) => {
         e.preventDefault();
-        setIsDescExpanded(!isDescExpanded)
+        dispatch({
+            type: 'field',
+            fieldName: 'isDescExpanded',
+            payload: !isDescExpanded
+        })
     }
 
-
-
     const handleLike = (action) => {
-        filmApi.like(film.id, action).then(res => {
-
+        if (isLikeButtonClicked) return
+        dispatch({
+            type: 'like',
+            payload: action
         })
+
     };
 
     const TruncateButton = (title) => {
@@ -126,16 +190,15 @@ function FilmPreview(props) {
                             <Col xs={4} sm={4}>
                                 <p><FontAwesomeIcon icon="eye" /> &ensp;{film.views}</p>
                             </Col>
-                            <Col xs={4} sm={4} className="text-right">
-
-                                <p style={{ cursor: "pointer" }}
+                            <Col xs={4} sm={4} className="text-right d-flex justify-content-end">
+                                <p style={{ cursor: "pointer", width: "fit-content", width: "-moz-fit-content" }} className={isLiked ? 'blue' : ''}
                                     onClick={() => handleLike('like')}>
                                     <FontAwesomeIcon icon="thumbs-up" />
                                     &ensp;{film.likes}
                                 </p>
                             </Col>
                             <Col xs={4} sm={4}>
-                                <p style={{ cursor: "pointer" }}
+                                <p style={{ cursor: "pointer", width: "fit-content", width: "-moz-fit-content" }} className={isDisliked ? 'blue' : ''}
                                     onClick={() => handleLike('dislike')}>
                                     <FontAwesomeIcon icon="thumbs-down" />
                                     &ensp;{film.dislikes}
@@ -143,7 +206,7 @@ function FilmPreview(props) {
                             </Col>
                             <Col sm={12} className="mt-4 mb-4 divider" />
 
-                            <Col sm={12} style={{ whiteSpace: 'pre-line' }}>
+                            <Col sm={12} style={{ whiteSpace: 'pre-line', textAlign: 'justify' }}>
                                 <TextTruncate line={!isDescExpanded && 2}
                                     truncateText="…"
                                     text={film.description}

@@ -9,9 +9,9 @@ import HomeComponent from './components/homePage';
 import FilmComponent from './components/filmPage';
 import LoginComponent from './components/auth/login';
 import RegisterComponent from './components/auth/register';
-import SearchComponent from './components/Search/SearchComponent';
+import SearchComponent from './components/searchPage';
 import PlaylistsPage from './components/playlistsPage';
-import AddFilmComponent from './components/add/add-film';
+import AddFilmComponent from './components/add/filmAdd';
 import NotFoundComponent from './components/notFound';
 
 import { Route, BrowserRouter as Router } from 'react-router-dom';
@@ -37,18 +37,16 @@ import {
 import { Switch } from "react-router";
 import ResetPasswordComponent from './components/auth/resetPassword';
 import ForgotPasswordComponent from './components/auth/forgotPassword';
-import { PrivateRoute } from './helpers/PrivateRoute';
-import ProfileComponent from './components/Profile/ProfileComponent';
+import PrivateRoute from './helpers/components/privateRoute';
+import ProfileComponent from './components/profilePage';
 
 import { Toast } from 'react-bootstrap'
-import ToastContext from './helpers/toastContext'
-
-
+import ToastContext from './helpers/toast/toastContext'
 
 library.add(faSearch, faPlus, faThumbsUp, faThumbsDown, faEye, faPlay, faFilter, faCaretUp, faCaretDown, faEllipsisV,
     faSortDown, faSortUp, faTrashAlt, faTimes);
 
-const pathName = process.env.REACT_APP_PATH_NAME;
+const pathName = process.env.REACT_APP_PATH_NAME
 
 const HomePageLazy = lazy(() => import('./components/homePage'));
 const FilmPageLazy = lazy(() => import('./components/filmPage'));
@@ -103,7 +101,7 @@ function App(props) {
 
                         <Route exact path={[`${pathName}search`, `${pathName}search/login`, `${pathName}search/register`, `${pathName}search/reset/:token`, `${pathName}search/forgot`]} component={SearchComponent} />
 
-                        <Route exact path={[`${pathName}add`, `${pathName}add/login`, `${pathName}add/register`, `${pathName}add/reset/:token`, `${pathName}add/forgot`]} component={AddFilmComponent} />
+                        <PrivateRoute exact path={[`${pathName}add`, `${pathName}add/login`, `${pathName}add/register`, `${pathName}add/reset/:token`, `${pathName}add/forgot`]} component={AddFilmComponent} />
 
                         <Route exact path={[`${pathName}playlists`, `${pathName}playlists/login`, `${pathName}playlists/register`, `${pathName}playlists/reset/:token`,
                         `${pathName}playlists/forgot`]} component={PlaylistsPage} />
