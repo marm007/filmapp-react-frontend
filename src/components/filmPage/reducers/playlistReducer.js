@@ -3,7 +3,10 @@ export const filmPlaylistInitialState = {
     playlist: null,
     currentFilm: null,
     currentFilmIndex: 0,
-    isLoading: true,
+    isLoading: false,
+    isRemovingPlaylist: false,
+    isRemovingFilm: false,
+    removingFilmId: null,
     headerHeight: null,
     playerHeight: null
 }
@@ -26,17 +29,40 @@ export const filmPlaylistReducer = (state, action) => {
             }
         }
         case 'clear': {
-            return { ...filmPlaylistInitialState }
+            return filmPlaylistInitialState 
         }
         case 'remove-film': {
             return {
                 ...state,
-                currentFilm: action.payload === state.currentFilm ? null : state.currentFilm,
-                currentFilmIndex: action.payload === state.currentFilm ? 0 : state.currentFilmIndex - 1,
+                removingFilmId: action.payload,
+                isRemovingFilm: true
+            }
+        }
+        case 'remove-film-success': {
+
+            if (!state.removingFilmId)
+                return {
+                    ...state,
+                    isRemovingFilm: false
+                }
+
+            const filtered = state.playlist.films.filter(film => film.id !== state.removingFilmId)
+            return {
+                ...state,
+                currentFilm: state.removingFilmId === state.currentFilm ? null : state.currentFilm,
+                currentFilmIndex: state.removingFilmId === state.currentFilm ? 0 : filtered.findIndex(film => film.id === state.currentFilm) + 1,
                 playlist: {
                     ...state.playlist,
-                    films: state.playlist.films.filter(film => film.id !== action.payload)
-                }
+                    films: filtered
+                },
+                isRemovingFilm: false,
+            }
+        }
+        case 'error': {
+            return {
+                ...state,
+                isLoading: false,
+                error: action.payload
             }
         }
         default:

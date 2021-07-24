@@ -316,13 +316,18 @@ function NavbarComponent(props) {
                         {
                             user.auth ?
                                 (
-
                                     <Avatar onClick={handleProfileMenuOpen}
-                                        className="pr-2 pl-2 custom-avatar m-button">{user.name.toUpperCase().charAt(0)}</Avatar>
+                                        className="pr-2 pl-2 custom-avatar m-button">
+                                        {user.name.toUpperCase().charAt(0)}
+                                    </Avatar>
 
                                 ) :
-                                (<Nav.Link className="pr-2 pl-2" eventKey="login "
-                                    onClick={() => handleLogin()}>Login</Nav.Link>)
+                                (
+                                    <Nav.Link className="pr-2 pl-2" eventKey="login "
+                                        onClick={() => handleLogin()}>
+                                        Login
+                                    </Nav.Link>
+                                )
                         }
                     </Nav>
 
@@ -331,12 +336,11 @@ function NavbarComponent(props) {
             </Col>
 
             <Menu
+                id="film-navbar-menu"
                 anchorEl={anchorEl}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                keepMounted
                 open={Boolean(anchorEl)}
                 onClose={handleProfileMenuClose}>
-                <MenuItem key="placeholder" style={{ display: "none" }} />
                 <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
                 <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
             </Menu>

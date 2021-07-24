@@ -8,47 +8,41 @@ import * as playlistApi from '../../services/playlistService'
 import ToastContext from '../../helpers/toast/toastContext';
 import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
 import { playlistDropdownMenuReducer, playlistDropdownMenuInitialState } from './playlistDropdownMenuReducer'
-import FilmDispatch from '../../helpers/film/filmContext';
 import UserContext from '../../helpers/user/userContext';
 
-function PlaylistDropdownMenu(props) {
-   
+function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isPreview, filmDispatch }) {
+
     const { user } = useContext(UserContext)
-    const filmDispatch = useContext(FilmDispatch)
 
     const { createToast } = useContext(ToastContext);
     const [state, dispatch] = useReducer(playlistDropdownMenuReducer, playlistDropdownMenuInitialState);
 
-    const { playlists, title, isLoading, isAllFetched, error } = state
+    const { playlists, title, isLoading, isAllFetched, isCreating, isAdding, playlistToUpgrade, error } = state
 
     const handleOnPlaylistDropdownMenuBottom = useCallback(() => {
-        if (!isLoading && !isAllFetched) {
+        if (!isLoading && !isAllFetched && !isCreating && !isAdding) {
             dispatch({
                 type: 'load'
             })
         }
-    }, [isLoading, isAllFetched])
+    }, [isLoading, isAllFetched, isCreating, isAdding])
 
     const scrollRef = useBottomScrollListener(handleOnPlaylistDropdownMenuBottom);
 
     useEffect(() => {
         async function getMyPlaylists() {
-            if(!user.auth) return 
-            
             await userApi.me({ playlists: true, skip: playlists.length, limit: 10 })
                 .then(res => {
 
                     let result = res.data.playlists
 
                     result.forEach(playlist => {
-                        playlist.contains = playlist.films.indexOf(props.filmID) > -1
+                        playlist.contains = playlist.films.indexOf(filmID) > -1
                     });
 
-                    console.log('LOADED...')
                     dispatch({
-                        type: 'success',
-                        count: result.length,
-                        payload: [...playlists, ...result]
+                        type: 'load-success',
+                        payload: result
                     })
                 })
                 .catch(err => {
@@ -57,60 +51,79 @@ function PlaylistDropdownMenu(props) {
 
         if (isLoading) getMyPlaylists()
 
-    }, [props.filmID, playlists, isLoading])
+    }, [filmID, playlists, isLoading])
 
-    const handleAddToPlaylist = async (event, index, id, title) => {
-        console.log('lsalsala')
-        let tmp = playlists;
-        tmp[index].contains = !tmp[index].contains;
+    useEffect(() => {
 
-        let body = { films_id: [props.filmID] };
+        async function creatPlaylist() {
+            const body = { title: title, films_id: [filmID] };
 
-        body = tmp[index].contains ? { ...body, is_remove_films: false } : { ...body, is_remove_films: true }
-        console.log(body)
-        const message = tmp[index].contains ? `Added to playlist ${title}` : `Deleted from playlist ${title}`
-        await playlistApi.partialUpdate(id, body)
-            .then(res => {
-                console.log(res)
-                createToast(message)
-                dispatch({
-                    type: 'field',
-                    fieldName: 'playlists',
-                    payload: tmp
+            await playlistApi.create(body)
+                .then(res => {
+                    createToast(`Created playlist ${title}`)
+                    handlePlaylistClose()
 
                 })
-                filmDispatch({
-                    type: 'field',
-                    fieldName: 'reloadPlaylist',
-                    payload: true
-                })
-            })
-            .catch(err => console.error(err))
+                .catch(err => console.error(err))
+        }
 
+        if (isCreating) creatPlaylist()
+
+    }, [isCreating, title, createToast, handlePlaylistClose, filmID,])
+
+    useEffect(() => {
+        async function addToPlaylist() {
+
+            let body = { films_id: [filmID] };
+
+            body = playlistToUpgrade.contains ? { ...body, is_remove_films: true } :  { ...body, is_remove_films: false } 
+
+            const message = playlistToUpgrade.contains ? `Deleted from playlist ${playlistToUpgrade.title}` : `Added to playlist ${playlistToUpgrade.title}`
+
+            await playlistApi.partialUpdate(playlistToUpgrade.id, body)
+                .then(res => {
+                    dispatch({
+                        type: 'add-success',
+                        playlist: playlistToUpgrade
+                    })
+                    
+                    if (isPreview) {
+                        filmDispatch({
+                            type: 'field',
+                            fieldName: 'reloadPlaylist',
+                            payload: true
+                        })
+                    }
+                    createToast(message)
+                })
+                .catch(err => console.error(err))
+        }
+        if (isAdding && playlistToUpgrade) addToPlaylist()
+    }, [isAdding, playlistToUpgrade, createToast, filmDispatch, filmID, isPreview])
+
+    const handleAddToPlaylist = (playlist) => {
+        dispatch({
+            type: 'add',
+            payload: playlist
+        })
     };
 
-    const handleCreatePlaylist = async (e) => {
+    const handleCreatePlaylist = (e) => {
         e.stopPropagation()
-        const body = { title: title, films: [props.filmID] };
 
-        await playlistApi.create(body)
-            .then(res => {
-                console.log(res)
-                createToast(`Created playlist ${title}`)
-                props.handlePlaylistClose()
-
-            })
-            .catch(err => console.error(err))
+        dispatch({
+            type: 'create'
+        })
     };
 
     const playlistItems = () => playlists.map((playlist, index) => {
-        console.log(props.filmID)
+        console.log(filmID)
 
         return <Col xs={12} sm={12} key={playlist.id + '_random'} >
             <Row className="pl-4 pr-4" >
                 <Col xs={12} sm={12} className="p-0 mb-2" >
                     <Form.Check
-                        onChange={(e) => handleAddToPlaylist(e, index, playlist.id, playlist.title)}
+                        onChange={() => handleAddToPlaylist(playlist)}
                         custom
                         inline
                         checked={playlist.contains}
@@ -150,7 +163,6 @@ function PlaylistDropdownMenu(props) {
             <FormControl
                 isInvalid={error !== ''}
                 onChange={(e) => {
-                    console.log('lxlls')
                     dispatch({
                         type: 'field',
                         fieldName: 'title',

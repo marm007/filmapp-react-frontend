@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useCallback } from 'react';
+import React, { useEffect, useReducer, useCallback, useContext } from 'react';
 
 import { Col, Row, Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,59 +12,87 @@ import { checkIfPlaylistButtonClick } from '../../helpers'
 
 import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
 
-import {recommendationsReducer, recommendationsInitialState} from './reducers/recommendationsReducer'
+import { recommendationsReducer, recommendationsInitialState } from './reducers/recommendationsReducer'
 import { recommendationsMaxFetchCount } from "../../config"
+import FilmContext from '../../helpers/film/filmContext';
 
 function FilmsRecommendations(props) {
 
+    const [filmState, filmDispatch] = useContext(FilmContext)
 
     const [state, dispatch] = useReducer(recommendationsReducer, recommendationsInitialState)
 
-    const { films, isLoading, isAllFetched, id } = state
+    const { films, isLoading, isAllFetched, isInitialLoaded, id, error } = state
 
     const handleRecommendationsOnBottom = useCallback(() => {
-        if (!isLoading && !isAllFetched) {
+        if (!isLoading && !isAllFetched && isInitialLoaded && !error && id) {
             dispatch({
                 type: 'load'
             })
         }
-    }, [isLoading, isAllFetched])
+    }, [isLoading, isAllFetched, isInitialLoaded, error, id])
 
-    useBottomScrollListener(handleRecommendationsOnBottom, { triggerOnNoScroll: true })
+    useBottomScrollListener(handleRecommendationsOnBottom)
 
     useEffect(() => {
-        async function fetchData() {
-            await filmApi.all({ exclude: props.match.params.id, skip: films.length, limit: recommendationsMaxFetchCount }).then(res => {
+        async function initialLoad() {
+            await filmApi.all({ exclude: props.match.params.id, limit: recommendationsMaxFetchCount }).then(res => {
                 let films = res.data;
 
                 films.forEach(film => {
                     film.img = `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small`
 
                 });
-                console.log(films)
+
+                dispatch({
+                    type: 'initial-success',
+                    films: films,
+                    id: props.match.params.id
+                })
+            })
+        }
+
+        dispatch({
+            type: 'clear'
+        })
+
+        if (filmState.isPreviewLoaded) initialLoad()
+    }, [props.match.params.id, filmState.isPreviewLoaded])
+
+    useEffect(() => {
+        if (filmState.error) {
+            dispatch({
+                type: 'error',
+                payload: filmState.error
+            })
+        } 
+    }, [filmState.error])
+
+    useEffect(() => {
+        async function fetchData() {
+            await filmApi.all({ exclude: id, skip: films.length, limit: recommendationsMaxFetchCount }).then(res => {
+                let films = res.data;
+
+                films.forEach(film => {
+                    film.img = `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small`
+
+                });
+
                 dispatch({
                     type: 'success',
                     payload: films
                 })
             })
         }
-        if(!isLoading && id !== props.match.params.id) {
-            console.log('id', id)
-            dispatch({
-                type: 'clear',
-                payload: props.match.params.id
-            })
-        }
-
-        if(isLoading) fetchData()
-    }, [isLoading, id, films, props.match.params.id])
+        if (isLoading && films && id) fetchData()
+    }, [isLoading, id, films])
 
     return (
 
         <Col>
 
             {
-                films.map((film, index) => {
+                films && films.map((film, index) => {
 
                     return (
                         <Col className="film-play-outer-container p-0 mb-4"
@@ -91,6 +119,8 @@ function FilmsRecommendations(props) {
 
                                         </Col>
                                         <PlaylistAddButtonComponent
+                                            isPreview={true}
+                                            filmDispatch={filmDispatch}
                                             index={index}
                                             filmID={film.id} />
                                     </Row>
@@ -109,7 +139,7 @@ function FilmsRecommendations(props) {
 
             {
                 !isAllFetched && <div style={{ height: 32 + 'px' }} className="d-flex justify-content-center">
-                    {isLoading && <Spinner animation="border" />}
+                    {(isLoading || !isInitialLoaded) && !error && <Spinner animation="border" />}
                 </div>
             }
         </Col>

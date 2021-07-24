@@ -1,3 +1,5 @@
+import { filmsMaxFetchCount, playlistsMaxFetchCount } from "../../config"
+
 export const initialProfileState = {
     data: [],
     isLoading: true,
@@ -19,10 +21,10 @@ export function profileReducer(state, action) {
             return {
                 ...state,
                 isLoading: false,
-                isAllFetched: action.filmsCount < 10 && action.playlistsCount < 10,
+                isAllFetched: action.filmsCount < filmsMaxFetchCount && action.playlistsCount < playlistsMaxFetchCount,
                 filmsCount: state.filmsCount + action.filmsCount,
                 playlistsCount: state.playlistsCount + action.playlistsCount,
-                data: [...state.data, ...action.data]
+                data: new Set([...state.data, ...action.data])
             }
         }
         case 'load': {

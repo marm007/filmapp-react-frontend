@@ -1,9 +1,11 @@
 import { recommendationsMaxFetchCount } from "../../../config"
 
 export const recommendationsInitialState = {
-    films: [],
-    isLoading: true,
+    films: null,
+    id: null,
+    isLoading: false,
     isAllFetched: false,
+    isInitialLoaded: false,
     error: null,
 }
 
@@ -16,9 +18,14 @@ export function recommendationsReducer(state, action) {
             }
         }
         case 'clear': {
+            return recommendationsInitialState
+        }
+        case 'initial-success': {
             return {
                 ...recommendationsInitialState,
-                id: action.payload
+                films: action.films,
+                id: action.id,
+                isInitialLoaded: true
             }
         }
         case 'load': {
@@ -40,7 +47,6 @@ export function recommendationsReducer(state, action) {
         case 'error': {
             return {
                 ...recommendationsInitialState,
-                isLoading: false,
                 error: action.payload
             }
         }

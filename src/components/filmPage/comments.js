@@ -12,40 +12,66 @@ import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener
 import { commentsReducer, commentsInitialState } from './reducers/commentsReducer';
 import { commentsMaxFetchCount } from "../../config"
 import UserContext from '../../helpers/user/userContext';
+import FilmContext from '../../helpers/film/filmContext';
+import { displayCommentDate } from '../../helpers';
 
 function Comments(props) {
 
     const { user } = useContext(UserContext);
+    const [filmState, filmDispatch] = useContext(FilmContext)
 
     const [state, dispatch] = useReducer(commentsReducer, commentsInitialState)
-    const { comments, commentsLength, isLoading, isAllFetched, commentsLoaded, text, isAdding, error } = state
+    const { comments, commentsCount, text, isInitialLoaded, isLoading, isAllFetched, isAdding, id, error } = state
 
     const handleOnCommentsBottom = useCallback(() => {
-        if (!isLoading && !isAllFetched && commentsLoaded && !error) {
+        if (!isLoading && !isAllFetched && isInitialLoaded && !isAdding && !error && id) {
             dispatch({
                 type: 'load'
             })
         }
-    }, [isLoading, isAllFetched, commentsLoaded, error])
+    }, [isLoading, isAllFetched, isInitialLoaded, isAdding, error, id])
 
-    useBottomScrollListener(handleOnCommentsBottom, { triggerOnNoScroll: true })
+    useBottomScrollListener(handleOnCommentsBottom)
 
     useEffect(() => {
-        if (props.comments === null) return
-
         dispatch({
             type: 'clear',
-            payload: props.comments
+            id: props.match.params.id
         })
-    }, [props.comments])
+    }, [props.match.params.id])
+
+    useEffect(() => {
+        if (filmState.error) {
+            dispatch({
+                type: 'error',
+                payload: filmState.error
+            })
+        }
+    }, [filmState.error])
+
+    useEffect(() => {
+        function getCommentsFromContext() {
+            dispatch({
+                type: 'initial-success',
+                comments: filmState.comments,
+                commentsCount: filmState.commentsCount,
+            })
+
+            filmDispatch({
+                type: 'reset-comments'
+            })
+        }
+
+        if (filmState.comments && filmState.commentsCount !== null) getCommentsFromContext()
+    }, [filmState.comments, filmState.commentsCount, filmDispatch])
 
     useEffect(() => {
         async function loadComments() {
-            await commentApi.all(props.match.params.id, { skip: commentsLength, limit: commentsMaxFetchCount })
+            await commentApi.all(id, { skip: comments.length, limit: commentsMaxFetchCount })
                 .then(res => {
                     dispatch({
                         type: 'load-success',
-                        payload: res.data,
+                        payload: res.data
                     })
                 })
                 .catch(err => {
@@ -54,38 +80,44 @@ function Comments(props) {
                     })
                 })
         }
+        if (isLoading && isInitialLoaded && !isAdding && comments && id) loadComments()
+    }, [isLoading, isAdding, id, comments, isInitialLoaded])
 
 
-        if (isLoading && commentsLoaded) loadComments()
-    }, [commentsLength, isLoading, commentsLoaded, props.match.params.id])
+    useEffect(() => {
+        const addComment = async () => {
+            const comment = { text: text }
 
-    const addComment = async () => {
-        if (!user.auth) {
+            await commentApi.create(id, comment)
+                .then(res => {
+                    dispatch({
+                        type: 'add-success',
+                        payload: res.data
+                    })
+                })
+                .catch(err => {
+                    dispatch({
+                        type: 'error',
+                        payload: err.response.status
+                    })
+                })
+        };
+        if (isAdding && !isLoading && id) addComment()
+    }, [isAdding, isLoading, id, text])
 
-            return
+    const handleAddComment = () => {
+        if (text) {
+            dispatch({
+                type: 'add'
+            })
+        } else {
+
         }
+    }
 
-        if (isAdding) return
-        const comment = { text: text }
+    const handleRemoveComment = (id) => {
 
-        dispatch({
-            type: 'add',
-        })
-
-        await commentApi.create(props.match.params.id, comment)
-            .then(res => {
-                dispatch({
-                    type: 'add-success',
-                    payload: res.data
-                })
-            })
-            .catch(err => {
-                dispatch({
-                    type: 'error'
-                })
-                console.error(err)
-            })
-    };
+    }
 
     const sortComments = (e) => {
         let path = '';
@@ -108,23 +140,29 @@ function Comments(props) {
 
     };
 
-    const displayDate = (comment) => {
-        let date = new Date(Date.parse(comment.createdAt));
-        let time = (('0' + date.getDate()).slice(-2) + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-'
-            + ('0' + date.getFullYear()).slice(-2)
-            + ' o ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2))
-        return time;
-    };
-
-    const handleRemoveComment = (id) => {
-
-    }
 
     return (
 
         <Col>
-
-            <Col className="p-0" sm={12}>
+            <Col className="p-0 mt-4 mb-4" sm={12}>
+                <Row>
+                    <Col xs={7} sm={5} md={4} className="d-flex align-items-center ">
+                        {commentsCount !== null && <span>{commentsCount}{commentsCount === 1 ? ' comment' : ' comments'} </span>}
+                    </Col>
+                    <Col xs={2} sm={2}>
+                        <DropdownButton
+                            alignRight
+                            variant="secondary"
+                            title="Sort"
+                            id="dropdown-button-drop-down"
+                            onSelect={k => sortComments(k)}>
+                            <Dropdown.Item eventKey="commentByDate">By date</Dropdown.Item>
+                            <Dropdown.Item eventKey="commentByName">By author name</Dropdown.Item>
+                        </DropdownButton>
+                    </Col>
+                </Row>
+            </Col>
+            <Col className="p-0 mb-4" sm={12}>
                 <Row>
                     <Col xs={8} sm={10}>
                         <TextField
@@ -141,47 +179,29 @@ function Comments(props) {
                     <Col xs={2} sm={2}>
                         <Button disabled={isAdding}
                             className="mt-3" variant="primary"
-
-                            onClick={() => addComment()}>
+                            onClick={handleAddComment}>
                             Submit
                         </Button>
                     </Col>
                 </Row>
             </Col>
-            <Col className="p-0 mt-4 mb-4" sm={12}>
-                <Row>
-                    <Col xs={7} sm={5} md={4}>
-                    </Col>
-                    <Col xs={2} sm={2}>
-                        <DropdownButton
-                            alignRight
-                            variant="secondary"
-                            title="Sort"
-                            id="dropdown-button-drop-down"
-                            onSelect={k => sortComments(k)}>
-                            <Dropdown.Item eventKey="commentByDate">By date</Dropdown.Item>
-                            <Dropdown.Item eventKey="commentByName">By author name</Dropdown.Item>
-                        </DropdownButton>
-                    </Col>
-                </Row>
-            </Col>
+
             {
                 isAdding && <div style={{ height: 32 + 'px' }} className="d-flex justify-content-center">
                     <Spinner animation="border" />
                 </div>
             }
             {
-
                 comments && comments.map(comment => {
                     return (
                         <Col className="p-0 mt-4 playlist-remove-container" sm={12} key={comment.id}>
                             <Row className="pl-3">
 
                                 <p className="m-0 font-weight-bold">
-                                    <small className="m-0 font-weight-bold">{comment.author_name}</small>
+                                    <small className="m-0 font-weight-bold">{comment.author_name}&nbsp;</small>
                                 </p>
                                 <p>
-                                    <small className="m-0">{displayDate(comment)}</small>
+                                    <small className="m-0">{displayCommentDate(comment)}</small>
                                 </p>
                                 {
                                     user.id === comment.author_id &&
@@ -192,9 +212,7 @@ function Comments(props) {
                                             style={{ borderRadius: 20 + "px", width: 24 + "px", height: 24 + "px" }}
                                             className="m-button "
                                             onClick={() => handleRemoveComment(comment.id)}>
-                                            {
-                                                <FontAwesomeIcon icon="trash-alt" />
-                                            }
+                                            <FontAwesomeIcon icon="trash-alt" />
                                         </ButtonBase>
                                     </Col>
                                 }
@@ -211,7 +229,7 @@ function Comments(props) {
 
             {
                 !isAllFetched && <div style={{ height: 32 + 'px' }} className="d-flex justify-content-center">
-                    {(isLoading) && <Spinner animation="border" />}
+                    {(isLoading || !isInitialLoaded) && !error && <Spinner animation="border" />}
                 </div>
             }
 

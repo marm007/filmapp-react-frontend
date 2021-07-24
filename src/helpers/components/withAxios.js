@@ -4,16 +4,18 @@ import axios from '../axios'
 import UserContext from '../user/userContext';
 
 const WithAxios = ({ children }) => {
+
     const { logout } = useContext(UserContext);
 
     useMemo(() => {
+        console.log('memo')
         axios.interceptors.response.use((response) => {
             return response
         }, (error) => {
             const isAuth = localStorage.getItem('accessToken')
             const originalRequest = error.config
 
-            if (error.response.status === 401 && isAuth && !originalRequest._retry) {
+            if (error.response && error.response.status === 401 && isAuth && !originalRequest._retry) {
                 if (error.config.url === 'auth/refresh') {
                     logout()
                     return Promise.reject(error)

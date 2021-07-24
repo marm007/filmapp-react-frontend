@@ -1,3 +1,10 @@
+export const initialState = {
+    films: null,
+    isLoading: true,
+    isAllFetched: false,
+    error: '',
+}
+
 export const homePageReducer = (state, action) => {
     switch (action.type) {
         case 'field': {
@@ -17,7 +24,7 @@ export const homePageReducer = (state, action) => {
         case 'success': {
             return {
                 ...state,
-                films: [...state.films, ...action.payload],
+                films: new Set([...state.films, ...action.payload]),
                 isLoading: false,
                 isAllFetched: action.payload.length < 12,
                 error: ''
@@ -34,11 +41,4 @@ export const homePageReducer = (state, action) => {
         default:
             return state
     }
-}
-
-export const initialState = {
-    films: [],
-    isLoading: true,
-    isAllFetched: false,
-    error: '',
 }

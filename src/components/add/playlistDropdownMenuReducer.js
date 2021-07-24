@@ -1,3 +1,15 @@
+
+export const playlistDropdownMenuInitialState = {
+    playlists: [],
+    isLoading: true,
+    isAllFetched: false,
+    isCreating: false,
+    isAdding: false,
+    playlistToUpgrade: null,
+    title: '',
+    error: '',
+}
+
 export function playlistDropdownMenuReducer(state, action) {
     switch (action.type) {
         case 'field': {
@@ -14,33 +26,51 @@ export function playlistDropdownMenuReducer(state, action) {
                 isAllFetched: false,
             }
         }
-        case 'success': {
+        case 'load-success': {
             return {
                 ...state,
-                playlists: action.payload,
-                isAllFetched: action.count === 0,
+                playlists: [...state.playlists, ...action.payload],
+                isLoading: false,
+                isAllFetched: action.payload < 10,
                 error: '',
-                isLoading: false
             }
+        }
+        case 'create': {
+            return {
+                ...state,
+                isLoading: false,
+                isCreating: true
+            }
+        }
+        case 'add': {
+            return {
+                ...state,
+                isLoading: false,
+                isAdding: true,
+                playlistToUpgrade: action.payload
+            }
+        }
+        case 'add-success': {
+            return state.playlistToUpgrade ? {
+                ...state,
+                isAdding: false,
+                playlists: state.playlists.map(playlist => {
+                    if (playlist.id === state.playlistToUpgrade.id) return { ...playlist, contains: !playlist.contains }
+                    else return playlist
+                }),
+                playlistToUpgrade: null
+            } : state
         }
         case 'error':
             return {
                 ...state,
                 isLoading: false,
                 isAllFetched: false,
-                error: 'Bad',
+                error: action.payload,
                 title: ''
             }
         default:
             return state
 
     }
-}
-
-export const playlistDropdownMenuInitialState = {
-    playlists: [],
-    isAllFetched: false,
-    title: '',
-    isLoading: true,
-    error: '',
 }

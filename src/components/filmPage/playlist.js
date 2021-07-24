@@ -13,23 +13,35 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import '../playlistsPage/playlist.css';
 
 import * as playlistApi from '../../services/playlistService'
-import FilmDispatch from '../../helpers/film/filmContext';
+import FilmContext from '../../helpers/film/filmContext';
 
 import { filmPlaylistInitialState, filmPlaylistReducer } from './reducers/playlistReducer';
 
 import UserContext from '../../helpers/user/userContext';
 import RemoveButton from '../../helpers/components/removeButton';
+import ChangePrivacyButton from '../../helpers/components/changePrivacyButton';
 
 function Playlist(props) {
 
     let location = useLocation()
 
     const { user } = useContext(UserContext)
-    const filmDispatch = useContext(FilmDispatch)
+    const [filmState, filmDispatch] = useContext(FilmContext)
 
     const [state, dispatch] = useReducer(filmPlaylistReducer, filmPlaylistInitialState)
 
-    const { playlist, isLoading, currentFilm, currentFilmIndex, headerHeight, playerHeight } = state
+    const {
+        playlist,
+        isLoading,
+        isRemovingPlaylist,
+        isRemovingFilm,
+        removingFilmId,
+        currentFilm,
+        currentFilmIndex,
+        headerHeight,
+        playerHeight,
+        error
+    } = state
 
     const clearPlaylist = () => {
         dispatch({ type: 'clear' })
@@ -49,9 +61,16 @@ function Playlist(props) {
         dispatch({
             type: 'field',
             fieldName: 'playerHeight',
-            payload: props.playerHeight
+            payload: filmState.playerHeight
         });
-    }, [props.playerHeight])
+    }, [filmState.playerHeight])
+
+    useEffect(() => {
+        dispatch({
+            type: 'error',
+            payload: filmState.error
+        });
+    }, [filmState.error])
 
 
     useEffect(() => {
@@ -89,9 +108,9 @@ function Playlist(props) {
                 })
         }
 
-        if (props.reloadPlaylist) handleReloadPlaylist()
+        if (filmState.reloadPlaylist && playlist) handleReloadPlaylist()
 
-    }, [props.reloadPlaylist, playlist, filmDispatch, props.match.params.id])
+    }, [filmState.reloadPlaylist, playlist, filmDispatch, props.match.params.id])
 
 
 
@@ -127,153 +146,193 @@ function Playlist(props) {
                 clearPlaylist()
             })
         }
-        handleGetPlaylist()
-    }, [props.match.params.id, location.search])
+        if (!error && filmState.isPreviewLoaded) handleGetPlaylist()
+    }, [props.match.params.id, location.search, error, filmState.isPreviewLoaded])
 
 
-
-    const handleRemovePlaylist = async () => {
-
-        await playlistApi.remove(playlist.id)
-            .then(res => {
-                clearPlaylist()
-            })
-            .catch(err => {
-                console.error(err)
-            })
-    }
-
-    const handleRemoveFromPlaylist = async (id) => {
-
-        await playlistApi.partialUpdate(playlist.id, { films_id: [id], is_remove_films: true })
-            .then(res => {
-                dispatch({
-                    type: 'remove-film',
-                    payload: id
+    useEffect(() => {
+        async function removePlaylist() {
+            await playlistApi.remove(playlist.id)
+                .then(res => {
+                    console.log('remvode', res)
+                    clearPlaylist()
                 })
-            })
-            .catch(err => {
-                console.error(err)
-            })
+                .catch(err => {
+                    console.log('remvode', err)
+
+                    console.error(err)
+                })
+        }
+        if (isRemovingPlaylist) removePlaylist()
+    }, [isRemovingPlaylist, playlist])
+
+
+    useEffect(() => {
+        async function removeFilm() {
+            await playlistApi.partialUpdate(playlist.id, { films_id: [removingFilmId], is_remove_films: true })
+                .then(res => {
+                    dispatch({
+                        type: 'remove-film-success'
+                    })
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+        }
+
+        if (isRemovingFilm) removeFilm()
+    }, [isRemovingFilm, playlist, removingFilmId])
+
+    const handleRemovePlaylist = () => {
+
+        if (isRemovingPlaylist) return
+
+        dispatch({
+            type: 'field',
+            fieldName: 'isRemovingPlaylist',
+            payload: true
+        })
     }
 
+    const handleRemoveFromPlaylist = (id) => {
+        if (isRemovingFilm) return
+
+        dispatch({
+            type: 'remove-film',
+            payload: id
+        })
+    }
+
+    const handleChangePrivacy = (id) => {
+
+    }
 
     return (
 
-        playlist && playerHeight &&
+        playlist && playerHeight && !error &&
         <Col className='mb-4'>
-            <Col ref={headerRef}
-                style={{ height: headerHeight + 'px' }}
-                className="playlist-remove-container pt-2 pb-2 playlist-header" sm={12}>
-                <Row className="m-0 p-0 px-2">
-                    <Col className="m-0 p-0" xs={10} sm={10}>
-                        <p className="mb-1">{playlist.title}</p>
-                        <small>{playlist.author_name}</small>
-                        <small
-                            className="playlist-index">- {currentFilmIndex}/{playlist.films.length}</small>
-                    </Col>
-                    {
-                        user.id === playlist.author_id &&
-                        <RemoveButton handleRemove={() => handleRemovePlaylist()} />
-                    }
-                </Row>
+            <Col className='p-0 border'>
+                <Col ref={headerRef}
+                    style={{ height: headerHeight + 'px' }}
+                    className="playlist-remove-container pt-2 pb-2 playlist-header" sm={12}>
+                    <Row className="m-0 p-0 px-2">
+                        <Col className="m-0 p-0" xs={10} sm={10}>
+                            <p className="mb-1 font-weight-bold">{playlist.title}</p>
+                            {
+                                user.id === playlist.author_id &&
+                                <ChangePrivacyButton isPublic={playlist.is_public}
+                                    handleChangePrivacy={() => handleChangePrivacy(playlist.id)} />
+                            }
+                            {
+                                user.id === playlist.author_id && <small>&nbsp;</small>
+
+                            }
+                            <small>{playlist.author_name}&nbsp;</small>
+                            <small
+                                className="playlist-index">- {currentFilmIndex}/{playlist.films.length}</small>
+                        </Col>
+                        {
+                            user.id === playlist.author_id &&
+                            <RemoveButton handleRemove={() => handleRemovePlaylist()} />
+                        }
+                    </Row>
+                </Col>
+                <Col style={{ height: playerHeight - headerHeight + 'px' }}
+                    className="p-0 playlist-container" xs={12} sm={12}>
+                    <PerfectScrollbar
+                        onYReachEnd={() => { }}
+                        onScrollY={() => { }}>
+                        {
+                            playlist.films.map((film, index) => {
+                                return film && !film.isNonExisting ? (
+                                    <Row xs={12} sm={12} className="m-0 p-0 playlist-remove-container" key={film.id}>
+                                        <Col xs={9} sm={9}
+                                            className={index === playlist.films.length - 1 ?
+                                                "mt-3 mb-3 " :
+                                                "mt-3"}
+                                            onClick={() => props.handleRedirect(film.id)} >
+                                            <Row className="m-0 p-0 film-play-outer-container">
+                                                <Col xs={1} sm={1}
+                                                    className="text-center justify-content-center d-flex align-items-center p-0 pl-1" >
+                                                    {
+                                                        (currentFilm === film.id) ?
+                                                            <small>
+                                                                <FontAwesomeIcon style={{ fontWeight: 300 }}
+                                                                    icon="play" />
+                                                            </small>
+                                                            :
+                                                            <small>{index + 1}</small>
+
+                                                    }
+                                                </Col>
+                                                <Col xs={6} sm={6} className="pr-2 pl-2"
+                                                    style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                    <div className="embed-responsive embed-responsive-16by9 z-depth-1-half film-play-container">
+                                                        <img alt="" className="embed-responsive-item film-play-image"
+                                                            src={`${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small`} />
+                                                        <FontAwesomeIcon className="film-play-middle" icon="play" />
+                                                    </div>
+                                                </Col>
+                                                <Col xs={5} sm={5} className="p-0">
+                                                    <TextTruncate line={2} text={film.title}
+                                                        className="mb-0 title font-weight-bold" />
+                                                    <p className="mb-1 author-nick">
+                                                        <small>{film.author_name}</small>
+                                                    </p>
+                                                </Col>
+                                            </Row>
+                                        </Col>
+                                        {
+                                            user.id === playlist.author_id &&
+                                            <RemoveButton handleRemove={() => handleRemoveFromPlaylist(film.id)} />
+                                        }
+
+                                    </Row>
+                                ) : (
+                                    <Row xs={12} sm={12} className="m-0 p-0 playlist-remove-container" key={film.id}>
+                                        <Col xs={9} sm={9}
+                                            className={index === playlist.films.length - 1 ?
+                                                "mt-3 mb-3 " :
+                                                "mt-3"} >
+                                            <Row className="m-0 p-0">
+                                                <Col xs={1} sm={1}
+                                                    className="text-center justify-content-center d-flex align-items-center p-0 pl-1" >
+                                                    <small>{index + 1}</small>
+                                                </Col>
+                                                <Col xs={6} sm={6} className="pr-2 pl-2"
+                                                    style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                    <div className="embed-responsive embed-responsive-16by9 z-depth-1-half film-play-container">
+                                                        <img alt="" className="embed-responsive-item film-play-image"
+                                                            src={image_not_found} />
+                                                    </div>
+                                                </Col>
+                                                <Col xs={5} sm={5} className="p-0">
+                                                    <TextTruncate line={2} text="Not found"
+                                                        className="mb-0 title font-weight-bold" />
+                                                </Col>
+                                            </Row>
+                                        </Col>
+                                        {
+                                            user.id === playlist.author_id &&
+                                            <RemoveButton handleRemove={() => handleRemoveFromPlaylist(film.id)} />
+                                        }
+
+                                    </Row>
+                                )
+                            })
+                        }
+                    </PerfectScrollbar>
+
+                </Col>
             </Col>
-            <Col style={{ height: playerHeight - headerHeight + 'px' }}
-                className="p-0 playlist-container" xs={12} sm={12}>
-                <PerfectScrollbar
-                    onYReachEnd={() => { }}
-                    onScrollY={() => { }}>
-                    {
-                        playlist.films.map((film, index) => {
-                            return film && !film.isNonExisting ? (
-                                <Row xs={12} sm={12} className="m-0 p-0 playlist-remove-container" key={film.id}>
-                                    <Col xs={9} sm={9}
-                                        className={index === playlist.films.length - 1 ?
-                                            "mt-3 mb-3 " :
-                                            "mt-3"}
-                                        onClick={() => props.handleRedirect(film.id)} >
-                                        <Row className="m-0 p-0 film-play-outer-container">
-                                            <Col xs={1} sm={1}
-                                                className="text-center justify-content-center d-flex align-items-center p-0 pl-1" >
-                                                {
-                                                    (currentFilm === film.id) ?
-                                                        <small>
-                                                            <FontAwesomeIcon style={{ fontWeight: 300 }}
-                                                                icon="play" />
-                                                        </small>
-                                                        :
-                                                        <small>{index + 1}</small>
-
-                                                }
-                                            </Col>
-                                            <Col xs={6} sm={6} className="pr-2 pl-2"
-                                                style={{
-                                                    display: 'flex',
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center'
-                                                }}>
-                                                <div className="embed-responsive embed-responsive-16by9 z-depth-1-half film-play-container">
-                                                    <img alt="" className="embed-responsive-item film-play-image"
-                                                        src={`${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small`} />
-                                                    <FontAwesomeIcon className="film-play-middle" icon="play" />
-                                                </div>
-                                            </Col>
-                                            <Col xs={5} sm={5} className="p-0">
-                                                <TextTruncate line={2} text={film.title}
-                                                    className="mb-0 title font-weight-bold" />
-                                                <p className="mb-1 author-nick">
-                                                    <small>{film.author_name}</small>
-                                                </p>
-                                            </Col>
-                                        </Row>
-                                    </Col>
-                                    {
-                                        user.id === playlist.author_id &&
-                                        <RemoveButton handleRemove={() => handleRemoveFromPlaylist(film.id)} />
-                                    }
-
-                                </Row>
-                            ) : (
-                                <Row xs={12} sm={12} className="m-0 p-0 playlist-remove-container" key={film.id}>
-                                    <Col xs={9} sm={9}
-                                        className={index === playlist.films.length - 1 ?
-                                            "mt-3 mb-3 " :
-                                            "mt-3"} >
-                                        <Row className="m-0 p-0">
-                                            <Col xs={1} sm={1}
-                                                className="text-center justify-content-center d-flex align-items-center p-0 pl-1" >
-                                                <small>{index + 1}</small>
-                                            </Col>
-                                            <Col xs={6} sm={6} className="pr-2 pl-2"
-                                                style={{
-                                                    display: 'flex',
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center'
-                                                }}>
-                                                <div className="embed-responsive embed-responsive-16by9 z-depth-1-half film-play-container">
-                                                    <img alt="" className="embed-responsive-item film-play-image"
-                                                        src={image_not_found} />
-                                                </div>
-                                            </Col>
-                                            <Col xs={5} sm={5} className="p-0">
-                                                <TextTruncate line={2} text="Not found"
-                                                    className="mb-0 title font-weight-bold" />
-                                            </Col>
-                                        </Row>
-                                    </Col>
-                                    {
-                                        user.id === playlist.author_id &&
-                                        <RemoveButton handleRemove={() => handleRemoveFromPlaylist(film.id)} />
-                                    }
-
-                                </Row>
-                            )
-                        })
-                    }
-                </PerfectScrollbar>
-
-            </Col>
-
         </Col >
 
 

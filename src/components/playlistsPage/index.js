@@ -42,6 +42,7 @@ function PlaylistsPage(props) {
                     filtered.forEach(playlist => {
                         playlist.img = `${process.env.REACT_APP_API_URL}films/${playlist.film_id}/thumbnail?width=preview`
                     });
+                    
                     console.log('fecasz', result.length)
 
                     dispatch({

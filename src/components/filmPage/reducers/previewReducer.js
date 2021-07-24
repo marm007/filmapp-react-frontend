@@ -46,7 +46,7 @@ export function previewReducer(state, action) {
         }
         case 'error': {
             return {
-                ...initialPreviewState,
+                ...state,
                 isLikeButtonClicked: false,
                 likeAction: null
             }

@@ -1,3 +1,5 @@
+import { playlistsMaxFetchCount } from '../../config'
+
 export const playlistsPageReducer = (state, action) => {
     switch (action.type) {
         case 'field': {
@@ -18,8 +20,8 @@ export const playlistsPageReducer = (state, action) => {
             return {
                 ...state,
                 isLoading: false,
-                playlists: [...state.playlists, ...action.payload],
-                isAllFetched: action.responseCount < 12 ,
+                playlists: new Set([...state.playlists, ...action.payload]),
+                isAllFetched: action.responseCount < playlistsMaxFetchCount ,
                 playlistsCount: state.playlistsCount + action.responseCount,
                 error: ''
             }

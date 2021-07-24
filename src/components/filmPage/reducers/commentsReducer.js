@@ -1,12 +1,13 @@
 import { commentsMaxFetchCount } from "../../../config"
 
 export const commentsInitialState = {
-    comments: [],
-    commentsLength: 0,
-    isLoading: true,
-    isAllFetched: false,
-    commentsLoaded: false,
+    comments: null,
+    commentsCount: null,
     text: '',
+    id: null,
+    isLoading: false,
+    isAllFetched: false,
+    isInitialLoaded: false,
     isAdding: false,
     error: null
 }
@@ -22,24 +23,29 @@ export function commentsReducer(state, action) {
         case 'clear': {
             return {
                 ...commentsInitialState,
-                comments: action.payload,
-                commentsLength: action.payload.length,
-                commentsLoaded: true
+                id: action.id
             }
         }
         case 'load': {
             return {
                 ...state,
-                isLoading: true,
-                isAllFetched: false
+                isLoading: true
+            }
+        }
+        case 'initial-success': {
+            return {
+                ...state,
+                comments: action.comments,
+                commentsCount: action.commentsCount,
+                isAllFetched: action.comments.length < commentsMaxFetchCount,
+                isInitialLoaded: true,
+                error: null,
             }
         }
         case 'load-success': {
-            const newComments = [...state.comments, ...action.payload]
             return {
                 ...state,
-                comments: newComments,
-                commentsLength: newComments.length,
+                comments: [...state.comments, ...action.payload],
                 isLoading: false,
                 isAllFetched: action.payload.length < commentsMaxFetchCount
             }
@@ -47,23 +53,25 @@ export function commentsReducer(state, action) {
         case 'add': {
             return {
                 ...state,
-                isAdding: true
+                isAdding: true,
+                error: null
             }
         }
         case 'add-success': {
             return {
                 ...state,
                 text: '',
+                commentsCount: state.commentsCount + 1,
                 comments: [action.payload, ...state.comments],
                 isAdding: false
             }
         }
         case 'error': {
             return {
-                ...commentsInitialState,
-                isLoading: false,
+                ...state,
                 isAdding: false,
-                error: '',
+                isLoading: false,
+                error: action.payload,
             }
         }
         default: return state

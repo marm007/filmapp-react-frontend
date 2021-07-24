@@ -32,8 +32,11 @@ import {
     faSortUp,
     faSortDown,
     faTrashAlt,
-    faTimes
+    faTimes,
+    faGlobeEurope,
+    faLock
 } from '@fortawesome/free-solid-svg-icons'
+
 import { Switch } from "react-router";
 import ResetPasswordComponent from './components/auth/resetPassword';
 import ForgotPasswordComponent from './components/auth/forgotPassword';
@@ -44,7 +47,7 @@ import { Toast } from 'react-bootstrap'
 import ToastContext from './helpers/toast/toastContext'
 
 library.add(faSearch, faPlus, faThumbsUp, faThumbsDown, faEye, faPlay, faFilter, faCaretUp, faCaretDown, faEllipsisV,
-    faSortDown, faSortUp, faTrashAlt, faTimes);
+    faSortDown, faSortUp, faTrashAlt, faTimes, faGlobeEurope, faLock);
 
 const pathName = process.env.REACT_APP_PATH_NAME
 
@@ -74,7 +77,6 @@ function App(props) {
             }
             <Suspense fallback={<div style={{ width: '100%', height: '100%', backgroundColor: 'black' }}>Wczytywanie</div>}>
                 <Router>
-
                     <Route component={() => <NavbarComponent />} />
 
                     <Route exact path={[`${pathName}login`, `${pathName}film/:id/login`, `${pathName}search/login`, `${pathName}add/login`, `${pathName}playlists/login`]}

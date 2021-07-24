@@ -7,6 +7,14 @@ export const checkIfPlaylistButtonClick = (target) => {
     return false
 }
 
+export const displayCommentDate = (comment) => {
+    let date = new Date(Date.parse(comment.createdAt));
+    let time = (('0' + date.getDate()).slice(-2) + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-'
+        + ('0' + date.getFullYear()).slice(-2)
+        + ' o ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2))
+    return time;
+};
+
 export const parseSearchDate = (film) => {
 
     let date = new Date(Date.parse(film.createdAt));

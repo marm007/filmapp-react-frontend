@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useContext, useReducer } from 'react';
-import { withRouter } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 
 import { Button, Col, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,7 +9,7 @@ import * as userApi from '../../services/userService'
 import { Player } from 'video-react';
 import TextTruncate from 'react-text-truncate';
 
-import FilmDispatch from '../../helpers/film/filmContext'
+import FilmContext from '../../helpers/film/filmContext'
 
 import "../../../node_modules/video-react/dist/video-react.css";
 import { initialPreviewState, previewReducer } from './reducers/previewReducer';
@@ -17,10 +17,13 @@ import UserContext from '../../helpers/user/userContext';
 
 
 function FilmPreview(props) {
+    
+    let history = useHistory()
+    let location = useLocation()
 
     const { user } = useContext(UserContext)
 
-    const filmDispatch = useContext(FilmDispatch)
+    const [filmState, filmDispatch] = useContext(FilmContext)
 
     const playerRef = useCallback(node => {
         if (node !== null) {
@@ -60,15 +63,27 @@ function FilmPreview(props) {
     useEffect(() => {
         async function handleGetFilm() {
             let requests = [filmApi.index(props.match.params.id), filmApi.view(props.match.params.id)]
-            if(user.auth) requests.push(userApi.me({ details: true }))
+            if (user.auth) requests.push(userApi.me({ details: true }))
 
             const [filmResponse, filmViewResponse, userResponse] = await Promise.allSettled(requests);
 
             if (filmResponse.status === "rejected" || filmViewResponse.status === "rejected") {
-                // TODO implement error
+                filmDispatch({
+                    type: 'field',
+                    fieldName: 'error',
+                    payload: true
+                })
                 return
             }
+
+           
             const filmData = filmResponse.value.data
+
+            filmDispatch({
+                type: 'success',
+                comments: filmData.comments,
+                commentsCount: filmData.comments_count
+            })
 
             const film = {
                 ...filmData,
@@ -80,7 +95,7 @@ function FilmPreview(props) {
             let isDisliked = false
 
 
-            if ( userResponse && userResponse.status === "fulfilled") {
+            if (userResponse && userResponse.status === "fulfilled") {
                 const details = userResponse.value.data.details
                 isLiked = details.liked.indexOf(props.match.params.id) > -1
                 isDisliked = details.disliked.indexOf(props.match.params.id) > -1
@@ -93,24 +108,14 @@ function FilmPreview(props) {
                 isDisliked: isDisliked
             })
 
-            filmDispatch({
-                type: 'field',
-                fieldName: 'comments',
-                payload: filmData.comments
-            })
         }
         handleGetFilm()
     }, [props.match.params.id, filmDispatch, user.auth])
 
     useEffect(() => {
         async function handleLike() {
-
+            console.log('liked')
             if (likeAction === null) return
-            
-            if(!user.auth) {
-
-                return
-            }
 
             await filmApi.like(film.id, { action: likeAction })
                 .then(async res => {
@@ -135,12 +140,15 @@ function FilmPreview(props) {
                     dispatch({
                         type: 'error'
                     })
+                    if(err.response && err.response.status === 401) {
+                        history.push(`${location.pathname}/login`);
+                    }
                     console.error(err)
                 })
         }
 
         if (isLikeButtonClicked) handleLike()
-    }, [film.id, isLikeButtonClicked, likeAction])
+    }, [film.id, isLikeButtonClicked, likeAction, history, location])
 
     const handleTruncate = (e) => {
         e.preventDefault();
@@ -206,7 +214,7 @@ function FilmPreview(props) {
                             </Col>
                             <Col sm={12} className="mt-4 mb-4 divider" />
 
-                            <Col sm={12} style={{ whiteSpace: 'pre-line', textAlign: 'justify' }}>
+                            <Col sm={12} className="p-0" style={{ whiteSpace: 'pre-line', textAlign: 'justify' }}>
                                 <TextTruncate line={!isDescExpanded && 2}
                                     truncateText="…"
                                     text={film.description}
@@ -216,7 +224,7 @@ function FilmPreview(props) {
                             </Col>
                         </Row>
                     </Col>
-                    <Col sm={12} className="mt-4 mb-2 divider d-block d-md-none" />
+                    <Col sm={12} className="mt-4 mb-2 divider" />
                 </React.Fragment>
             }
         </Col>
@@ -226,4 +234,4 @@ function FilmPreview(props) {
 }
 
 
-export default withRouter(FilmPreview)
+export default FilmPreview
