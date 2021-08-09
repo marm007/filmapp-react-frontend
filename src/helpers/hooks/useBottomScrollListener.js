@@ -16,7 +16,7 @@ function useBottomScrollListener(
 ) {
   const { offset, triggerOnNoScroll, debounce, debounceOptions, id } = useMemo(
     () => ({
-      offset: options?.offset ?? 0,
+      offset: options?.offset ?? 20,
       debounce: options?.debounce ?? 200,
       debounceOptions: options?.debounceOptions ?? { leading: true },
       triggerOnNoScroll: options?.triggerOnNoScroll ?? false,

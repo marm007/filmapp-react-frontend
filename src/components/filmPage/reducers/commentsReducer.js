@@ -9,6 +9,14 @@ export const commentsInitialState = {
     isAllFetched: false,
     isInitialLoaded: false,
     isAdding: false,
+    isRemoving: false,
+    toRemove: null,
+    isSorting: false,
+    sort: null,
+    sorts: [
+        { id: 'created_at', title: 'By date', dir: 1 },
+        { id: 'author_name', title: 'By author name', dir: 1 }
+    ],
     error: null
 }
 
@@ -27,10 +35,12 @@ export function commentsReducer(state, action) {
             }
         }
         case 'load': {
-            return {
-                ...state,
-                isLoading: true
-            }
+            return !state.isLoading && !state.isAllFetched && state.isInitialLoaded && !state.isAdding &&
+                !state.error && state.id && !state.isSorting ?
+                {
+                    ...state,
+                    isLoading: true
+                } : state
         }
         case 'initial-success': {
             return {
@@ -66,11 +76,48 @@ export function commentsReducer(state, action) {
                 isAdding: false
             }
         }
+        case 'remove': {
+            return {
+                ...state,
+                isRemoving: true,
+                toRemove: action.payload
+            }
+        }
+        case 'remove-success': {
+            return {
+                ...state,
+                isRemoving: false,
+                toRemove: null,
+                commentsCount: state.commentsCount - 1,
+                comments: state.toRemove ? state.comments.filter(comment => comment.id !== state.toRemove.id) : state.data
+            }
+        }
+        case 'sort': {
+            return {
+                ...state,
+                comments: null,
+                isAllFetched: false,
+                sorts: state.sorts.map(sort => {
+                    if (sort.id === action.sortToChange.id) return action.sortToChange
+                    else return sort
+                }),
+                sort: action.sort,
+                isSorting: true,
+            }
+        }
+        case 'sort-success': {
+            return {
+                ...state,
+                isSorting: false,
+                comments: action.payload,
+            }
+        }
         case 'error': {
             return {
                 ...state,
                 isAdding: false,
                 isLoading: false,
+                isSorting: false,
                 error: action.payload,
             }
         }

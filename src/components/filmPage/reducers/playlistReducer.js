@@ -29,7 +29,7 @@ export const filmPlaylistReducer = (state, action) => {
             }
         }
         case 'clear': {
-            return filmPlaylistInitialState 
+            return filmPlaylistInitialState
         }
         case 'remove-film': {
             return {
@@ -56,6 +56,12 @@ export const filmPlaylistReducer = (state, action) => {
                     films: filtered
                 },
                 isRemovingFilm: false,
+            }
+        }
+        case 'change-playlist-privacy-success': {
+            return {
+                ...state,
+                playlist: { ...state.playlist, is_public: action.payload.is_public }
             }
         }
         case 'error': {

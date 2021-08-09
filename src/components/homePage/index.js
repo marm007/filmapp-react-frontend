@@ -14,22 +14,22 @@ function Home(props) {
     let history = useHistory()
 
     const [state, dispatch] = useReducer(homePageReducer, initialState)
-    const { films, isLoading, isAllFetched, error } = state
+    const { films, isLoading, isAllFetched, isInitialLoaded } = state
 
 
     const handleOnHomePageData = useCallback(() => {
-        if (!isLoading && !isAllFetched) {
+        if (!isLoading && !isAllFetched && isInitialLoaded) {
             dispatch({
                 type: 'load'
             })
         }
-    }, [isLoading, isAllFetched])
+    }, [isLoading, isAllFetched, isInitialLoaded])
 
     useBottomScrollListener(handleOnHomePageData, { triggerOnNoScroll: true })
 
     useEffect(() => {
-        async function getAllFilms() {
-            await filmApi.all({ skip: films.length, limit: 12 }).then(res => {
+        async function fetchData() {
+            await filmApi.all({ limit: 12 }).then(res => {
                 let response = res.data;
 
                 response.forEach(film => {
@@ -38,13 +38,34 @@ function Home(props) {
                 });
 
                 dispatch({
-                    type: 'success',
+                    type: 'initial-load',
                     payload: response
                 })
             })
         }
-        if (isLoading) getAllFilms()
-    }, [isLoading, films])
+        fetchData()
+
+    }, [])
+
+    useEffect(() => {
+        async function getAllFilms() {
+            await filmApi.all({ skip: films.length, limit: 12 })
+                .then(res => {
+                    let response = res.data;
+
+                    response.forEach(film => {
+                        film.img = `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=preview`
+
+                    });
+
+                    dispatch({
+                        type: 'success',
+                        payload: response
+                    })
+                }).catch(err => console.error(err))
+        }
+        if (isLoading && isInitialLoaded && films) getAllFilms()
+    }, [isLoading, isInitialLoaded, films])
 
     const handleRedirect = (id) => {
         history.push({ pathname: `${process.env.REACT_APP_PATH_NAME}film/` + id });
@@ -53,12 +74,12 @@ function Home(props) {
     return (
         <Row className="mt-5 mx-2">
             {
-                films.map((film, index) => <Film key={film.id} film={film} index={index} handleRedirect={handleRedirect} />)
+                films && films.map((film, index) => <Film key={film.id} film={film} index={index} handleRedirect={handleRedirect} />)
             }
 
             {
                 !isAllFetched && <div style={{ height: 32 + 'px', width: '100%' }} className="d-flex justify-content-center">
-                    {isLoading && <Spinner animation="border" />}
+                    {(isLoading || !isInitialLoaded) && <Spinner animation="border" />}
                 </div>
             }
 

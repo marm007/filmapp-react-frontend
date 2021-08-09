@@ -1,5 +1,15 @@
 import { playlistsMaxFetchCount } from '../../config'
 
+
+export const initialState = {
+    playlists: null,
+    playlistsCount: 0,
+    isLoading: false,
+    isAllFetched: false,
+    isInitialLoaded: false,
+    error: null,
+}
+
 export const playlistsPageReducer = (state, action) => {
     switch (action.type) {
         case 'field': {
@@ -8,23 +18,36 @@ export const playlistsPageReducer = (state, action) => {
                 [action.fieldName]: action.payload
             }
         }
+        case 'initial-success': {
+            return {
+                ...state,
+                playlists: [...new Set([...action.playlists])],
+                isLoading: false,
+                isInitialLoaded: true,
+                isAllFetched: action.responseCount < playlistsMaxFetchCount,
+                playlistsCount: state.playlistsCount + action.responseCount,
+            }
+        }
         case 'load': {
             return {
                 ...state,
                 isLoading: true,
                 isAllFetched: false,
-                error: ''
+                error: null
             }
         }
         case 'success': {
             return {
                 ...state,
+                playlists: [...new Set([...state.playlists, ...action.playlists])],
                 isLoading: false,
-                playlists: new Set([...state.playlists, ...action.payload]),
-                isAllFetched: action.responseCount < playlistsMaxFetchCount ,
+                isAllFetched: action.responseCount < playlistsMaxFetchCount,
                 playlistsCount: state.playlistsCount + action.responseCount,
-                error: ''
+                error: null
             }
+        }
+        case 'clear': {
+            return initialState
         }
         case 'error': {
             return {
@@ -37,12 +60,4 @@ export const playlistsPageReducer = (state, action) => {
         default:
             return state
     }
-}
-
-export const initialState = {
-    playlists: [],
-    playlistsCount: 0,
-    isLoading: true,
-    isAllFetched: false,
-    error: '',
 }

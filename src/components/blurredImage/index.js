@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Ratio } from 'react-bootstrap'
 
 function BlurredImageComponent(props) {
 
-    const [image, setImage] = useState('')
+    const [image, setImage] = useState("data:image/gif;base64,R0lGODlhAQABAPAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==")
 
     useEffect(() => {
         setImage(props.image);
@@ -10,14 +11,15 @@ function BlurredImageComponent(props) {
 
 
     return (
-
-        <img
-            onLoad={() => {
-                setImage(image.replace("preview", "small"));
-            }}
-            alt=""
-            className="embed-responsive-item film-play-image"
-            src={image} />);
+        <Ratio aspectRatio="16x9">
+            <img
+                onLoad={() => {
+                    setImage(image.replace("preview", "small"));
+                }}
+                alt=""
+                className="embed-responsive-item play-image"
+                src={image} />
+        </Ratio>);
 }
 
 export default BlurredImageComponent;

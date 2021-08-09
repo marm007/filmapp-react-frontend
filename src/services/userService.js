@@ -1,9 +1,9 @@
-import { config } from '../config'
 import axios from '../helpers/axios'
 import authHeader from '../helpers/authHeader'
 
 
-export const me = (params) => axios.get('users/me', {params, headers: authHeader()})
+export const me = (params) => axios.get('users/me', { params, headers: authHeader() })
+export const partialUpdate = (body) => axios.patch('users', body, { headers: authHeader() })
 
 export const userService = {
     login,
@@ -13,7 +13,7 @@ export const userService = {
 
 function login(username, password) {
 
-    let loginHeaderMy =  null
+    let loginHeaderMy = null
 
     const requestOptions = {
         method: 'POST',
@@ -29,7 +29,7 @@ function login(username, password) {
         })
 }
 
-function logout(){
+function logout() {
     localStorage.removeItem('user');
 }
 
@@ -46,8 +46,8 @@ function register(user) {
 function handleResponse(response) {
     return response.text().then(text => {
         const data = text && JSON.parse(text);
-        if(!response.ok){
-            if(response.status === 401){
+        if (!response.ok) {
+            if (response.status === 401) {
                 logout();
             }
             const error = (data && data.errors) || response.statusText;

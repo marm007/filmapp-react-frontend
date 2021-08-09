@@ -1,23 +1,24 @@
 import React, { useCallback, useEffect, useContext, useReducer } from 'react';
-import { Button, Col, Dropdown, Form, FormControl, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Dropdown, Form, FormCheck, FormControl, Row, Spinner } from "react-bootstrap";
 
 import * as userApi from '../../services/userService'
 import * as playlistApi from '../../services/playlistService'
 
-//import '../Playlist/PlaylistComponent.css'
-import ToastContext from '../../helpers/toast/toastContext';
+import ToastContext from '../../helpers/contexts/toast/toastContext';
 import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
-import { playlistDropdownMenuReducer, playlistDropdownMenuInitialState } from './playlistDropdownMenuReducer'
-import UserContext from '../../helpers/user/userContext';
+import { playlistDropdownMenuReducer, playlistDropdownMenuInitialState } from './reducers/playlistDropdownMenuReducer'
+import ChangePrivacyButton from '../../helpers/components/changePrivacyButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useRipple from "useripple"
 
 function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isPreview, filmDispatch }) {
 
-    const { user } = useContext(UserContext)
+    const [addRipple, ripples] = useRipple({ background: "black" })
 
     const { createToast } = useContext(ToastContext);
     const [state, dispatch] = useReducer(playlistDropdownMenuReducer, playlistDropdownMenuInitialState);
 
-    const { playlists, title, isLoading, isAllFetched, isCreating, isAdding, playlistToUpgrade, error } = state
+    const { playlists, title, isPublic, isLoading, isAllFetched, isCreating, isAdding, playlistToUpgrade, error } = state
 
     const handleOnPlaylistDropdownMenuBottom = useCallback(() => {
         if (!isLoading && !isAllFetched && !isCreating && !isAdding) {
@@ -46,6 +47,7 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isPreview, filmDisp
                     })
                 })
                 .catch(err => {
+                    console.error(err)
                 })
         }
 
@@ -56,37 +58,58 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isPreview, filmDisp
     useEffect(() => {
 
         async function creatPlaylist() {
-            const body = { title: title, films_id: [filmID] };
+            const body = { title: title, is_public: isPublic, films_id: [filmID] };
 
             await playlistApi.create(body)
                 .then(res => {
+                    dispatch({
+                        type: 'create-success'
+                    })
                     createToast(`Created playlist ${title}`)
                     handlePlaylistClose()
 
                 })
-                .catch(err => console.error(err))
+                .catch(err => {
+                    console.error(err)
+                    let errorMessage = null
+
+                    if (err.response && err.response.data && err.response.data.error) {
+                        errorMessage = err.response.data.error
+                    } else if (err.response && err.response.data && err.response.data.errors) {
+                        errorMessage = err.response.data.errors[0]
+                    }
+
+                    dispatch({
+                        type: 'error',
+                        payload: errorMessage === "Path `title` is required." ? 'Playlist title is required' : errorMessage
+                    })
+                })
         }
 
         if (isCreating) creatPlaylist()
 
-    }, [isCreating, title, createToast, handlePlaylistClose, filmID,])
+    }, [isCreating, title, isPublic, createToast, handlePlaylistClose, filmID,])
 
     useEffect(() => {
         async function addToPlaylist() {
 
             let body = { films_id: [filmID] };
 
-            body = playlistToUpgrade.contains ? { ...body, is_remove_films: true } :  { ...body, is_remove_films: false } 
+            body = playlistToUpgrade.contains ? { ...body, is_remove_films: true } : { ...body, is_remove_films: false }
 
             const message = playlistToUpgrade.contains ? `Deleted from playlist ${playlistToUpgrade.title}` : `Added to playlist ${playlistToUpgrade.title}`
+
+            dispatch({
+                type: 'add-update-playlist',
+                playlist: playlistToUpgrade
+            })
 
             await playlistApi.partialUpdate(playlistToUpgrade.id, body)
                 .then(res => {
                     dispatch({
-                        type: 'add-success',
-                        playlist: playlistToUpgrade
+                        type: 'add-success'
                     })
-                    
+
                     if (isPreview) {
                         filmDispatch({
                             type: 'field',
@@ -110,39 +133,29 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isPreview, filmDisp
 
     const handleCreatePlaylist = (e) => {
         e.stopPropagation()
-
         dispatch({
             type: 'create'
         })
     };
-
-    const playlistItems = () => playlists.map((playlist, index) => {
-        console.log(filmID)
-
-        return <Col xs={12} sm={12} key={playlist.id + '_random'} >
-            <Row className="pl-4 pr-4" >
-                <Col xs={12} sm={12} className="p-0 mb-2" >
-                    <Form.Check
-                        onChange={() => handleAddToPlaylist(playlist)}
-                        custom
-                        inline
-                        checked={playlist.contains}
-                        label={playlist.title}
-                        type="checkbox"
-                        id={playlist.id}
-                    />
-                </Col>
-
-            </Row>
-        </Col>
-    })
 
     return (
 
         <Dropdown.Menu
             onClick={e => e.stopPropagation()}
             style={{ width: 240 + "px" }}>
-            <p className="dropdown-item-my pl-4 pr-4">Save to...</p>
+            <Row className="m-0 m-button playlist-add-button-ripple" >
+                <Col className="playlist-add-exit-text-width">Save to...</Col>
+                <Col xs={2} sm={2}
+                    onClick={(e) => {
+                        addRipple(e)
+                        setTimeout(handlePlaylistClose, 150)
+                    }}
+                    style={{ borderRadius: 20 + "px", width: 24 + "px", height: 24 + "px" }}
+                    className="playlist-add-icon-holder p-0 playlist-add-button-ripple d-flex align-items-center text-center justify-content-center">
+                    <FontAwesomeIcon icon="times" />
+                    {ripples}
+                </Col>
+            </Row>
             <Dropdown.Divider />
             <div
                 ref={scrollRef}
@@ -150,7 +163,32 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isPreview, filmDisp
                     maxHeight: 100 + 'px', overflowY: 'scroll', minHeight: 3 + 'rem'
                 }}>
 
-                {playlistItems()}
+                {
+                    playlists.map((playlist, index) => {
+                        return (<Row className="m-0 playlist-form-group" key={playlist.id} >
+                            <Col xs={10} sm={10} className="p-0">
+                                <Form.Check id={playlist.id} className="form-check">
+                                    <FormCheck.Input type="checkbox"
+                                        onChange={() => handleAddToPlaylist(playlist)}
+                                        checked={playlist.contains} />
+                                    <FormCheck.Label>
+                                        <p className="playlist-check-label">
+                                            {playlist.title}
+                                        </p>
+                                    </FormCheck.Label>
+                                </Form.Check>
+
+                            </Col>
+                            <ChangePrivacyButton
+                                id={playlist.id}
+                                isPublic={playlist.is_public}
+                                isProfile={false}
+                                filmDispatch={filmDispatch}
+                                dispatchPrivacyUpdate={dispatch} />
+
+                        </Row>)
+                    })
+                }
 
                 {
                     !isAllFetched && <div style={{ height: 32 + 'px' }} className="d-flex justify-content-center">
@@ -159,30 +197,40 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isPreview, filmDisp
                 }
             </div>
             <Dropdown.Divider />
-            <p className="dropdown-item-my pl-4 pr-4">Create a new playlist</p>
-            <FormControl
-                isInvalid={error !== ''}
-                onChange={(e) => {
-                    dispatch({
-                        type: 'field',
-                        fieldName: 'title',
-                        payload: e.target.value
+            <Dropdown.ItemText>Create a new playlist</Dropdown.ItemText>
+            <Row className="m-0 p-0">
+                <Form>
+                    <FormControl
+                        isInvalid={error !== ''}
+                        onChange={(e) => dispatch({ type: 'field', fieldName: 'title', payload: e.target.value })}
+                        className="mb-2 mt-2"
+                        placeholder="Enter playlist title..." />
 
-                    })
-                }}
-                className="dropdown-item-my w-75 ml-auto mr-auto mb-2 mt-2"
-                placeholder="Enter playlist name..."
+                    <FormControl.Feedback type="invalid"
+                        className="mb-2 mt-2">
+                        {error}
+                    </FormControl.Feedback>
+                    <Form.Select aria-label="Privacy" className="mb-2 mt-2"
+                        onChange={(e) => dispatch({ type: 'field', fieldName: 'isPublic', payload: e.target.value === 'public' })}>
+                        <option value="private">Private</option>
+                        <option value="public">Public</option>
+                    </Form.Select>
 
-            />
-            <Form.Control.Feedback type="invalid"
-                className="dropdown-item-my w-75 ml-auto mr-auto mb-2 mt-2">
-                {error}
-            </Form.Control.Feedback>
-            <Col className="mb-1 text-right justify-content-end">
-                <Button onClick={handleCreatePlaylist}>Create</Button>
-            </Col>
+                    <Form.Group className="d-flex align-items-center mt-2">
+                        <Button disabled={isCreating}
+                            onClick={isCreating ? null : handleCreatePlaylist}>Create</Button>
 
-        </Dropdown.Menu >
+                        {
+                            isCreating &&
+                            <Spinner className="ms-2" animation="grow" />
+                        }
+                    </Form.Group>
+
+                </Form>
+
+            </Row>
+
+        </Dropdown.Menu>
 
 
     )

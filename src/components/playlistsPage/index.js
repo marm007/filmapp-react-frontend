@@ -1,10 +1,6 @@
 import React, { useEffect, useReducer, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Col, Row, Spinner } from 'react-bootstrap';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import TextTruncate from "react-text-truncate";
-import BlurredImageComponent from "../blurredImage";
+import { Row, Spinner } from 'react-bootstrap';
 
 import * as playlistApi from '../../services/playlistService'
 
@@ -19,21 +15,21 @@ function PlaylistsPage(props) {
     let history = useHistory()
 
     const [state, dispatch] = useReducer(playlistsPageReducer, initialState)
-    const { playlists, isLoading, isAllFetched, error, playlistsCount } = state
+    const { playlists, isLoading, isAllFetched, isInitialLoaded, playlistsCount } = state
 
     const handleOnPlaylistsBottom = useCallback(() => {
-        if (!isLoading && !isAllFetched) {
+        if (!isLoading && !isAllFetched && isInitialLoaded) {
             dispatch({
                 type: 'load'
             })
         }
-    }, [isAllFetched, isLoading])
+    }, [isAllFetched, isLoading, isInitialLoaded])
 
     useBottomScrollListener(handleOnPlaylistsBottom, { triggerOnNoScroll: true })
 
     useEffect(() => {
-        async function fetchAllPlaylists() {
-            await playlistApi.show({ skip: playlistsCount, limit: 12 })
+        async function fetchInitialPlaylists() {
+            await playlistApi.show({ limit: 12 })
                 .then(res => {
                     const result = res.data;
 
@@ -42,12 +38,10 @@ function PlaylistsPage(props) {
                     filtered.forEach(playlist => {
                         playlist.img = `${process.env.REACT_APP_API_URL}films/${playlist.film_id}/thumbnail?width=preview`
                     });
-                    
-                    console.log('fecasz', result.length)
 
                     dispatch({
-                        type: 'success',
-                        payload: filtered,
+                        type: 'initial-success',
+                        playlists: filtered,
                         responseCount: result.length
                     })
 
@@ -57,9 +51,38 @@ function PlaylistsPage(props) {
                 })
         }
 
-        if (isLoading) fetchAllPlaylists()
+        dispatch({ type: 'clear' })
+        fetchInitialPlaylists()
 
-    }, [playlists, isLoading, playlistsCount])
+    }, [])
+
+    useEffect(() => {
+        async function fetchPlaylists() {
+            await playlistApi.show({ skip: playlistsCount, limit: 12 })
+                .then(res => {
+                    const result = res.data;
+
+                    let filtered = result.filter(playlist => playlist.film_id)
+
+                    filtered.forEach(playlist => {
+                        playlist.img = `${process.env.REACT_APP_API_URL}films/${playlist.film_id}/thumbnail?width=preview`
+                    });
+
+                    dispatch({
+                        type: 'success',
+                        playlists: filtered,
+                        responseCount: result.length
+                    })
+
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+        }
+
+        if (isLoading && isInitialLoaded) fetchPlaylists()
+
+    }, [isLoading, isInitialLoaded, playlists, playlistsCount])
 
 
     const setRedirect = (playlistID, filmID) => {
@@ -73,11 +96,11 @@ function PlaylistsPage(props) {
     return (
         <Row className="mt-5 mx-2">
             {
-                playlists.map((playlist, index) => <Playlist key={playlist.id} playlist={playlist} index={index} handleRedirect={setRedirect} />)
+                playlists && playlists.map((playlist, index) => <Playlist key={playlist.id} playlist={playlist} index={index} handleRedirect={setRedirect} />)
             }
             {
                 !isAllFetched && <div style={{ height: 32 + 'px', width: '100%' }} className="d-flex justify-content-center">
-                    {isLoading && <Spinner animation="border" />}
+                    {(isLoading || !isInitialLoaded) && <Spinner animation="border" />}
                 </div>
             }
 

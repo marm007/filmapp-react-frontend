@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 
 import queryString from "query-string";
@@ -10,7 +10,7 @@ import Comments from './comments';
 import Playlist from './playlist';
 import useWindowWidth from '../../helpers/hooks/useWindowsWidth'
 
-import FilmProvider from '../../helpers/film/filmProvider'
+import FilmProvider from '../../helpers/contexts/film/filmProvider'
 import './film.css'
 
 
@@ -21,18 +21,16 @@ function Film(props) {
 
     const onSmallScreen = useWindowWidth();
 
-
     const handleRedirect = (id) => {
         const parsed = queryString.parse(location.search);
         let historyObject = { pathname: `${process.env.REACT_APP_PATH_NAME}film/` + id }
         if (parsed.list) historyObject = { ...historyObject, search: `?list=${parsed.list}` }
         history.push(historyObject);
-        window.scrollTo(0, 0);
     };
 
     return (
         <FilmProvider>
-            <Row className="p-0 m-0 mt-4">
+            <Row className="p-0 m-0 mt-4 mx-2">
                 <Col xs={{ span: 12, order: 'first' }} sm={8}>
                     <FilmPreview {...props} />
                     {!onSmallScreen && <Comments {...props} />}

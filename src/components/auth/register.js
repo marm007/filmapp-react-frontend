@@ -1,36 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, Form, Modal } from 'react-bootstrap';
-
+import { Alert, Button, Form, Modal, Spinner } from 'react-bootstrap';
+import * as authApi from '../../services/authService'
+import { authInitialState, authReducer } from './reducer';
+import UserContext from '../../helpers/contexts/user/userContext'
 
 function Register(props) {
 
     let history = useHistory()
 
-    const [email, setEmail] = useState('')
-    const [nick, setNick] = useState('')
-    const [password, setPassword] = useState('')
-    const [submitted, setSubmitted] = useState(false)
+    const { login } = useContext(UserContext)
+    const [state, dispatch] = useReducer(authReducer, authInitialState)
+    const { email, nick, password, isSubmitted, isSuccess, isSending, isError, error } = state
+
     const [show, setShow] = useState(true)
 
+    useEffect(() => {
+        async function submitData() {
+
+            await authApi.register({ email: email, password: password, name: nick })
+                .then(res => {
+                    dispatch({
+                        type: 'success'
+                    })
+                    setTimeout(() => {
+                        login(res.data.user.name, res.data.user.id, res.data.token, res.data.refreshToken)
+                        history.goBack()
+                    }, 1500)
+                })
+                .catch(err => {
+                    let errorMessage = null;
+
+                    if (err.response && err.response.data && err.response.data.errors)
+                        errorMessage = err.response.data.errors;
+                    else if (err.response && err.response.data && err.response.data.error)
+                        errorMessage = err.response.data.error
+
+                    dispatch({
+                        type: 'error',
+                        payload: errorMessage
+                    })
+                    console.error(err)
+                })
+        }
+
+        if (isSending) submitData()
+
+    }, [isSending, email, nick, password, history, login])
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        setSubmitted(true)
+
+        dispatch({
+            type: 'submit'
+        })
 
         if (email && nick && password && password.length >= 6) {
+            dispatch({
+                type: 'send'
+            })
         }
     }
-
-
 
     const modalClose = () => {
         setShow(false)
         history.goBack();
     };
 
-    const { alert, registering } = props;
 
     return (
 
@@ -39,8 +76,7 @@ function Register(props) {
             show={show}
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
+            centered>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
                     Register
@@ -50,32 +86,30 @@ function Register(props) {
                 <Form onSubmit={handleSubmit}>
                     <Form.Group>
                         <Form.Label htmlFor="nick">Nick</Form.Label>
-                        <Form.Control isInvalid={submitted && !nick} type="text" name="nick" value={nick}
-                            onChange={e => setNick(e.target.value)}>
+                        <Form.Control isInvalid={isSubmitted && !nick} type="text" name="nick" value={nick}
+                            onChange={e => dispatch({ type: 'field', fieldName: 'nick', payload: e.target.value })} >
                         </Form.Control>
                         <Form.Control.Feedback type="invalid">
                             Nick is required
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group>
+                    <Form.Group className="mt-2">
                         <Form.Label htmlFor="email">Email</Form.Label>
                         <Form.Control
-                            isInvalid={(submitted && !email) || (alert && alert.type === 'alert-danger' && alert.message)}
-                            type="email" name="email" value={email} onChange={e => setEmail(e.target.value)}>
+                            isInvalid={(isSubmitted && !email)}
+                            type="email" name="email" value={email} onChange={e => dispatch({ type: 'field', fieldName: 'email', payload: e.target.value })} >
                         </Form.Control>
                         <Form.Control.Feedback type="invalid">
-                            {
-                                alert && alert.message ? alert.message : "Email is required"
-                            }
+                            Email is required
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group>
+                    <Form.Group className="mt-2">
                         <Form.Label htmlFor="password">Password</Form.Label>
-                        <Form.Control isInvalid={submitted && (password.length < 6)} type="password"
+                        <Form.Control isInvalid={isSubmitted && (password.length < 6)} type="password"
                             name="password" value={password} maxLength="11"
-                            onChange={e => setPassword(e.target.value)}>
+                            onChange={e => dispatch({ type: 'field', fieldName: 'password', payload: e.target.value })}>
                         </Form.Control>
                         <Form.Control.Feedback type="invalid">
                             {
@@ -85,14 +119,28 @@ function Register(props) {
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group>
+                    {
+                        isSuccess &&
+                        <Alert variant="success" className="mt-2">
+                            You have successfully registered and logged in.
+                        </Alert>
+                    }
+
+                    {
+                        isError &&
+                        <Alert variant="danger" className="mt-2">
+                            {error ? error : 'Error while registtering.'}
+                        </Alert>
+                    }
+
+                    <Form.Group className="d-flex align-items-center mt-2">
                         <Button type="submit" className="btn-primary">
                             Register
                         </Button>
 
-                        {registering &&
-                            <img alt="loading..." className="pl-2"
-                                src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                        {
+                            isSending &&
+                            <Spinner className="ms-2" animation="grow" />
                         }
                     </Form.Group>
 

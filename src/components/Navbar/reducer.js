@@ -3,6 +3,8 @@ export const initialSearchState = {
     isLoading: false,
     isAllFetched: false,
     isSearching: false,
+    isOpen: false,
+    selected: null,
     title: ''
 }
 
@@ -11,7 +13,15 @@ export function searchReducer(state, action) {
         case 'field': {
             return {
                 ...state,
+                selected: null,
                 [action.fieldName]: action.payload
+            }
+        }
+        case 'pick-option': {
+            return {
+                ...state,
+                title: action.title,
+                selected: action.selected
             }
         }
         case 'success-load': {
@@ -32,6 +42,9 @@ export function searchReducer(state, action) {
                 options: action.payload
             }
         }
+        case 'clear': {
+            return initialSearchState
+        }
         case 'load': {
             return !state.isLoading && !state.isAllFetched ? {
                 ...state,
@@ -43,10 +56,10 @@ export function searchReducer(state, action) {
         case 'search': {
             return {
                 ...state,
+                options: [],
                 isSearching: true,
                 isLoading: false,
-                isAllFetched: false,
-                title: action.payload
+                isAllFetched: false
             }
         }
         default: return state

@@ -10,18 +10,19 @@ import image_not_found from '../../images/image_not_found.png'; // Tell Webpack 
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
-import '../playlistsPage/playlist.css';
-
 import * as playlistApi from '../../services/playlistService'
-import FilmContext from '../../helpers/film/filmContext';
+import FilmContext from '../../helpers/contexts/film/filmContext';
 
 import { filmPlaylistInitialState, filmPlaylistReducer } from './reducers/playlistReducer';
 
-import UserContext from '../../helpers/user/userContext';
+import UserContext from '../../helpers/contexts/user/userContext';
 import RemoveButton from '../../helpers/components/removeButton';
 import ChangePrivacyButton from '../../helpers/components/changePrivacyButton';
+import RemoveModalContext from '../../helpers/contexts/removeModal/removeModalContext';
 
 function Playlist(props) {
+
+    const { showModal, clear, removeModalData } = useContext(RemoveModalContext)
 
     let location = useLocation()
 
@@ -32,7 +33,6 @@ function Playlist(props) {
 
     const {
         playlist,
-        isLoading,
         isRemovingPlaylist,
         isRemovingFilm,
         removingFilmId,
@@ -154,17 +154,18 @@ function Playlist(props) {
         async function removePlaylist() {
             await playlistApi.remove(playlist.id)
                 .then(res => {
-                    console.log('remvode', res)
                     clearPlaylist()
+                    clear()
                 })
                 .catch(err => {
-                    console.log('remvode', err)
-
                     console.error(err)
+                    clear()
                 })
         }
-        if (isRemovingPlaylist) removePlaylist()
-    }, [isRemovingPlaylist, playlist])
+        if (isRemovingPlaylist && removeModalData.isRemoving &&
+            removeModalData.id === playlist.id && removeModalData.type === 'playlist' &&
+            removeModalData.title === playlist.title) removePlaylist()
+    }, [clear, isRemovingPlaylist, playlist, removeModalData])
 
 
     useEffect(() => {
@@ -185,13 +186,15 @@ function Playlist(props) {
 
     const handleRemovePlaylist = () => {
 
-        if (isRemovingPlaylist) return
+        if (removeModalData.isRemoving) return
 
         dispatch({
             type: 'field',
             fieldName: 'isRemovingPlaylist',
             payload: true
         })
+
+        showModal(playlist.id, 'playlist', playlist.title)
     }
 
     const handleRemoveFromPlaylist = (id) => {
@@ -203,9 +206,6 @@ function Playlist(props) {
         })
     }
 
-    const handleChangePrivacy = (id) => {
-
-    }
 
     return (
 
@@ -214,14 +214,25 @@ function Playlist(props) {
             <Col className='p-0 border'>
                 <Col ref={headerRef}
                     style={{ height: headerHeight + 'px' }}
-                    className="playlist-remove-container pt-2 pb-2 playlist-header" sm={12}>
-                    <Row className="m-0 p-0 px-2">
-                        <Col className="m-0 p-0" xs={10} sm={10}>
-                            <p className="mb-1 font-weight-bold">{playlist.title}</p>
+                    className="remove-container pt-2 pb-2 film-preview-playlist-header" sm={12}>
+                    <Row className="m-0 px-2">
+                        <Col className="film-preview-playlist-title-width">
+                            <p className="mb-1 fw-bold film-preview-playlist-text-truncate">{playlist.title}</p>
+                        </Col>
+                        <Col className="justify-content-end d-flex">
                             {
                                 user.id === playlist.author_id &&
-                                <ChangePrivacyButton isPublic={playlist.is_public}
-                                    handleChangePrivacy={() => handleChangePrivacy(playlist.id)} />
+                                <RemoveButton handleRemove={() => handleRemovePlaylist()} />
+                            }
+                        </Col>
+                        <Col xs={12} sm={12}>
+                            {
+                                user.id === playlist.author_id &&
+                                <ChangePrivacyButton
+                                    id={playlist.id}
+                                    isPublic={playlist.is_public}
+                                    isProfile={false}
+                                    dispatchPrivacyUpdate={dispatch} />
                             }
                             {
                                 user.id === playlist.author_id && <small>&nbsp;</small>
@@ -229,31 +240,29 @@ function Playlist(props) {
                             }
                             <small>{playlist.author_name}&nbsp;</small>
                             <small
-                                className="playlist-index">- {currentFilmIndex}/{playlist.films.length}</small>
+                                className="film-preview-playlist-index">
+                                - {currentFilmIndex}/{playlist.films.length}
+                            </small>
                         </Col>
-                        {
-                            user.id === playlist.author_id &&
-                            <RemoveButton handleRemove={() => handleRemovePlaylist()} />
-                        }
                     </Row>
                 </Col>
                 <Col style={{ height: playerHeight - headerHeight + 'px' }}
-                    className="p-0 playlist-container" xs={12} sm={12}>
+                    className="p-0 film-preview-playlist-container" xs={12} sm={12}>
                     <PerfectScrollbar
                         onYReachEnd={() => { }}
                         onScrollY={() => { }}>
                         {
                             playlist.films.map((film, index) => {
                                 return film && !film.isNonExisting ? (
-                                    <Row xs={12} sm={12} className="m-0 p-0 playlist-remove-container" key={film.id}>
+                                    <Row xs={12} sm={12} className="m-0 p-0 remove-container" key={film.id}>
                                         <Col xs={9} sm={9}
                                             className={index === playlist.films.length - 1 ?
                                                 "mt-3 mb-3 " :
                                                 "mt-3"}
                                             onClick={() => props.handleRedirect(film.id)} >
-                                            <Row className="m-0 p-0 film-play-outer-container">
+                                            <Row className="m-0 p-0 play-outer-container">
                                                 <Col xs={1} sm={1}
-                                                    className="text-center justify-content-center d-flex align-items-center p-0 pl-1" >
+                                                    className="text-center justify-content-center d-flex align-items-center p-0 ps-1" >
                                                     {
                                                         (currentFilm === film.id) ?
                                                             <small>
@@ -265,22 +274,21 @@ function Playlist(props) {
 
                                                     }
                                                 </Col>
-                                                <Col xs={6} sm={6} className="pr-2 pl-2"
+                                                <Col xs={6} sm={6} className="pe-2 ps-2"
                                                     style={{
                                                         display: 'flex',
                                                         justifyContent: 'center',
                                                         alignItems: 'center'
                                                     }}>
-                                                    <div className="embed-responsive embed-responsive-16by9 z-depth-1-half film-play-container">
-                                                        <img alt="" className="embed-responsive-item film-play-image"
+                                                    <div className="embed-responsive embed-responsive-16by9 z-depth-1-half play-container">
+                                                        <img alt="" className="embed-responsive-item play-image"
                                                             src={`${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small`} />
-                                                        <FontAwesomeIcon className="film-play-middle" icon="play" />
                                                     </div>
                                                 </Col>
                                                 <Col xs={5} sm={5} className="p-0">
-                                                    <TextTruncate line={2} text={film.title}
-                                                        className="mb-0 title font-weight-bold" />
-                                                    <p className="mb-1 author-nick">
+                                                    <TextTruncate line={1} text={film.title}
+                                                        className="mb-0 title fw-bold" />
+                                                    <p className="mb-1 author-nick-color">
                                                         <small>{film.author_name}</small>
                                                     </p>
                                                 </Col>
@@ -293,30 +301,30 @@ function Playlist(props) {
 
                                     </Row>
                                 ) : (
-                                    <Row xs={12} sm={12} className="m-0 p-0 playlist-remove-container" key={film.id}>
+                                    <Row xs={12} sm={12} className="m-0 p-0 remove-container" key={film.id}>
                                         <Col xs={9} sm={9}
                                             className={index === playlist.films.length - 1 ?
                                                 "mt-3 mb-3 " :
                                                 "mt-3"} >
                                             <Row className="m-0 p-0">
                                                 <Col xs={1} sm={1}
-                                                    className="text-center justify-content-center d-flex align-items-center p-0 pl-1" >
+                                                    className="text-center justify-content-center d-flex align-items-center p-0 ps-1" >
                                                     <small>{index + 1}</small>
                                                 </Col>
-                                                <Col xs={6} sm={6} className="pr-2 pl-2"
+                                                <Col xs={6} sm={6} className="pe-2 ps-2"
                                                     style={{
                                                         display: 'flex',
                                                         justifyContent: 'center',
                                                         alignItems: 'center'
                                                     }}>
-                                                    <div className="embed-responsive embed-responsive-16by9 z-depth-1-half film-play-container">
-                                                        <img alt="" className="embed-responsive-item film-play-image"
+                                                    <div className="embed-responsive embed-responsive-16by9 z-depth-1-half play-container">
+                                                        <img alt="" className="embed-responsive-item play-image"
                                                             src={image_not_found} />
                                                     </div>
                                                 </Col>
                                                 <Col xs={5} sm={5} className="p-0">
                                                     <TextTruncate line={2} text="Not found"
-                                                        className="mb-0 title font-weight-bold" />
+                                                        className="mb-0 title fw-bold" />
                                                 </Col>
                                             </Row>
                                         </Col>

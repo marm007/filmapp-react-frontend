@@ -1,18 +1,14 @@
-.title-search {
+.search-title {
     font-size: 1.6rem;
     line-height: 1.05;
     font-weight: 400 !important;
 }
 
-.film-views-search {
-    color: #606060;
-}
-
-.filter-search {
+.search-filter {
     color: #606060;
     cursor: pointer;
 }
 
-.style-search {
+.search-style {
     cursor: pointer;
 }

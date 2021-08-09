@@ -1,5 +1,36 @@
-.container{
-    cursor: pointer;
+.film-picked-thumb-color {
+    color: #06538b;
 }
 
+.film-preview-playlist-text-truncate {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis ellipsis;
+}
 
+.film-preview-playlist-title-width {
+    flex: 0 0 auto !important;
+    width: calc(83.33333333% - 24px) !important;        
+}
+
+.film-preview-playlist-header {
+    background-color: rgba(233, 236, 239, 0.80);
+}
+
+.film-preview-playlist-container {
+    background-color: rgba(243, 246, 249, 0.88);
+}
+
+.film-preview-playlist-index {
+    color: hsla(0, 0%, 6.7%, .6);
+}
+
+.dropdown-item:focus, .dropdown-item:hover {
+    color: #1e2125;
+    background-color: #cfd1d37a;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+    color: #1e2125;
+    background-color: #cfd1d3;
+}

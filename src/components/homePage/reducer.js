@@ -1,8 +1,9 @@
 export const initialState = {
     films: null,
-    isLoading: true,
+    isLoading: false,
     isAllFetched: false,
-    error: '',
+    isInitialLoaded: false,
+    error: null,
 }
 
 export const homePageReducer = (state, action) => {
@@ -21,13 +22,22 @@ export const homePageReducer = (state, action) => {
                 error: ''
             }
         }
+        case 'initial-load': { 
+            return {
+                ...state,
+                films: [...new Set([...action.payload])],
+                isLoading: false,
+                isInitialLoaded: true,
+                isAllFetched: action.payload.length < 12,
+            }
+        }
         case 'success': {
             return {
                 ...state,
-                films: new Set([...state.films, ...action.payload]),
+                films: [...new Set([...state.films, ...action.payload])],
                 isLoading: false,
                 isAllFetched: action.payload.length < 12,
-                error: ''
+                error: null
             }
         }
         case 'error': {

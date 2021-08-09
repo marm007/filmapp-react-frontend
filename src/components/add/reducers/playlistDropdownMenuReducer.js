@@ -7,6 +7,7 @@ export const playlistDropdownMenuInitialState = {
     isAdding: false,
     playlistToUpgrade: null,
     title: '',
+    isPublic: false,
     error: '',
 }
 
@@ -15,7 +16,7 @@ export function playlistDropdownMenuReducer(state, action) {
         case 'field': {
             return {
                 ...state,
-                isError: '',
+                error: '',
                 [action.fieldName]: action.payload
             }
         }
@@ -42,6 +43,13 @@ export function playlistDropdownMenuReducer(state, action) {
                 isCreating: true
             }
         }
+        case 'create-success': {
+            return {
+                ...state,
+                isLoading: false,
+                isCreating: false
+            }
+        }
         case 'add': {
             return {
                 ...state,
@@ -50,22 +58,37 @@ export function playlistDropdownMenuReducer(state, action) {
                 playlistToUpgrade: action.payload
             }
         }
-        case 'add-success': {
-            return state.playlistToUpgrade ? {
+        case 'add-update-playlist': {
+            return {
                 ...state,
-                isAdding: false,
                 playlists: state.playlists.map(playlist => {
                     if (playlist.id === state.playlistToUpgrade.id) return { ...playlist, contains: !playlist.contains }
                     else return playlist
                 }),
                 playlistToUpgrade: null
-            } : state
+            }
+        }
+        case 'add-success': {
+            return {
+                ...state,
+                isAdding: false
+            }
+        }
+        case 'change-playlist-privacy-success': {
+            return {
+                ...state,
+                playlists: state.playlists.map(playlist => {
+                    if (playlist.id === action.payload.id) return { ...playlist, is_public: action.payload.is_public }
+                    return playlist
+                })
+            }
         }
         case 'error':
             return {
                 ...state,
                 isLoading: false,
                 isAllFetched: false,
+                isCreating: false,
                 error: action.payload,
                 title: ''
             }

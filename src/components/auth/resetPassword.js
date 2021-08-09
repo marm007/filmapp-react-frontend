@@ -1,59 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Alert, Button, Form, Modal } from 'react-bootstrap';
+import { Alert, Button, Form, Modal, Spinner } from 'react-bootstrap';
+import * as authApi from '../../services/authService'
+import { authInitialState, authReducer } from './reducer';
 
 function ResetPassword(props) {
-    
+
     let history = useHistory()
 
-    const [password, setPassword] = useState('')
-    const [submitted, setSubmitted] = useState(false)
+    const [state, dispatch] = useReducer(authReducer, authInitialState)
+
+    const { password, isSubmitted, isSending, isSuccess, isError, error } = state
+
     const [show, setShow] = useState(true)
 
-    const [isResetRequested, setIsResetRequested] = useState(false)
-    const [isResetSuccessful, setIsResetSuccessful] = useState(false)
-    const [isResetError, setIsResetError] = useState(false)
-    const [errorMessage, setErrorMessage] = useState('')
-
-
-    const handleSubmitPasswordChange = (e) => {
-        e.preventDefault();
-        
-        setSubmitted(true)
-        setIsResetRequested(true)
-        setIsResetError(false)
-
-
-       /*  if (this.props.match.params.token && user.password && user.password.length >= 6) {
-            axios.post(`${process.env.REACT_APP_API_URL}users/password/reset/${this.props.match.params.token}`,
-                { password: this.state.user.password })
+    useEffect(() => {
+        async function sendData() {
+            await authApi.reset(props.match.params.token, { password: password })
                 .then(res => {
-
-                    this.setState({ resetSuccessful: true, resetRequested: false });
+                    dispatch({
+                        type: 'success'
+                    })
 
                     setTimeout(function () {
-                        this.setState({ show: false });
-                        this.props.history.push(`${pathName}`);
+                        setShow(false);
+                        history.push(`${process.env.REACT_APP_PATH_NAME}`);
                         setTimeout(function () {
-                            this.props.history.push(`${pathName}login`);
-                        }.bind(this), 500);
-                    }.bind(this), 1500);
+                            history.push(`${process.env.REACT_APP_PATH_NAME}login`);
+                        }, 500);
+                    }, 1500);
 
                 })
                 .catch(err => {
-                    let errorMessage = '';
+                    let errorMessage = null;
 
                     if (err.response && err.response.data && err.response.data.errors)
                         errorMessage = err.response.data.errors;
 
-                    this.setState({ resetError: true, resetSuccessful: false, resetRequested: false, errorMessage: errorMessage });
+                    dispatch({
+                        type: 'error',
+                        payload: errorMessage
+                    })
 
                 })
-        } else {
-            this.setState({ resetRequested: false });
-        } */
-    }
 
+        }
+
+
+        if (isSending) sendData()
+
+    }, [isSending, history, password, props.match.params.token])
+
+    const handleSubmitPasswordChange = (e) => {
+        e.preventDefault();
+
+        dispatch({
+            type: 'submit'
+        })
+
+        if (props.match.params.token && password && password.length >= 6) {
+            dispatch({ type: 'send' })
+        }
+    }
 
     const modalClose = () => {
         setShow(false)
@@ -71,16 +79,16 @@ function ResetPassword(props) {
         >
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Register
+                    Reset
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form onSubmit={handleSubmitPasswordChange}>
                     <Form.Group>
                         <Form.Label htmlFor="password">Password</Form.Label>
-                        <Form.Control isInvalid={submitted && (password.length < 6)} type="password"
+                        <Form.Control isInvalid={isSubmitted && (password.length < 6)} type="password"
                             name="password" value={password} maxLength="11"
-                            onChange={e => setPassword(e.target.value)}>
+                            onChange={e => dispatch({ type: 'field', fieldName: 'password', payload: e.target.value })}>
                         </Form.Control>
                         <Form.Control.Feedback type={"invalid"}>
                             {
@@ -91,28 +99,28 @@ function ResetPassword(props) {
                     </Form.Group>
 
                     {
-                        isResetSuccessful &&
-                        <Alert variant="success">
+                        isSuccess &&
+                        <Alert variant="success" className="mt-2">
                             Password has been reseated! Redirecting to login page.
                         </Alert>
                     }
 
                     {
-                        isResetError &&
-                        <Alert variant="danger">
-                            {errorMessage ? errorMessage : 'Error while resetting password.'}
+                        isError &&
+                        <Alert variant="danger" className="mt-2">
+                            {error ? error : 'Error while resetting password.'}
                         </Alert>
                     }
 
-                    <Form.Group>
+                    <Form.Group className="d-flex align-items-center mt-2">
                         <Button type="submit" className="btn-primary">
                             Reset password
                         </Button>
 
-                        {isResetRequested &&
-                            <img alt="loading..." className="pl-2"
-                                src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-                        }
+                        {
+                            isSending &&
+                            <Spinner className="ms-2" animation="grow" />
+                            }
                     </Form.Group>
 
                 </Form>

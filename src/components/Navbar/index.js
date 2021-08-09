@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/role-has-required-aria-props */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useCallback, useContext, useReducer, useRef } from 'react';
 import { useHistory, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,14 +10,15 @@ import { Button, Col, Row, Form, Nav, Navbar, Spinner } from 'react-bootstrap';
 import Menu from "@material-ui/core/Menu/Menu";
 import MenuItem from "@material-ui/core/MenuItem/MenuItem";
 
-import ico from '../../images/ico.png';
+import headerIcon from '../../images/header.png';
 import * as filmApi from '../../services/filmService'
 
 import { AsyncTypeahead, Menu as AsyncMenu, MenuItem as AsyncMenuItem } from 'react-bootstrap-typeahead';
 import { isMobile } from "react-device-detect";
 
-import UserContext from '../../helpers/user/userContext'
+import UserContext from '../../helpers/contexts/user/userContext'
 
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 import './navbar.css';
 import { initialSearchState, searchReducer } from './reducer';
 
@@ -32,15 +35,15 @@ function NavbarComponent(props) {
 
     const [isExpanded, setIsExpanded] = useState(false)
 
-    const { options, title, isLoading, isAllFetched, isSearching } = state
+    const { options, title, isLoading, isAllFetched, isSearching, isOpen, selected } = state
 
     const handleSearchOnBottom = useCallback(() => {
-        if (!isLoading && !isAllFetched && !isSearching) {
+        if (!isLoading && !isAllFetched && !isSearching && isOpen) {
             dispatch({
                 type: 'load'
             })
         }
-    }, [isLoading, isAllFetched, isSearching])
+    }, [isLoading, isAllFetched, isSearching, isOpen])
 
     useBottomScrollListener(handleSearchOnBottom, { id: 'typeahead-navbar' })
 
@@ -49,7 +52,6 @@ function NavbarComponent(props) {
     const [anchorEl, setAnchorEl] = useState(null)
 
     const filterBy = () => true;
-    //handleSearchSubmit = handleSearchSubmit.bind(this);
 
     useEffect(() => {
         document.addEventListener("keydown", handleKeyDown);
@@ -72,7 +74,6 @@ function NavbarComponent(props) {
                         img: `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small`
                     }));
 
-                    console.log('data', data)
                     dispatch({
                         type: 'success-load',
                         payload: options
@@ -111,7 +112,6 @@ function NavbarComponent(props) {
         if (event && event.target && event.target.className &&
             event.target.className === "rbt-input-main form-control rbt-input  focus") {
             let keyCode = event.keyCode || event.charCode;
-
             switch (keyCode) {
                 case 13:
                     handleSearchSubmit(event);
@@ -146,7 +146,21 @@ function NavbarComponent(props) {
         document.getElementById("search-form").reset();
         if (typeaheadRef) typeaheadRef.current.clear();
 
-        if (options.length === 1) {
+        if (selected) {
+            history.push({
+                pathname: `${process.env.REACT_APP_PATH_NAME}film/${selected.id}`,
+                search: '',
+                state: {}
+            });
+        }
+        else if (title === '') {
+            history.push({
+                pathname: `${process.env.REACT_APP_PATH_NAME}search`,
+                search: `?title=${title}`,
+                state: {}
+            });
+        }
+        else if (options.length === 1) {
             history.push({
                 pathname: `${process.env.REACT_APP_PATH_NAME}film/${options[0].id}`,
                 search: '',
@@ -161,9 +175,7 @@ function NavbarComponent(props) {
         }
 
         dispatch({
-            type: 'field',
-            fieldName: 'title',
-            payload: ''
+            type: 'clear'
         })
     }
 
@@ -185,29 +197,42 @@ function NavbarComponent(props) {
         history.push(`${process.env.REACT_APP_PATH_NAME}profile`)
     };
 
+    const handleSettingsClick = () => {
+        setAnchorEl(null);
+        let pathname = location.pathname
+        if (pathname === '/') pathname = ''
+        history.push({
+            pathname: `${pathname}/settings`,
+            search: location.search,
+            state: location.state
+        });
+    }
+
     const handleToggle = (expanded) => {
         setIsExpanded(expanded)
     }
-
-    const handleSearch = (query) => {
+    const handleSearch = useCallback((query) => {
         dispatch({
             type: 'search',
             payload: query
         })
-
-    }
+    }, []);
 
     const handleLogin = () => {
         let pathname = location.pathname
         if (pathname === '/') pathname = ''
-        history.push(`${pathname}/login`);
+        history.push({
+            pathname: `${pathname}/login`,
+            search: location.search,
+            state: location.state
+        });
     }
 
     return (
 
         <Navbar
             expanded={isExpanded}
-            className="p-2"
+            className="py-2 px-4"
             expand="md" bg="light" variant="light"
             onToggle={handleToggle}
             onSelect={e => handleSelect(e)}>
@@ -216,19 +241,21 @@ function NavbarComponent(props) {
                 xs={{ span: 5, order: 'first' }}
                 sm={{ span: 2, order: 'first' }}
                 md={{ span: 4, order: 'first' }}>
-                <Navbar.Brand href={process.env.REACT_APP_PATH_NAME}>
+                <Navbar.Brand style={{ cursor: 'pointer' }}
+                    className="d-flex align-items-center"
+                    onClick={() => history.push(process.env.REACT_APP_PATH_NAME)}>
                     <Navbar.Brand>
                         {
                             <img alt=""
-                                src={ico} width="30"
+                                src={headerIcon} width="30"
                                 height="30" />
                         }
                     </Navbar.Brand>
-                    {<p className="d-none d-md-inline">FilmApp</p>}
+                    {<p className="d-none d-md-inline m-0">FilmApp</p>}
                 </Navbar.Brand>
             </Col>
 
-            <Col className="text-right d-md-none m-button-1 pb-2 "
+            <Col className="text-right d-md-none m-button pb-2 "
                 xs={{ span: 6, order: 2 }}
                 sm={{ span: 2, order: 'last' }}>
                 <Navbar.Toggle className="m-button" aria-controls="responsive-navbar-nav" />
@@ -237,7 +264,7 @@ function NavbarComponent(props) {
             <Col xs={{ span: 12, order: 3 }}
                 sm={{ span: 8, order: 2 }}
                 md={{ span: 5, order: 2 }}>
-                <Form id="search-form" inline>
+                <Form id="search-form" inline="true">
                     <Row className="m-0" style={{ width: 100 + '%' }}>
                         <Col xs={12} sm={10} className="p-0">
                             <AsyncTypeahead
@@ -246,26 +273,61 @@ function NavbarComponent(props) {
                                 useCache={false}
                                 filterBy={filterBy}
                                 id="typeahead-navbar"
-                                isLoading={isLoading}
+                                isLoading={true}
+                                open={isOpen}
                                 placeholder="Search"
                                 labelKey="title"
                                 minLength={1}
                                 options={options}
                                 onSearch={handleSearch}
-                                onChange={(selected) => {
-                                    const title = selected.length > 0 ? selected[0].title : '';
+                                onBlur={(event) => dispatch({ type: 'field', fieldName: 'isOpen', payload: false })}
+                                onFocus={(event) => {
+                                    if (title !== '')
+                                        dispatch({ type: 'field', fieldName: 'isOpen', payload: true })
+                                }}
+                                onKeyDown={(event) => dispatch({ type: 'field', fieldName: 'isOpen', payload: true })}
+                                onMenuToggle={(isOpen) => dispatch({ type: 'field', fieldName: 'isOpen', payload: isOpen })}
+                                onInputChange={(text, event) => {
                                     dispatch({
                                         type: 'field',
                                         fieldName: 'title',
-                                        payload: title
+                                        payload: text
+                                    })
+                                    if (text === '')
+                                        dispatch({
+                                            type: 'field',
+                                            fieldName: 'options',
+                                            payload: []
+                                        })
+                                }}
+                                onChange={(selected) => {
+                                    const title = selected.length > 0 ? selected[0].title : '';
+                                    dispatch({
+                                        type: 'pick-option',
+                                        title: title,
+                                        selected: selected.length > 0 ? selected[0] : null
                                     })
                                 }}
                                 renderMenu={(results, menuProps) => (
-
                                     <AsyncMenu {...menuProps} className="pt-4 pb-4">
                                         {results.map((result, index) => (
                                             <AsyncMenuItem key={result.id} option={result} position={index}>
-                                                <Row className="p-0 m-0 entry__inner">
+                                                <Row className="p-0 m-0 entry__inner" onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    e.preventDefault()
+                                                    dispatch({
+                                                        type: 'clear'
+                                                    })
+                                                    document.getElementById("search-form").reset();
+                                                    if (typeaheadRef) typeaheadRef.current.clear();
+
+                                                    history.push({
+                                                        pathname: `${process.env.REACT_APP_PATH_NAME}film/${result.id}`,
+                                                        search: '',
+                                                        state: {}
+                                                    });
+
+                                                }}>
                                                     <img
                                                         className="p-0"
                                                         alt=""
@@ -280,7 +342,11 @@ function NavbarComponent(props) {
                                                 </Row>
                                             </AsyncMenuItem>
                                         ))}
-                                        {!isLoading && results.length === 0 && <a role="option" className="dropdown-item disabled" href="#">No matches found.</a>}
+
+
+
+                                        {!isLoading && !isSearching && results.length === 0 && <a role="option" className="dropdown-item disabled" href="#">No matches found.</a>}
+                                        {isSearching && <a role="option" className="dropdown-item disabled" href="#">Searching...</a>}
                                         {
                                             <div style={{ height: 8 + 'px' }} className="d-flex justify-content-center">
                                                 {isLoading && !isAllFetched && <Spinner animation="border" />}
@@ -309,21 +375,21 @@ function NavbarComponent(props) {
 
                 <Navbar.Collapse className="justify-content-end" id="responsive-navbar-nav">
 
-                    <Nav activeKey="">
-                        <Nav.Link className="pr-2 pl-2" eventKey="playlists">Playlists</Nav.Link>
-                        {user.auth && <Nav.Link className="pr-2 pl-2" eventKey="add_film">Add</Nav.Link>}
+                    <Nav activeKey="" className="d-block d-sm-block d-md-flex  align-items-center">
+                        <Nav.Link className="px-2" eventKey="playlists">Playlists</Nav.Link>
+                        {user.auth && <Nav.Link className="px-2" eventKey="add_film">Add</Nav.Link>}
 
                         {
                             user.auth ?
                                 (
                                     <Avatar onClick={handleProfileMenuOpen}
-                                        className="pr-2 pl-2 custom-avatar m-button">
+                                        className="pe-2 ps-2 custom-avatar m-button">
                                         {user.name.toUpperCase().charAt(0)}
                                     </Avatar>
 
                                 ) :
                                 (
-                                    <Nav.Link className="pr-2 pl-2" eventKey="login "
+                                    <Nav.Link className="pe-2 ps-2" eventKey="login "
                                         onClick={() => handleLogin()}>
                                         Login
                                     </Nav.Link>
@@ -340,8 +406,10 @@ function NavbarComponent(props) {
                 anchorEl={anchorEl}
                 keepMounted
                 open={Boolean(anchorEl)}
-                onClose={handleProfileMenuClose}>
+                onClose={handleProfileMenuClose}
+            >
                 <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
+                <MenuItem onClick={handleSettingsClick}>Settings</MenuItem>
                 <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
             </Menu>
 

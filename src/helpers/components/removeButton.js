@@ -2,14 +2,13 @@ import { Col } from "react-bootstrap"
 import { ButtonBase } from "@material-ui/core"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
-const RemoveButton = (props) => {
-    const { handleRemove } = props
+const RemoveButton = ({ handleRemove }) => {
     return (
-        <Col xs={2} sm={2}
-            className="text-center justify-content-center d-flex align-items-center p-0">
+        <Col
+            className="text-center justify-content-center d-flex align-items-center p-0 flex-grow-0">
             <Col
-                className="playlist-remove-holder p-0 m-0"
-                style={{ height: 24 + 'px', width: 24 + "px" }}>
+                className="remove-holder p-0 m-0 flex-grow-0"
+                style={{ height: '24px', width: '24px' }}>
                 <ButtonBase
                     style={{ marginLeft: 'auto', borderRadius: 20 + "px", width: 24 + "px", height: 24 + "px" }}
                     className="m-button "

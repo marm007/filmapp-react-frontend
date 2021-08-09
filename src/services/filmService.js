@@ -11,7 +11,7 @@ export const view = (id) => axios.patch(`films/${id}/view`)
 export const video = (id) => axios.get(`films/${id}/video`)
 export const thumbnail = (id, params) => axios.get(`films/${id}/thumbnail`, {params})
 
-export const create = (id, form) => axios.post(`films}`, form, {headers: authHeader()})
+export const create = (form) => axios.post(`films`, form, {headers: authHeader()})
 
 export const update = (id, form) => axios.put(`films/${id}`, form, {headers: authHeader()})
 export const partialUpdate = (id, form) => axios.patch(`films/${id}`, form, {headers: authHeader()})

@@ -8,46 +8,56 @@ import PlaylistAddButtonComponent from "../../components/add/playlistAddButton";
 
 import { checkIfPlaylistButtonClick } from '../index'
 import RemoveButton from './removeButton';
+import '../../components/filmPage/film.css'
 
-const Film = (props) => {
+const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommendations }) => {
 
-    const { film, index, handleRedirect, handleRemove, isProfile } = props
+    const recommendationsClass = "row mx-0 mb-4"
+    const normalClass = "col mb-5 col-12 col-sm-6 col-md-3 col-lg-2"
 
     return (
-        <Col className="mb-5 film-play-outer-container playlist-remove-container"
-            xs={12} sm={6} md={3} lg={2}
-            onClick={(e) => {
-                const isPlaylistButton = checkIfPlaylistButtonClick(e.target)
-                if (!isPlaylistButton) handleRedirect(film.id)
-            }}>
-            <div
-                className="embed-responsive embed-responsive-16by9 z-depth-1-half film-play-container">
-                <BlurredImageComponent
-                    image={film.img} />
-                <FontAwesomeIcon className="film-play-middle" icon="play" />
-            </div>
-            <Row className="m-0 mt-1">
-                <Col xs={10} sm={10} className="p-0">
-                    <TextTruncate line={1} text={film.title}
-                        id="s-c-2"
-                        className="mb-1 mt-1 title " />
+        <div className={isRecommendations ? recommendationsClass : normalClass}>
+            <div className={(isRecommendations ? "row p-0 m-0" : "col").concat(" play-outer-container remove-container")}
+                onClick={(e) => {
+                    const isPlaylistButton = checkIfPlaylistButtonClick(e.target)
+                    if (!isPlaylistButton) handleRedirect(film.id)
+                }}>
+                <Col xs={isRecommendations ? 6 : 12} sm={isRecommendations ? 6 : 12}
+                    className="m-0 p-0">
+                    <div
+                        className="embed-responsive embed-responsive-16by9 z-depth-1-half play-container">
+                        <BlurredImageComponent
+                            image={film.img} />
+                        <FontAwesomeIcon className="play-middle" icon="play" />
+                    </div>
                 </Col>
+                <Col xs={isRecommendations ? 6 : 12} sm={isRecommendations ? 6 : 12}
+                    className={isRecommendations ? "m-0" : "m-0 p-0"}>
+                    <Row className="m-0 mt-1">
+                        <Col className="film-preview-playlist-title-width p-0">
+                            <TextTruncate line={1} text={film.title}
+                                className="mb-1 mt-1 title " />
+                        </Col>
 
-                {
-                    isProfile ?
-                        <RemoveButton handleRemove={handleRemove}/> :
-                        <PlaylistAddButtonComponent
-                            index={index}
-                            filmID={film.id} />
-                }
-            </Row>
-            <p className="mb-0 author-nick">
-                <small>{film.author_name}</small>
-            </p>
-            <p className="mb-0 film-views">
-                <small>{film.views} views</small>
-            </p>
-        </Col>
+                        <Col className="p-0 d-flex justify-content-end">
+                            {
+                                isProfile ?
+                                    <RemoveButton handleRemove={handleRemove} /> :
+                                    <PlaylistAddButtonComponent
+                                        index={index}
+                                        filmID={film.id} />
+                            }
+                        </Col>
+                    </Row>
+                    <p className="mb-0 author-nick-color">
+                        <small>{film.author_name}</small>
+                    </p>
+                    <p className="mb-0 film-views">
+                        <small>{film.views} views</small>
+                    </p>
+                </Col>
+            </div>
+        </div>
     )
 }
 

@@ -9,20 +9,21 @@ import * as userApi from '../../services/userService'
 import { Player } from 'video-react';
 import TextTruncate from 'react-text-truncate';
 
-import FilmContext from '../../helpers/film/filmContext'
+import FilmContext from '../../helpers/contexts/film/filmContext'
 
 import "../../../node_modules/video-react/dist/video-react.css";
 import { initialPreviewState, previewReducer } from './reducers/previewReducer';
-import UserContext from '../../helpers/user/userContext';
+import UserContext from '../../helpers/contexts/user/userContext';
 
 
 function FilmPreview(props) {
-    
+
     let history = useHistory()
     let location = useLocation()
 
     const { user } = useContext(UserContext)
 
+    // eslint-disable-next-line no-unused-vars
     const [filmState, filmDispatch] = useContext(FilmContext)
 
     const playerRef = useCallback(node => {
@@ -76,7 +77,7 @@ function FilmPreview(props) {
                 return
             }
 
-           
+
             const filmData = filmResponse.value.data
 
             filmDispatch({
@@ -114,37 +115,36 @@ function FilmPreview(props) {
 
     useEffect(() => {
         async function handleLike() {
-            console.log('liked')
             if (likeAction === null) return
 
-            await filmApi.like(film.id, { action: likeAction })
-                .then(async res => {
-                    let data = res.data
-                    data.img = `${process.env.REACT_APP_API_URL}films/${res.data.id}/thumbnail?width=poster`
-                    data.video = `${process.env.REACT_APP_API_URL}films/${res.data.id}/video`
-                    await userApi.me({ details: true })
-                        .then(res => {
-                            const details = res.data.details
-                            const isLiked = details.liked.indexOf(data.id) > -1
-                            const isDisliked = details.disliked.indexOf(data.id) > -1
-                            dispatch({
-                                type: 'success',
-                                film: data,
-                                isLiked: isLiked,
-                                isDisliked: isDisliked
-                            })
+            try {
+                const likeResult = await filmApi.like(film.id, { action: likeAction })
 
-                        })
+                let likeData = likeResult.data
+                likeData.img = `${process.env.REACT_APP_API_URL}films/${likeData.id}/thumbnail?width=poster`
+                likeData.video = `${process.env.REACT_APP_API_URL}films/${likeData.id}/video`
+
+                const userResult = await userApi.me({ details: true })
+                const details = userResult.data.details
+                const isLiked = details.liked.indexOf(likeData.id) > -1
+                const isDisliked = details.disliked.indexOf(likeData.id) > -1
+
+                dispatch({
+                    type: 'success',
+                    film: likeData,
+                    isLiked: isLiked,
+                    isDisliked: isDisliked
                 })
-                .catch(err => {
-                    dispatch({
-                        type: 'error'
-                    })
-                    if(err.response && err.response.status === 401) {
-                        history.push(`${location.pathname}/login`);
-                    }
-                    console.error(err)
+
+            } catch (err) {
+                console.error(err)
+                dispatch({
+                    type: 'error'
                 })
+                if (err.response && err.response.status === 401) {
+                    history.push(`${location.pathname}/login`);
+                }
+            }
         }
 
         if (isLikeButtonClicked) handleLike()
@@ -171,7 +171,7 @@ function FilmPreview(props) {
     const TruncateButton = (title) => {
         return (<span>
             <Button variant="link"
-                className="p-0 m-0 mb-1 title font-weight-bold"
+                className="p-0 m-0 mb-1 title fw-bold"
                 onClick={handleTruncate}>{title}</Button>
         </span>)
     }
@@ -189,24 +189,25 @@ function FilmPreview(props) {
             {
                 film &&
                 <React.Fragment>
-                    <Col className="pl-3 pr-3 mt-4" sm={12}>
-                        <Row>
-                            <Col sm={12}>
-                                {!film.title && <p className="font-weight-bold"><br /></p>}
-                                <p className="font-weight-bold">{film.title}</p>
+                    <Col className="mt-4" sm={12}>
+                        <Row className="p-0 m-0">
+                            <Col sm={12} className="p-0">
+                                {!film.title && <p className="fw-bold"><br /></p>}
+                                <p className="fw-bold">{film.title}</p>
                             </Col>
-                            <Col xs={4} sm={4}>
+                            <Col xs={4} sm={4} className="p-0">
                                 <p><FontAwesomeIcon icon="eye" /> &ensp;{film.views}</p>
                             </Col>
                             <Col xs={4} sm={4} className="text-right d-flex justify-content-end">
-                                <p style={{ cursor: "pointer", width: "fit-content", width: "-moz-fit-content" }} className={isLiked ? 'blue' : ''}
+                                <p style={{ cursor: "pointer" }}
+                                    className={isLiked ? 'film-picked-thumb-color' : ''}
                                     onClick={() => handleLike('like')}>
                                     <FontAwesomeIcon icon="thumbs-up" />
                                     &ensp;{film.likes}
                                 </p>
                             </Col>
                             <Col xs={4} sm={4}>
-                                <p style={{ cursor: "pointer", width: "fit-content", width: "-moz-fit-content" }} className={isDisliked ? 'blue' : ''}
+                                <p style={{ cursor: "pointer" }} className={isDisliked ? 'film-picked-thumb-color' : ''}
                                     onClick={() => handleLike('dislike')}>
                                     <FontAwesomeIcon icon="thumbs-down" />
                                     &ensp;{film.dislikes}

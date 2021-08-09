@@ -1,9 +1,11 @@
-import React, { Suspense, useContext, lazy } from 'react';
+import React, { useContext } from 'react';
 import './App.css';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import NavbarComponent from './components/navbar';
+
+import RemoveModal from './helpers/components/removeModal'
 
 import HomeComponent from './components/homePage';
 import FilmComponent from './components/filmPage';
@@ -13,6 +15,7 @@ import SearchComponent from './components/searchPage';
 import PlaylistsPage from './components/playlistsPage';
 import AddFilmComponent from './components/add/filmAdd';
 import NotFoundComponent from './components/notFound';
+import SettingsComponent from './components/settings'
 
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 
@@ -44,15 +47,15 @@ import PrivateRoute from './helpers/components/privateRoute';
 import ProfileComponent from './components/profilePage';
 
 import { Toast } from 'react-bootstrap'
-import ToastContext from './helpers/toast/toastContext'
+import ToastContext from './helpers/contexts/toast/toastContext'
+
+import WithAxios from "./helpers/components/withAxios";
+import UserProvider from './helpers/contexts/user/userProvider';
 
 library.add(faSearch, faPlus, faThumbsUp, faThumbsDown, faEye, faPlay, faFilter, faCaretUp, faCaretDown, faEllipsisV,
     faSortDown, faSortUp, faTrashAlt, faTimes, faGlobeEurope, faLock);
 
 const pathName = process.env.REACT_APP_PATH_NAME
-
-const HomePageLazy = lazy(() => import('./components/homePage'));
-const FilmPageLazy = lazy(() => import('./components/filmPage'));
 
 function App(props) {
 
@@ -63,58 +66,62 @@ function App(props) {
             {
                 <div className="toast-root">
                     <Toast
+
                         show={toast.isOpen}
                         onClose={clearToast}
                         autohide
-                        className="toast-element"
-                    >
+                        className="toast-element bg-secondary">
                         <Toast.Header>
-                            <strong className="mr-auto">Bootstrap</strong>
+                            <strong className="me-auto">Playlist</strong>
                         </Toast.Header>
                         <Toast.Body>{toast.message}</Toast.Body>
                     </Toast>
                 </div>
             }
-            <Suspense fallback={<div style={{ width: '100%', height: '100%', backgroundColor: 'black' }}>Wczytywanie</div>}>
-                <Router>
-                    <Route component={() => <NavbarComponent />} />
+            <Router>
+                <UserProvider>
+                    <WithAxios>
+                        <Route component={() => <NavbarComponent />} />
 
-                    <Route exact path={[`${pathName}login`, `${pathName}film/:id/login`, `${pathName}search/login`, `${pathName}add/login`, `${pathName}playlists/login`]}
-                        component={LoginComponent} />
+                        <PrivateRoute exact path={[`${pathName}settings`, `${pathName}profile/settings`, `${pathName}film/:id/settings`, `${pathName}search/settings`, `${pathName}add/settings`, `${pathName}playlists/settings`]}
+                            component={SettingsComponent} />
 
-                    <Route exact path={[`${pathName}register`, `${pathName}film/:id/register`, `${pathName}search/register`, `${pathName}add/register`, `${pathName}playlists/register`]}
-                        component={RegisterComponent} />
+                        <Route exact path={[`${pathName}login`, `${pathName}film/:id/login`, `${pathName}search/login`, `${pathName}add/login`, `${pathName}playlists/login`]}
+                            component={LoginComponent} />
 
-                    <Route exact path={[`${pathName}reset/:token`, `${pathName}film/:id/reset/:token`, `${pathName}search/reset/:token`, `${pathName}add/reset/:token`, `${pathName}playlists/reset/:token`]}
-                        component={ResetPasswordComponent} />
+                        <Route exact path={[`${pathName}register`, `${pathName}film/:id/register`, `${pathName}search/register`, `${pathName}add/register`, `${pathName}playlists/register`]}
+                            component={RegisterComponent} />
 
-                    <Route exact path={[`${pathName}forgot`, `${pathName}film/:id/forgot`, `${pathName}search/forgot`, `${pathName}add/forgot`, `${pathName}playlists/forgot`]}
-                        component={ForgotPasswordComponent} />
+                        <Route exact path={[`${pathName}reset/:token`, `${pathName}film/:id/reset/:token`, `${pathName}search/reset/:token`, `${pathName}add/reset/:token`, `${pathName}playlists/reset/:token`]}
+                            component={ResetPasswordComponent} />
 
-                    <Switch>
+                        <Route exact path={[`${pathName}forgot`, `${pathName}film/:id/forgot`, `${pathName}search/forgot`, `${pathName}add/forgot`, `${pathName}playlists/forgot`]}
+                            component={ForgotPasswordComponent} />
 
-                        <Route exact path={[`${pathName}film/:id`, `${pathName}film/:id/login`, `${pathName}film/:id/register`, `${pathName}film/:id/reset/:token`,
-                        `${pathName}film/:id/forgot`]}
-                            render={(props) => <FilmPageLazy {...props} />} />
+                        <Switch>
 
-                        <Route exact path={[`${pathName}`, `${pathName}login`, `${pathName}register`,
-                        `${pathName}reset/:token`, `${pathName}forgot`]}
-                            render={() => <Suspense fallback={<div style={{ width: '100%', height: '100%', backgroundColor: 'black' }}>Wczytywanie</div>}><HomePageLazy /></Suspense>} />
+                            <Route exact path={[`${pathName}film/:id`, `${pathName}film/:id/login`, `${pathName}film/:id/register`, `${pathName}film/:id/reset/:token`,
+                            `${pathName}film/:id/forgot`, `${pathName}film/:id/settings`]} component={FilmComponent} />
 
-                        <Route exact path={[`${pathName}search`, `${pathName}search/login`, `${pathName}search/register`, `${pathName}search/reset/:token`, `${pathName}search/forgot`]} component={SearchComponent} />
+                            <Route exact path={[`${pathName}`, `${pathName}login`, `${pathName}register`, `${pathName}settings`,
+                            `${pathName}reset/:token`, `${pathName}forgot`]} component={HomeComponent} />
 
-                        <PrivateRoute exact path={[`${pathName}add`, `${pathName}add/login`, `${pathName}add/register`, `${pathName}add/reset/:token`, `${pathName}add/forgot`]} component={AddFilmComponent} />
+                            <Route exact path={[`${pathName}search`, `${pathName}search/login`, `${pathName}search/settings`, `${pathName}search/register`, `${pathName}search/reset/:token`, `${pathName}search/forgot`]} component={SearchComponent} />
 
-                        <Route exact path={[`${pathName}playlists`, `${pathName}playlists/login`, `${pathName}playlists/register`, `${pathName}playlists/reset/:token`,
-                        `${pathName}playlists/forgot`]} component={PlaylistsPage} />
+                            <PrivateRoute exact path={[`${pathName}add`, `${pathName}add/settings`]} component={AddFilmComponent} />
 
-                        <PrivateRoute exact path={[`${pathName}profile`]} component={ProfileComponent} />
+                            <Route exact path={[`${pathName}playlists`, `${pathName}playlists/login`, `${pathName}playlists/settings`, `${pathName}playlists/register`, `${pathName}playlists/reset/:token`,
+                            `${pathName}playlists/forgot`]} component={PlaylistsPage} />
 
-                        <Route exact path="*" component={NotFoundComponent} />
+                            <PrivateRoute exact path={[`${pathName}profile`, `${pathName}profile/settings`]} component={ProfileComponent} />
 
-                    </Switch>
-                </Router>
-            </Suspense>
+                            <Route exact path="*" component={NotFoundComponent} />
+
+                        </Switch>
+                    </WithAxios>
+                </UserProvider>
+            </Router>
+            <RemoveModal />
         </div>
     );
 }

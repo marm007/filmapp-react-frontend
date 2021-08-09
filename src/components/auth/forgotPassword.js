@@ -1,41 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Alert, Button, Form, Modal } from 'react-bootstrap';
+import { Alert, Button, Form, Modal, Spinner } from 'react-bootstrap';
+import * as authApi from '../../services/authService'
+import { authInitialState, authReducer } from './reducer';
 
 function ForgotPassword(props) {
     let history = useHistory()
 
-    const [email, setEmail] = useState('')
-    const [submitted, setSubmitted] = useState(false)
     const [show, setShow] = useState(true)
 
-    const [isEmailSending, setIsEmailSending] = useState(false)
-    const [isEmailSend, setIsEmailSend] = useState(false)
-    const [isEmailError, setIsEmailError] = useState(false)
-    const [errorMessage, setErrorMessage] = useState('')
+    const [state, dispatch] = useReducer(authReducer, authInitialState)
+
+    const { email, isSuccess, isSubmitted, isSending, isError, error } = state
+
+    useEffect(() => {
+        async function submitData() {
+
+            await authApi.forget({ email: email })
+                .then(res => {
+                    dispatch({
+                        type: 'success'
+                    })
+                })
+                .catch(err => {
+                    let errorMessage = null;
+
+                    if (err.response && err.response.data && err.response.data.errors)
+                        errorMessage = err.response.data.errors;
+
+                    dispatch({
+                        type: 'error',
+                        payload: errorMessage
+                    })
+
+                    console.error(err)
+                })
+        }
+        if (isSending) submitData()
+    }, [isSending, email])
 
     const handleSubmitForgotRequest = (e) => {
         e.preventDefault();
 
-        setIsEmailSending(true)
-        setIsEmailError(false)
-        setErrorMessage('')
+        dispatch({
+            type: 'submit'
+        })
 
-      /*   axios.post(`${process.env.REACT_APP_API_URL}users/password/forgot`, { email: this.state.user.email })
-            .then(res => {
-                this.setState({ emailSend: true, emailSending: false });
+        if (email) {
+            dispatch({
+                type: 'send'
             })
-            .catch(err => {
-                let errorMessage = '';
-
-                if (err.response && err.response.data && err.response.data.errors)
-                    errorMessage = err.response.data.errors;
-
-                this.setState({ emailError: true, emailSending: false, errorMessage: errorMessage });
-
-            }) */
+        }
     };
-
 
     const modalClose = () => {
         setShow(false)
@@ -50,11 +66,10 @@ function ForgotPassword(props) {
             show={show}
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
+            centered>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Register
+                    Forgot
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -62,40 +77,39 @@ function ForgotPassword(props) {
                     <Form.Group>
                         <Form.Label htmlFor="email">Email</Form.Label>
                         <Form.Control
-                            isInvalid={(submitted && !email) || (alert && alert.type === 'alert-danger' && alert.message)}
-                            type="email" name="email" value={email} onChange={e => setEmail(e.target.value)}>
+                            isInvalid={(isSubmitted && !email)}
+
+                            type="email" name="email" value={email} onChange={e => dispatch({ type: 'field', fieldName: 'email', payload: e.target.value })}>
                         </Form.Control>
                         <Form.Control.Feedback type="invalid">
-                            {
-                                alert && alert.message ? alert.message : "Email is required"
-                            }
+                            Email is required
                         </Form.Control.Feedback>
                     </Form.Group>
 
 
 
                     {
-                        isEmailSend &&
-                        <Alert variant="success">
+                        isSuccess &&
+                        <Alert variant="success" className="mt-2">
                             Email with link to reset password has been sent.
                         </Alert>
                     }
 
                     {
-                        isEmailError &&
-                        <Alert variant="danger">
-                            {errorMessage ? errorMessage : "Error while sending email."}
+                        isError &&
+                        <Alert variant="danger" className="mt-2">
+                            {error ? error : "Error while sending email."}
                         </Alert>
                     }
 
-                    <Form.Group>
+                    <Form.Group className="d-flex align-items-center mt-2">
                         <Button type="submit" className="btn-primary">
                             Reset password
                         </Button>
 
-                        {isEmailSending &&
-                            <img alt="loading..." className="pl-2"
-                                src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                        {
+                            isSending &&
+                            <Spinner className="ms-2" animation="grow" />
                         }
                     </Form.Group>
 

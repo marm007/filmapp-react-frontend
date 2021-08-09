@@ -1,14 +1,13 @@
 import { useContext, useMemo } from 'react'
 import { refresh } from '../../services/authService';
 import axios from '../axios'
-import UserContext from '../user/userContext';
+import UserContext from '../contexts/user/userContext';
 
 const WithAxios = ({ children }) => {
 
     const { logout } = useContext(UserContext);
 
     useMemo(() => {
-        console.log('memo')
         axios.interceptors.response.use((response) => {
             return response
         }, (error) => {
@@ -33,7 +32,8 @@ const WithAxios = ({ children }) => {
             }
             return Promise.reject(error);
         })
-    }, [logout])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return children
 }

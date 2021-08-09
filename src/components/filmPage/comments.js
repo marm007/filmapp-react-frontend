@@ -11,25 +11,44 @@ import * as commentApi from '../../services/commentService'
 import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
 import { commentsReducer, commentsInitialState } from './reducers/commentsReducer';
 import { commentsMaxFetchCount } from "../../config"
-import UserContext from '../../helpers/user/userContext';
-import FilmContext from '../../helpers/film/filmContext';
+import UserContext from '../../helpers/contexts/user/userContext';
+import FilmContext from '../../helpers/contexts/film/filmContext';
 import { displayCommentDate } from '../../helpers';
+import RemoveModalContext from '../../helpers/contexts/removeModal/removeModalContext';
 
 function Comments(props) {
 
+    const { showModal, clear, removeModalData } = useContext(RemoveModalContext)
+
     const { user } = useContext(UserContext);
+
     const [filmState, filmDispatch] = useContext(FilmContext)
 
     const [state, dispatch] = useReducer(commentsReducer, commentsInitialState)
-    const { comments, commentsCount, text, isInitialLoaded, isLoading, isAllFetched, isAdding, id, error } = state
+    const {
+        comments,
+        commentsCount,
+        text,
+        isInitialLoaded,
+        isLoading,
+        isAllFetched,
+        isAdding,
+        id,
+        isRemoving,
+        toRemove,
+        isSorting,
+        sort,
+        sorts,
+        error
+    } = state
 
     const handleOnCommentsBottom = useCallback(() => {
-        if (!isLoading && !isAllFetched && isInitialLoaded && !isAdding && !error && id) {
+        if (!isLoading && !isAllFetched && isInitialLoaded && !isAdding && !error && id && !isSorting) {
             dispatch({
                 type: 'load'
             })
         }
-    }, [isLoading, isAllFetched, isInitialLoaded, isAdding, error, id])
+    }, [isLoading, isAllFetched, isInitialLoaded, isAdding, error, id, isSorting])
 
     useBottomScrollListener(handleOnCommentsBottom)
 
@@ -56,10 +75,6 @@ function Comments(props) {
                 comments: filmState.comments,
                 commentsCount: filmState.commentsCount,
             })
-
-            filmDispatch({
-                type: 'reset-comments'
-            })
         }
 
         if (filmState.comments && filmState.commentsCount !== null) getCommentsFromContext()
@@ -80,8 +95,28 @@ function Comments(props) {
                     })
                 })
         }
-        if (isLoading && isInitialLoaded && !isAdding && comments && id) loadComments()
-    }, [isLoading, isAdding, id, comments, isInitialLoaded])
+        async function loadSortedComments() {
+            await commentApi.sort(id, { [sort.id]: sort.dir, skip: comments.length, limit: commentsMaxFetchCount })
+                .then(res => {
+                    dispatch({
+                        type: 'load-success',
+                        payload: res.data
+                    })
+                })
+                .catch(err => {
+                    dispatch({
+                        type: 'error'
+                    })
+                })
+        }
+        if (isLoading && isInitialLoaded && !isAdding &&
+            comments && id && !isSorting) {
+            if (!sort)
+                loadComments()
+            else
+                loadSortedComments()
+        }
+    }, [isLoading, isAdding, id, comments, isInitialLoaded, isSorting, sort])
 
 
     useEffect(() => {
@@ -105,38 +140,85 @@ function Comments(props) {
         if (isAdding && !isLoading && id) addComment()
     }, [isAdding, isLoading, id, text])
 
-    const handleAddComment = () => {
-        if (text) {
-            dispatch({
-                type: 'add'
-            })
-        } else {
-
+    useEffect(() => {
+        async function removeComment() {
+            await commentApi.remove(toRemove.id)
+                .then(res => {
+                    dispatch({ type: 'remove-success' })
+                    clear()
+                })
+                .catch(err => {
+                    clear()
+                    console.error(err)
+                })
         }
+
+        if (isRemoving && toRemove && removeModalData.isRemoving &&
+            removeModalData.id === toRemove.id && removeModalData.type === 'comment' &&
+            removeModalData.title === toRemove.text.substring(0, 10).concat('...')) removeComment()
+    }, [isRemoving, toRemove, clear, removeModalData])
+
+    useEffect(() => {
+        async function sortComments() {
+            const sortParams = sort ? { [sort.id]: sort.dir, limit: commentsMaxFetchCount } : {}
+
+            await commentApi.sort(id, sortParams)
+                .then(res => {
+                    dispatch({ type: 'sort-success', payload: res.data })
+                })
+                .catch(err => {
+                    dispatch({ type: 'error', payload: 'Sort error.' })
+                    console.error(err)
+                })
+        }
+        if (isSorting) sortComments()
+    }, [isSorting, sort, id])
+
+    const handleAddComment = () => {
+        dispatch({
+            type: 'add'
+        })
     }
 
-    const handleRemoveComment = (id) => {
-
+    const handleRemoveComment = (comment) => {
+        if (removeModalData.isRemoving) return
+        dispatch({ type: 'remove', payload: comment })
+        showModal(comment.id, 'comment', comment.text.substring(0, 10).concat('...'))
     }
 
-    const sortComments = (e) => {
-        let path = '';
+    const handleSortComments = (e) => {
+
+        let sortToChange = null
 
         switch (e) {
-            case 'commentByDate':
-                path = 'date';
+            case 'created_at':
+                sortToChange = sorts[0]
 
                 break;
-            case 'commentByName':
-                path = 'author';
+            case 'author_name':
+                sortToChange = sorts[1]
                 break;
             default:
-                break;
+                return;
         }
 
-        if (path === '')
-            return;
+        let tmpSort = null
 
+        if (sort && sort.id === sortToChange.id) {
+            sortToChange.dir *= -1
+            tmpSort = sortToChange
+            if (sortToChange.dir === 1) {
+                tmpSort = null
+            }
+        } else {
+            tmpSort = sortToChange
+        }
+
+        dispatch({
+            type: 'sort',
+            sortToChange: sortToChange,
+            sort: tmpSort
+        })
 
     };
 
@@ -144,46 +226,45 @@ function Comments(props) {
     return (
 
         <Col>
-            <Col className="p-0 mt-4 mb-4" sm={12}>
-                <Row>
-                    <Col xs={7} sm={5} md={4} className="d-flex align-items-center ">
-                        {commentsCount !== null && <span>{commentsCount}{commentsCount === 1 ? ' comment' : ' comments'} </span>}
-                    </Col>
-                    <Col xs={2} sm={2}>
-                        <DropdownButton
-                            alignRight
-                            variant="secondary"
-                            title="Sort"
-                            id="dropdown-button-drop-down"
-                            onSelect={k => sortComments(k)}>
-                            <Dropdown.Item eventKey="commentByDate">By date</Dropdown.Item>
-                            <Dropdown.Item eventKey="commentByName">By author name</Dropdown.Item>
-                        </DropdownButton>
-                    </Col>
-                </Row>
-            </Col>
-            <Col className="p-0 mb-4" sm={12}>
-                <Row>
-                    <Col xs={8} sm={10}>
-                        <TextField
-                            value={text}
-                            onChange={e => dispatch({ type: 'field', fieldName: 'text', payload: e.target.value })}
-                            type="text"
-                            id="standard-multiline-flexible"
-                            label="Comment"
-                            multiline
-                            fullWidth
-                            maxrow="4"
-                        />
-                    </Col>
-                    <Col xs={2} sm={2}>
-                        <Button disabled={isAdding}
-                            className="mt-3" variant="primary"
-                            onClick={handleAddComment}>
-                            Submit
-                        </Button>
-                    </Col>
-                </Row>
+            <Row className="p-0 mt-4 mb-4">
+                <Col xs={7} sm={5} md={4} className="d-flex align-items-center ">
+                    {commentsCount !== null && <span>{commentsCount}{commentsCount === 1 ? ' comment' : ' comments'} </span>}
+                </Col>
+                <Col xs={2} sm={2}>
+                    <DropdownButton
+                        variant="secondary"
+                        title="Sort"
+                        id="dropdown-button-drop-down"
+                        onSelect={e => handleSortComments(e)}>
+                        {
+                            sorts.map(sortTmp => (
+                                <Dropdown.Item key={sortTmp.id} eventKey={sortTmp.id} active={sort && sortTmp.id === sort.id}>
+                                    {sortTmp.title}
+                                    {sort && sort.id === sortTmp.id && sortTmp.dir === 1 ?
+                                        <FontAwesomeIcon className="ms-2" icon="sort-up" /> :
+                                        sort && sort.id === sortTmp.id && sortTmp.dir === -1 ?
+                                            <FontAwesomeIcon className="ms-2" icon="sort-down" /> : ""}
+                                </Dropdown.Item>)
+                            )
+                        }
+                    </DropdownButton>
+                </Col>
+            </Row>
+            <TextField
+                value={text}
+                onChange={e => dispatch({ type: 'field', fieldName: 'text', payload: e.target.value })}
+                type="text"
+                id="standard-multiline-flexible"
+                label="Comment"
+                multiline
+                fullWidth
+                maxrow="4" />
+            <Col className="d-flex justify-content-end" >
+                <Button disabled={isAdding || !text}
+                    className="mt-3" variant="primary"
+                    onClick={(text && !isAdding) ? handleAddComment : null}>
+                    Submit
+                </Button>
             </Col>
 
             {
@@ -194,42 +275,40 @@ function Comments(props) {
             {
                 comments && comments.map(comment => {
                     return (
-                        <Col className="p-0 mt-4 playlist-remove-container" sm={12} key={comment.id}>
-                            <Row className="pl-3">
-
-                                <p className="m-0 font-weight-bold">
-                                    <small className="m-0 font-weight-bold">{comment.author_name}&nbsp;</small>
+                        <Col className="p-0 mt-4 remove-container" sm={12} key={comment.id}>
+                            <div className="d-flex">
+                                <p className="m-0 fw-bold">
+                                    <small className="m-0 fw-bold">{comment.author_name}&nbsp;</small>
                                 </p>
-                                <p>
+                                <p >
                                     <small className="m-0">{displayCommentDate(comment)}</small>
                                 </p>
                                 {
                                     user.id === comment.author_id &&
                                     <Col
-                                        className="playlist-remove-holder p-0 m-0 d-flex justify-content-end"
+                                        xs={2} sm={2}
+                                        className="d-flex justify-content-center align-items-center remove-holder p-0 m-0 ms-auto"
                                         style={{ height: 24 + 'px', width: 24 + "px" }}>
                                         <ButtonBase
                                             style={{ borderRadius: 20 + "px", width: 24 + "px", height: 24 + "px" }}
-                                            className="m-button "
-                                            onClick={() => handleRemoveComment(comment.id)}>
+                                            className="m-button cursor-pointer"
+                                            onClick={() => handleRemoveComment(comment)}>
                                             <FontAwesomeIcon icon="trash-alt" />
                                         </ButtonBase>
                                     </Col>
                                 }
-                            </Row>
-                            <p>
+                            </div>
+                            <p className="d-block d-sm-block">
                                 <small>{comment.text}</small>
                             </p>
                         </Col>
                     )
                 })
-
-
             }
 
             {
                 !isAllFetched && <div style={{ height: 32 + 'px' }} className="d-flex justify-content-center">
-                    {(isLoading || !isInitialLoaded) && !error && <Spinner animation="border" />}
+                    {(isLoading || !isInitialLoaded || isSorting) && !error && <Spinner animation="border" />}
                 </div>
             }
 

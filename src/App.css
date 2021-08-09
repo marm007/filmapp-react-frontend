@@ -1,43 +1,5 @@
-.App {
-    text-align: center;
-}
-
-.App-logo {
-    animation: App-logo-spin infinite 20s linear;
-    height: 40vmin;
-    pointer-events: none;
-}
-
-.App-header {
-    background-color: #282c34;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-}
-
-.App-link {
-    color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.blue {
-    color: #06538b;
-}
-
-.word-wrap {
-    word-wrap: break-word;
+#async_typeahead > li > a {
+    white-space: initial;
 }
 
 .divider {
@@ -49,23 +11,23 @@
     background-color: #e5e5e5;
 }
 
-.film-play-outer-container {
+.play-outer-container {
     cursor: pointer;
 }
 
-.film-cursor-default > div > img {
+.play-cursor-default > div > img {
     cursor: default !important
 }
 
-.film-cursor-default > div > div {
+.play-cursor-default > div > div {
     cursor: default !important
 }
 
-.film-play-container {
+.play-container {
     position: relative;
 }
 
-.film-play-image {
+.play-image {
     cursor: pointer;
     opacity: 1;
     display: block;
@@ -75,7 +37,7 @@
     backface-visibility: hidden;
 }
 
-.film-play-middle {
+.play-middle {
     cursor: pointer;
     transition: .5s ease;
     opacity: 0;
@@ -93,22 +55,11 @@
     transition: all .2s ease-in-out;
 }
 
-.author-nick {
-    color: #606060;
-}
-
-.film-views {
-    line-height: 0.6;
+.author-nick-color {
     color: #606060;
 }
 
 .m-button {
-    margin-right: 0;
-    display: flex;
-    margin-left: auto;
-}
-
-.m-button-1 {
     margin-right: 0;
     display: flex;
     margin-left: auto;
@@ -119,157 +70,8 @@
     outline-offset: none !important;
 }
 
-.playlist-add-icon {
-    cursor: pointer;
-}
-
-.playlist-add-icon-holder {
-    cursor: pointer;
-}
-
-.centerd {
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
-}
-
-@media (hover: hover) {
-    .playlist-add-icon {
-        transition: .2s ease;
-        opacity: 0;
-    }
-    .film-play-outer-container:hover .film-play-image {
-        opacity: 0.5;
-    }
-    .film-play-outer-container:hover .film-play-middle {
-        opacity: 1.0;
-    }
-    .film-play-outer-container:hover .playlist-add-icon {
-        opacity: 0.6;
-    }
-    .film-play-outer-container:hover .playlist-add-icon-holder:hover .playlist-add-icon {
-        opacity: 1;
-    }
-    .playlist-remove-holder {
-        opacity: 0;
-        transition: all .2s ease-in-out;
-        color: #606060;
-    }
-    .playlist-remove-container:hover .playlist-remove-holder {
-        opacity: 0.6;
-    }
-    .playlist-remove-container:hover .playlist-remove-holder:hover {
-        opacity: 1;
-        cursor: pointer;
-    }
-}
-
-@media (hover: none) {
-    .playlist-remove-holder {
-        opacity: 0.8;
-        color: #606060;
-    }
-    .playlist-add-icon {
-        opacity: 0.7;
-    }
-}
-
-.dropdown-center-playlist {
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-}
-
-.no-copy {
-    -webkit-user-select: none;
-    /* Chrome all / Safari all */
-    -moz-user-select: none;
-    /* Firefox all */
-    -ms-user-select: none;
-    /* IE 10+ */
-    user-select: none;
-    /* Likely future */
-}
-
-.bar {
-    background-color: #f8f8f8;
-    height: 60px;
-}
-
-.dropdown-bar {
-    height: 200px;
-    width: 400px;
-    margin: 0 auto 50px;
-    box-shadow: 0 10px 10px #666;
-    /*              |        |         |
-                x-shift      |         |
-                          y-shift      |
-                                 size of shadow
-    */
-}
-
-.add-item-opacity {
-    background-color: rgba(0, 0, 0, 0.4);
-}
-
-.add-item-middle {
-    cursor: pointer;
-    opacity: 0.8;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    text-align: center;
-}
-
-mark {
-    padding: 0 !important;
-    background-color: transparent !important;
-    color: black;
-    font-weight: 700;
-}
-
-#async_typeahead>li>a {
-    white-space: initial;
-}
-
-@media(max-width:586px) {
-    .search-bar {
-        width: 100%;
-    }
-}
-
-.dropdown-menu.show {
-    opacity: 1 !important;
-    pointer-events: auto !important;
-}
-
-.dropdown-toggle:after {
-    display: none !important
-}
-
-.m-button-ripple {
-    box-shadow: 0 0 0 !important;
-}
-
 .react-ripples {
     border-radius: 20px !important;
-}
-
-@keyframes useRippleAnimation {
-    to {
-        transform: scale(15);
-        opacity: 0;
-    }
-}
-
-.m-button-ripple {
-    position: relative;
-    overflow: hidden;
-}
-
-.rbt-input {
-    width: 100% !important;
 }
 
 .toast-root {
@@ -281,22 +83,81 @@ mark {
     justify-content: center;
 }
 
+.dropdown-toggle:after {
+    display: none !important
+}
 
-.toast-element {
-    padding: 6px 6px;
-    font-size: 0.875rem;
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-    font-weight: 400;
-    line-height: 1.43;
-    border-radius: 4px;
-    letter-spacing: 0.01071em;
+.dropdown-menu.show {
+    opacity: 1 !important;
+    pointer-events: auto !important;
 }
 
 .dropdown-menu {
     box-shadow: 0 10px 10px #666;
 }
 
-.calculeted-width-helper-buttons {
-    flex: 0 0 calc(66.666667% - 24px) !important;
-    max-width: calc(66.666667% - 24px) !important;
+.rbt-input {
+    width: 100% !important;
 }
+
+.film-views {
+    line-height: 0.6;
+    color: #606060;
+}
+
+@media (hover: hover) {
+  
+    .play-outer-container:hover .play-image {
+        opacity: 0.5;
+    }
+    .play-outer-container:hover .play-middle {
+        opacity: 1.0;
+    }
+    .play-outer-container:hover .playlist-add-icon {
+        opacity: 0.6;
+    }
+    .play-outer-container:hover .playlist-add-icon-holder:hover .playlist-add-icon {
+        opacity: 1;
+    }
+    .remove-holder {
+        opacity: 0;
+        transition: all .2s ease-in-out;
+        color: #606060;
+    }
+    .remove-container:hover .remove-holder {
+        opacity: 0.6;
+    }
+    .remove-container:hover .remove-holder:hover {
+        opacity: 1;
+        cursor: pointer;
+    }
+}
+
+.cursor-pointer {
+    cursor: pointer !important
+}
+
+.cursor-default {
+    cursor: default !important
+}
+
+@media (hover: none) {
+    .remove-holder {
+        opacity: 0.8;
+        color: #606060;
+    }
+}
+
+@media(max-width:586px) {
+    .search-bar {
+        width: 100%;
+    }
+}
+
+@keyframes useRippleAnimation {
+    to {
+        transform: scale(15);
+        opacity: 0;
+    }
+}
+
