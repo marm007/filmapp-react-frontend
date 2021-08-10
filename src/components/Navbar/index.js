@@ -199,10 +199,8 @@ function NavbarComponent(props) {
 
     const handleSettingsClick = () => {
         setAnchorEl(null);
-        let pathname = location.pathname
-        if (pathname === '/') pathname = ''
         history.push({
-            pathname: `${pathname}/settings`,
+            pathname: `${location.pathname}settings`,
             search: location.search,
             state: location.state
         });
@@ -219,10 +217,8 @@ function NavbarComponent(props) {
     }, []);
 
     const handleLogin = () => {
-        let pathname = location.pathname
-        if (pathname === '/') pathname = ''
         history.push({
-            pathname: `${pathname}/login`,
+            pathname: `${location.pathname}login`,
             search: location.search,
             state: location.state
         });
