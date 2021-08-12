@@ -15,6 +15,7 @@ import * as filmApi from '../../services/filmService'
 import image_not_found from '../../images/image_not_found.png'; // Tell Webpack this JS file uses this image
 import RemoveModalContext from '../../helpers/contexts/removeModal/removeModalContext';
 import UserContext from '../../helpers/contexts/user/userContext';
+import { pageInitialMaxFetchCount, pageMaxFetchCount } from '../../config';
 
 const Profile = (props) => {
 
@@ -49,7 +50,7 @@ const Profile = (props) => {
         async function fetchInitialData() {
 
             const [response] = await Promise.allSettled([
-                userApi.me({ skipFilms: 0, skipPlaylists: 0, limit: 12 })
+                userApi.me({ skipFilms: 0, skipPlaylists: 0, limit: pageInitialMaxFetchCount })
             ])
 
             let data = []
@@ -97,7 +98,7 @@ const Profile = (props) => {
     useEffect(() => {
         async function fetchData() {
             const [response] = await Promise.allSettled([
-                userApi.me({ skipFilms: filmsCount, skipPlaylists: playlistsCount, limit: 12 })
+                userApi.me({ skipFilms: filmsCount, skipPlaylists: playlistsCount, limit: pageMaxFetchCount })
             ])
 
             let data = []

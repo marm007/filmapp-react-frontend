@@ -1,3 +1,5 @@
+import { pageInitialMaxFetchCount, pageMaxFetchCount } from "../../config"
+
 export const initialState = {
     films: null,
     isLoading: false,
@@ -28,7 +30,7 @@ export const homePageReducer = (state, action) => {
                 films: [...new Set([...action.payload])],
                 isLoading: false,
                 isInitialLoaded: true,
-                isAllFetched: action.payload.length < 12,
+                isAllFetched: action.payload.length < pageInitialMaxFetchCount,
             }
         }
         case 'success': {
@@ -36,7 +38,7 @@ export const homePageReducer = (state, action) => {
                 ...state,
                 films: [...new Set([...state.films, ...action.payload])],
                 isLoading: false,
-                isAllFetched: action.payload.length < 12,
+                isAllFetched: action.payload.length < pageMaxFetchCount,
                 error: null
             }
         }

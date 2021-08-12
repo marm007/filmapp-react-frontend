@@ -7,6 +7,7 @@ import * as playlistApi from '../../services/playlistService'
 import { playlistsPageReducer, initialState } from './reducer'
 import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
 import Playlist from '../../helpers/components/playlist';
+import { pageInitialMaxFetchCount, pageMaxFetchCount } from '../../config';
 
 const pathName = process.env.REACT_APP_PATH_NAME;
 
@@ -29,7 +30,7 @@ function PlaylistsPage(props) {
 
     useEffect(() => {
         async function fetchInitialPlaylists() {
-            await playlistApi.show({ limit: 12 })
+            await playlistApi.show({ limit: pageInitialMaxFetchCount })
                 .then(res => {
                     const result = res.data;
 
@@ -58,7 +59,7 @@ function PlaylistsPage(props) {
 
     useEffect(() => {
         async function fetchPlaylists() {
-            await playlistApi.show({ skip: playlistsCount, limit: 12 })
+            await playlistApi.show({ skip: playlistsCount, limit: pageMaxFetchCount })
                 .then(res => {
                     const result = res.data;
 

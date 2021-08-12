@@ -1,3 +1,4 @@
+import { pageMaxFetchCount } from "../../config"
 
 export const searchInitialState = {
     films: [],
@@ -31,7 +32,7 @@ export const searchReducer = (state, action) => {
                 isLoading: false,
                 isInitialLoaded: true,
                 error: null,
-                isAllFetched: action.payload.films.length < 12,
+                isAllFetched: action.payload.films.length < pageMaxFetchCount,
                 films: action.payload.films,
                 search: action.payload.params.search,
                 sort: action.payload.params.sort,
@@ -51,7 +52,7 @@ export const searchReducer = (state, action) => {
                 ...state,
                 isLoading: false,
                 error: null,
-                isAllFetched: action.payload.length < 12,
+                isAllFetched: action.payload.length < pageMaxFetchCount,
                 films: [...state.films, ...action.payload],
             }
         }

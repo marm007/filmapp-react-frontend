@@ -10,6 +10,7 @@ import { playlistDropdownMenuReducer, playlistDropdownMenuInitialState } from '.
 import ChangePrivacyButton from '../../helpers/components/changePrivacyButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useRipple from "useripple"
+import { playlistButtonMaxFetchCount } from '../../config';
 
 function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isPreview, filmDispatch }) {
 
@@ -32,7 +33,7 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isPreview, filmDisp
 
     useEffect(() => {
         async function getMyPlaylists() {
-            await userApi.me({ playlists: true, skip: playlists.length, limit: 10 })
+            await userApi.me({ playlists: true, skip: playlists.length, limit: playlistButtonMaxFetchCount })
                 .then(res => {
 
                     let result = res.data.playlists

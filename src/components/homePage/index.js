@@ -8,6 +8,7 @@ import { homePageReducer, initialState } from './reducer';
 import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
 
 import Film from '../../helpers/components/film'
+import { pageMaxFetchCount, pageInitialMaxFetchCount } from '../../config';
 
 function Home(props) {
 
@@ -29,7 +30,7 @@ function Home(props) {
 
     useEffect(() => {
         async function fetchData() {
-            await filmApi.all({ limit: 12 }).then(res => {
+            await filmApi.all({ limit: pageInitialMaxFetchCount }).then(res => {
                 let response = res.data;
 
                 response.forEach(film => {
@@ -49,7 +50,7 @@ function Home(props) {
 
     useEffect(() => {
         async function getAllFilms() {
-            await filmApi.all({ skip: films.length, limit: 12 })
+            await filmApi.all({ skip: films.length, limit: pageMaxFetchCount })
                 .then(res => {
                     let response = res.data;
 

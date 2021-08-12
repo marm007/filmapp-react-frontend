@@ -1,4 +1,4 @@
-import { playlistsMaxFetchCount } from '../../config'
+import { pageInitialMaxFetchCount, pageMaxFetchCount  } from '../../config'
 
 
 export const initialState = {
@@ -24,7 +24,7 @@ export const playlistsPageReducer = (state, action) => {
                 playlists: [...new Set([...action.playlists])],
                 isLoading: false,
                 isInitialLoaded: true,
-                isAllFetched: action.responseCount < playlistsMaxFetchCount,
+                isAllFetched: action.responseCount < pageInitialMaxFetchCount,
                 playlistsCount: state.playlistsCount + action.responseCount,
             }
         }
@@ -41,7 +41,7 @@ export const playlistsPageReducer = (state, action) => {
                 ...state,
                 playlists: [...new Set([...state.playlists, ...action.playlists])],
                 isLoading: false,
-                isAllFetched: action.responseCount < playlistsMaxFetchCount,
+                isAllFetched: action.responseCount < pageMaxFetchCount,
                 playlistsCount: state.playlistsCount + action.responseCount,
                 error: null
             }

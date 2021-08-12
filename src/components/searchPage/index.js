@@ -22,6 +22,7 @@ import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener
 import BlurredImageComponent from '../blurredImage'
 
 import { searchReducer, searchInitialState } from './reducer'
+import { pageMaxFetchCount } from '../../config';
 
 let filters = [
     { id: 'last_hour', title: 'Last hour' },
@@ -71,7 +72,7 @@ const Search = (props) => {
         }
 
         async function getFilms() {
-            await filmApi.search({ ...params, limit: 12 })
+            await filmApi.search({ ...params, limit: pageMaxFetchCount })
                 .then(res => {
                     dispatch({
                         type: 'initial-success',
@@ -99,7 +100,7 @@ const Search = (props) => {
                 filter: filter,
                 dir: dir,
                 skip: films.length,
-                limit: 12
+                limit: pageMaxFetchCount
             })
                 .then(res => {
                     dispatch({

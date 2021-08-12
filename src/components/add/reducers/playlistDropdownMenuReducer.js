@@ -1,3 +1,4 @@
+import { playlistButtonMaxFetchCount } from "../../../config"
 
 export const playlistDropdownMenuInitialState = {
     playlists: [],
@@ -32,7 +33,7 @@ export function playlistDropdownMenuReducer(state, action) {
                 ...state,
                 playlists: [...state.playlists, ...action.payload],
                 isLoading: false,
-                isAllFetched: action.payload < 10,
+                isAllFetched: action.payload < playlistButtonMaxFetchCount,
                 error: '',
             }
         }

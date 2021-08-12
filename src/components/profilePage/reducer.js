@@ -1,4 +1,4 @@
-import { filmsMaxFetchCount, playlistsMaxFetchCount } from "../../config"
+import { pageMaxFetchCount } from "../../config"
 
 export const initialProfileState = {
     data: [],
@@ -24,7 +24,7 @@ export function profileReducer(state, action) {
                 ...state,
                 isLoading: false,
                 isInitialLoaded: true,
-                isAllFetched: action.filmsCount < filmsMaxFetchCount && action.playlistsCount < playlistsMaxFetchCount,
+                isAllFetched: action.filmsCount < pageMaxFetchCount && action.playlistsCount < pageMaxFetchCount,
                 filmsCount: state.filmsCount + action.filmsCount,
                 playlistsCount: state.playlistsCount + action.playlistsCount,
                 data: [...new Set(action.data)]
@@ -39,7 +39,7 @@ export function profileReducer(state, action) {
             return {
                 ...state,
                 isLoading: false,
-                isAllFetched: action.filmsCount < filmsMaxFetchCount && action.playlistsCount < playlistsMaxFetchCount,
+                isAllFetched: action.filmsCount < pageMaxFetchCount && action.playlistsCount < pageMaxFetchCount,
                 filmsCount: state.filmsCount + action.filmsCount,
                 playlistsCount: state.playlistsCount + action.playlistsCount,
                 data: [...new Set([...state.data, ...action.data])]
