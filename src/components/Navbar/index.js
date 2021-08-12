@@ -14,7 +14,6 @@ import headerIcon from '../../images/header.png';
 import * as filmApi from '../../services/filmService'
 
 import { AsyncTypeahead, Menu as AsyncMenu, MenuItem as AsyncMenuItem } from 'react-bootstrap-typeahead';
-import { isMobile } from "react-device-detect";
 
 import UserContext from '../../helpers/contexts/user/userContext'
 
@@ -23,11 +22,14 @@ import './navbar.css';
 import { initialSearchState, searchReducer } from './reducer';
 
 import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
+import useWindowsWidth from '../../helpers/hooks/useWindowsWidth';
 
 function NavbarComponent(props) {
 
     let history = useHistory();
     let location = useLocation();
+
+    const onSmallScreen = useWindowsWidth();
 
     const { user, logout } = useContext(UserContext);
 
@@ -112,12 +114,14 @@ function NavbarComponent(props) {
         if (event && event.target && event.target.className &&
             event.target.className === "rbt-input-main form-control rbt-input  focus") {
             let keyCode = event.keyCode || event.charCode;
+            console.log(keyCode)
+
             switch (keyCode) {
                 case 13:
                     handleSearchSubmit(event);
                     break;
                 case 9:
-                    if (isMobile)
+                    if (onSmallScreen)
                         handleSearchSubmit(event);
                     break;
                 default:

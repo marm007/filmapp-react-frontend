@@ -1,5 +1,4 @@
 import './filmAdd.css'
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 import React, { useRef, useReducer, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';

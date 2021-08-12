@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useMemo } from 'react';
-import { debounce as lodashDebounce } from 'lodash'
-
+import lodashDebounce from 'lodash.debounce';
 
 const createCallback = (debounce, handleOnScroll, options) => {
   if (debounce) {
