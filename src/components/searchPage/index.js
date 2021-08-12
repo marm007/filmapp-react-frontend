@@ -267,7 +267,7 @@ const Search = (props) => {
                                     <Col xs={8} sm={4} className="p-0">
                                         <div className="embed-responsive embed-responsive-16by9 z-depth-1-half play-container">
                                             <BlurredImageComponent
-                                                image={`${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=preview`} />
+                                                image={`${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small`} />
                                             <FontAwesomeIcon className="play-middle" icon="play" />
                                         </div>
                                     </Col>

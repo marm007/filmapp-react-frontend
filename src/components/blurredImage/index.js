@@ -13,9 +13,6 @@ function BlurredImageComponent(props) {
     return (
         <Ratio aspectRatio="16x9">
             <img
-                onLoad={() => {
-                    setImage(image.replace("preview", "small"));
-                }}
                 alt=""
                 className="embed-responsive-item play-image"
                 src={image} />
