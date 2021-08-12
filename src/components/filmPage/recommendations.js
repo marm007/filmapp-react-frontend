@@ -36,7 +36,7 @@ function FilmsRecommendations(props) {
                     let films = res.data;
 
                     films.forEach(film => {
-                        film.img = `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small`
+                        film.img = `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small_webp`
 
                     });
 
@@ -75,7 +75,7 @@ function FilmsRecommendations(props) {
                 let films = res.data;
 
                 films.forEach(film => {
-                    film.img = `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small`
+                    film.img = `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small_webp`
 
                 });
 

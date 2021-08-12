@@ -73,7 +73,7 @@ function NavbarComponent(props) {
                 .then(({ data }) => {
                     const options = data.map((film) => ({
                         ...film,
-                        img: `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small`
+                        img: `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small_webp`
                     }));
 
                     dispatch({
@@ -95,7 +95,7 @@ function NavbarComponent(props) {
                 .then(({ data }) => {
                     const options = data.map((film) => ({
                         ...film,
-                        img: `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small`
+                        img: `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small_webp`
                     }));
                     dispatch({
                         type: 'success-search',

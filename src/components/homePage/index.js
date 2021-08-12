@@ -34,7 +34,7 @@ function Home(props) {
                 let response = res.data;
 
                 response.forEach(film => {
-                    film.img = `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small`
+                    film.img = `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small_webp`
 
                 });
 
@@ -55,7 +55,7 @@ function Home(props) {
                     let response = res.data;
 
                     response.forEach(film => {
-                        film.img = `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small`
+                        film.img = `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small_webp`
 
                     });
 

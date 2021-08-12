@@ -282,7 +282,7 @@ function Playlist(props) {
                                                     }}>
                                                     <div className="embed-responsive embed-responsive-16by9 z-depth-1-half play-container">
                                                         <img alt="" className="embed-responsive-item play-image"
-                                                            src={`${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small`} />
+                                                            src={`${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small_webp`} />
                                                     </div>
                                                 </Col>
                                                 <Col xs={5} sm={5} className="p-0">
