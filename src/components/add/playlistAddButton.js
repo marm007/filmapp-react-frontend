@@ -6,6 +6,8 @@ import PlaylistDropdownMenu from './playlistDropdownMenu'
 import UserContext from '../../helpers/contexts/user/userContext';
 import useRipple from "useripple"
 
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons'
+
 import './playlistAdd.css'
 
 function PlaylistAddButton(props) {
@@ -39,7 +41,7 @@ function PlaylistAddButton(props) {
                             style={{ verticalAlign: 'top', borderRadius: 20 + "px", width: 24 + "px", height: 24 + "px" }}
                             className="playlist-add-icon-holder p-0 playlist-add-button-ripple">
                             <FontAwesomeIcon style={{ opacity: (isOpen ? 1 : "") }}
-                                className="playlist-add-icon" icon="ellipsis-v" />
+                                className="playlist-add-icon" icon={faEllipsisV} />
                             {ripples}
                         </Col>
                     </div>

@@ -23,6 +23,7 @@ import { initialSearchState, searchReducer } from './reducer';
 
 import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
 import useWindowsWidth from '../../helpers/hooks/useWindowsWidth';
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 function NavbarComponent(props) {
 
@@ -205,7 +206,7 @@ function NavbarComponent(props) {
         setAnchorEl(null);
         let pathname = location.pathname
         if (pathname === process.env.REACT_APP_PATH_NAME) pathname = pathname.slice(0, -1)
-        
+
         history.push({
             pathname: `${pathname}/settings`,
             search: location.search,
@@ -366,7 +367,7 @@ function NavbarComponent(props) {
                             <Button onClick={handleSearchSubmit}
                                 className="d-none d-sm-inline"
                                 variant="light">
-                                <FontAwesomeIcon icon="search" />
+                                <FontAwesomeIcon icon={faSearch} />
                             </Button>
                         </Col>
                     </Row>

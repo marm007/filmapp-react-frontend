@@ -14,6 +14,7 @@ import FilmContext from '../../helpers/contexts/film/filmContext'
 import "../../../node_modules/video-react/dist/video-react.css";
 import { initialPreviewState, previewReducer } from './reducers/previewReducer';
 import UserContext from '../../helpers/contexts/user/userContext';
+import { faEye, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 
 
 function FilmPreview(props) {
@@ -196,20 +197,20 @@ function FilmPreview(props) {
                                 <p className="fw-bold">{film.title}</p>
                             </Col>
                             <Col xs={4} sm={4} className="p-0">
-                                <p><FontAwesomeIcon icon="eye" /> &ensp;{film.views}</p>
+                                <p><FontAwesomeIcon icon={faEye} /> &ensp;{film.views}</p>
                             </Col>
                             <Col xs={4} sm={4} className="text-right d-flex justify-content-end">
                                 <p style={{ cursor: "pointer" }}
                                     className={isLiked ? 'film-picked-thumb-color' : ''}
                                     onClick={() => handleLike('like')}>
-                                    <FontAwesomeIcon icon="thumbs-up" />
+                                    <FontAwesomeIcon icon={faThumbsUp} />
                                     &ensp;{film.likes}
                                 </p>
                             </Col>
                             <Col xs={4} sm={4}>
                                 <p style={{ cursor: "pointer" }} className={isDisliked ? 'film-picked-thumb-color' : ''}
                                     onClick={() => handleLike('dislike')}>
-                                    <FontAwesomeIcon icon="thumbs-down" />
+                                    <FontAwesomeIcon icon={faThumbsDown} />
                                     &ensp;{film.dislikes}
                                 </p>
                             </Col>

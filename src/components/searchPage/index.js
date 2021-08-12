@@ -23,6 +23,7 @@ import BlurredImageComponent from '../blurredImage'
 
 import { searchReducer, searchInitialState } from './reducer'
 import { pageMaxFetchCount } from '../../config';
+import { faFilter } from '@fortawesome/free-solid-svg-icons'
 
 let filters = [
     { id: 'last_hour', title: 'Last hour' },
@@ -197,7 +198,7 @@ const Search = (props) => {
                 aria-controls="filter-collapse"
                 aria-expanded={isOpen}
                 className="mt-3 mx-3 p-2 m-button">
-                <FontAwesomeIcon style={{ cursor: "pointer" }} icon="filter" />
+                <FontAwesomeIcon style={{ cursor: "pointer" }} icon={faFilter} />
             </Button>
 
             <Collapse in={isOpen}>
