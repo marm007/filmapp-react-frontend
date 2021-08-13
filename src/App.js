@@ -1,4 +1,6 @@
 import React, { useContext, lazy, Suspense } from 'react';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 import NavbarComponent from './components/navbar';

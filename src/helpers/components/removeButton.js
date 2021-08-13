@@ -1,5 +1,5 @@
-import { Col } from "react-bootstrap"
-import { ButtonBase } from "@material-ui/core"
+import Col from "react-bootstrap/Col"
+import ButtonBase from "@material-ui/core/ButtonBase"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 const RemoveButton = ({ handleRemove }) => {
