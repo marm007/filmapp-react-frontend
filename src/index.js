@@ -9,7 +9,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 import ToastProvider from "./helpers/contexts/toast/toastProvider";
 import RemoveModalProvider from "./helpers/contexts/removeModal/removeModalProvider";
