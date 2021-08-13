@@ -33,13 +33,12 @@ function PlaylistAddButton(props) {
                     setIsOpen(isOpen)
                 }} className={props.isPreview ? previewClass : allClass} >
                 <Dropdown.Toggle variant="link" bsPrefix="p-0"
-                    className="m-button playlist-add-button-ripple"
+                    className="m-button button-ripple"
                     style={{ color: "black" }}>
                     <div style={{ display: 'inline-block', width: '100%', height: '100%' }}>
                         <Col
                             onClick={addRipple}
-                            style={{ verticalAlign: 'top', borderRadius: 20 + "px", width: 24 + "px", height: 24 + "px" }}
-                            className="playlist-add-icon-holder p-0 playlist-add-button-ripple">
+                            className="playlist-add-icon-holder p-0 button-ripple button-ripple-24">
                             <FontAwesomeIcon style={{ opacity: (isOpen ? 1 : "") }}
                                 className="playlist-add-icon" icon={faEllipsisV} />
                             {ripples}

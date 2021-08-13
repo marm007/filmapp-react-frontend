@@ -9,12 +9,11 @@ import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener
 import { playlistDropdownMenuReducer, playlistDropdownMenuInitialState } from './reducers/playlistDropdownMenuReducer'
 import ChangePrivacyButton from '../../helpers/components/changePrivacyButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useRipple from "useripple"
 import { playlistButtonMaxFetchCount } from '../../config';
+import RippleButton from '../../helpers/components/rippleButton';
 
 function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isPreview, filmDispatch }) {
 
-    const [addRipple, ripples] = useRipple({ background: "black" })
 
     const { createToast } = useContext(ToastContext);
     const [state, dispatch] = useReducer(playlistDropdownMenuReducer, playlistDropdownMenuInitialState);
@@ -143,19 +142,13 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isPreview, filmDisp
 
         <Dropdown.Menu
             onClick={e => e.stopPropagation()}
-            style={{ width: 240 + "px" }}>
-            <Row className="m-0 m-button playlist-add-button-ripple" >
+            style={{ width: 240 + "px", left: '50px !important' }}>
+            <Row className="m-0 m-button button-ripple" >
                 <Col className="playlist-add-exit-text-width">Save to...</Col>
-                <Col xs={2} sm={2}
-                    onClick={(e) => {
-                        addRipple(e)
-                        setTimeout(handlePlaylistClose, 150)
-                    }}
-                    style={{ borderRadius: 20 + "px", width: 24 + "px", height: 24 + "px" }}
-                    className="playlist-add-icon-holder p-0 playlist-add-button-ripple d-flex align-items-center text-center justify-content-center">
+                <RippleButton className="button-ripple-24 playlist-add-icon-holder p-0 d-flex align-items-center text-center justify-content-center"
+                    onClick={() => setTimeout(handlePlaylistClose, 150)}>
                     <FontAwesomeIcon icon="times" />
-                    {ripples}
-                </Col>
+                </RippleButton>
             </Row>
             <Dropdown.Divider />
             <div
@@ -231,7 +224,7 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isPreview, filmDisp
 
             </Row>
 
-        </Dropdown.Menu>
+        </Dropdown.Menu >
 
 
     )

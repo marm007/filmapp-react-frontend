@@ -1,11 +1,11 @@
 import React, { useEffect, useReducer, useState, useCallback } from 'react';
 import { useLocation, useHistory } from 'react-router-dom'
+import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
+
 import { Col, Collapse, Row, Spinner } from 'react-bootstrap';
 
-import "./search.css";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Button from '@material-ui/core/Button';
 
 import queryString from 'query-string';
 
@@ -14,16 +14,17 @@ import Truncate from "react-truncate";
 
 import PlaylistAddButtonComponent from '../add/playlistAddButton';
 
-
 import { parseSearchDate, checkIfPlaylistButtonClick } from '../../helpers'
 import * as filmApi from '../../services/filmService'
-import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
 
 import BlurredImageComponent from '../blurredImage'
 
 import { searchReducer, searchInitialState } from './reducer'
 import { pageMaxFetchCount } from '../../config';
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
+import RippleButton from '../../helpers/components/rippleButton';
+
+import "./search.css";
 
 let filters = [
     { id: 'last_hour', title: 'Last hour' },
@@ -193,14 +194,15 @@ const Search = (props) => {
 
     return (
         <>
-            <Button
-                onClick={() => setIsOpen(!isOpen)}
-                aria-controls="filter-collapse"
-                aria-expanded={isOpen}
-                className="mt-3 mx-3 p-2 m-button">
-                <FontAwesomeIcon style={{ cursor: "pointer" }} icon={faFilter} />
-            </Button>
-
+            <RippleButton className="mt-3 mx-3 search-button"
+                onClick={() => setIsOpen(!isOpen)}>
+                <span
+                    aria-controls="filter-collapse"
+                    aria-expanded={isOpen}
+                    className="p-2">
+                    <FontAwesomeIcon style={{ cursor: "pointer" }} icon={faFilter} />
+                </span>
+            </RippleButton>
             <Collapse in={isOpen}>
                 <Row id="filter-collapse" className="mx-2">
                     <Col className="mt-4" sm={4}>

@@ -3,12 +3,8 @@
 import React, { useState, useEffect, useCallback, useContext, useReducer, useRef } from 'react';
 import { useHistory, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Avatar from '@material-ui/core/Avatar';
 
 import { Button, Col, Row, Form, Nav, Navbar, Spinner } from 'react-bootstrap';
-
-import Menu from "@material-ui/core/Menu/Menu";
-import MenuItem from "@material-ui/core/MenuItem/MenuItem";
 
 import headerIcon from '../../images/header.png';
 import * as filmApi from '../../services/filmService'
@@ -24,6 +20,12 @@ import { initialSearchState, searchReducer } from './reducer';
 import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
 import useWindowsWidth from '../../helpers/hooks/useWindowsWidth';
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
+
+import {
+    Menu,
+    MenuItem,
+} from '@szhsin/react-menu';
+import '@szhsin/react-menu/dist/index.css';
 
 function NavbarComponent(props) {
 
@@ -51,8 +53,6 @@ function NavbarComponent(props) {
     useBottomScrollListener(handleSearchOnBottom, { id: 'typeahead-navbar' })
 
     const typeaheadRef = useRef(null)
-
-    const [anchorEl, setAnchorEl] = useState(null)
 
     const filterBy = () => true;
 
@@ -184,26 +184,16 @@ function NavbarComponent(props) {
         })
     }
 
-    const handleProfileMenuOpen = event => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleProfileMenuClose = () => {
-        setAnchorEl(null);
-    };
 
     const handleLogoutClick = () => {
-        setAnchorEl(null);
         logout()
     };
 
     const handleProfileClick = () => {
-        setAnchorEl(null);
         history.push(`${process.env.REACT_APP_PATH_NAME}profile`)
     };
 
     const handleSettingsClick = () => {
-        setAnchorEl(null);
         let pathname = location.pathname
         if (pathname === process.env.REACT_APP_PATH_NAME) pathname = pathname.slice(0, -1)
 
@@ -388,10 +378,25 @@ function NavbarComponent(props) {
                         {
                             user.auth ?
                                 (
-                                    <Avatar onClick={handleProfileMenuOpen}
-                                        className="pe-2 ps-2 custom-avatar m-button">
-                                        {user.name.toUpperCase().charAt(0)}
-                                    </Avatar>
+                                    <Menu
+                                        className="avatar-menu-items"
+                                        align="end"
+                                        viewScroll="close"
+                                        offsetY={12}
+                                        position="initial"
+                                        direction="bottom"
+                                        menuButton={
+                                            <div
+                                                className="pe-2 ps-2 custom-avatar m-button">
+                                                {user.name.toUpperCase().charAt(0)}
+                                            </div>
+                                        }
+                                    >
+                                        <MenuItem onClick={handleProfileClick} > Profile</MenuItem>
+                                        <MenuItem onClick={handleSettingsClick}>Settings</MenuItem>
+                                        <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
+                                    </Menu>
+
 
                                 ) :
                                 (
@@ -407,17 +412,7 @@ function NavbarComponent(props) {
 
             </Col>
 
-            <Menu
-                id="film-navbar-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleProfileMenuClose}
-            >
-                <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
-                <MenuItem onClick={handleSettingsClick}>Settings</MenuItem>
-                <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
-            </Menu>
+
 
         </Navbar>
     )

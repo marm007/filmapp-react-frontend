@@ -1,8 +1,8 @@
 import Col  from "react-bootstrap/Col"
-import ButtonBase  from "@material-ui/core/ButtonBase"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useEffect, useState } from "react"
 import * as playlistApi from '../../services/playlistService'
+import RippleButton from "./rippleButton"
 
 const ChangePrivacyButton = ({ isPublic, id, isProfile, dispatchPrivacyUpdate, filmDispatch }) => {
 
@@ -42,12 +42,11 @@ const ChangePrivacyButton = ({ isPublic, id, isProfile, dispatchPrivacyUpdate, f
     }
 
     const privacyButton = (
-        <ButtonBase
-            style={{ marginLeft: 'auto', borderRadius: 20 + "px", width: 24 + "px", height: 24 + "px" }}
-            className="m-button"
+        <RippleButton
+            className="button-ripple-24 p-0"
             onClick={handleChangePrivacy}>
             <FontAwesomeIcon icon={isPublic ? "globe-europe" : "lock"} />
-        </ButtonBase>
+        </RippleButton>
     )
 
     return isProfile ?

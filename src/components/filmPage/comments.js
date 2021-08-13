@@ -1,10 +1,7 @@
 import React, { useContext, useEffect, useReducer, useCallback } from 'react';
 
-import { Button, Col, Dropdown, DropdownButton, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Dropdown, DropdownButton, Row, Spinner, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-import TextField from '@material-ui/core/TextField';
-import ButtonBase from "@material-ui/core/ButtonBase/ButtonBase";
 
 import * as commentApi from '../../services/commentService'
 
@@ -15,6 +12,7 @@ import UserContext from '../../helpers/contexts/user/userContext';
 import FilmContext from '../../helpers/contexts/film/filmContext';
 import { displayCommentDate } from '../../helpers';
 import RemoveModalContext from '../../helpers/contexts/removeModal/removeModalContext';
+import RippleButton from '../../helpers/components/rippleButton';
 
 function Comments(props) {
 
@@ -250,7 +248,21 @@ function Comments(props) {
                     </DropdownButton>
                 </Col>
             </Row>
-            <TextField
+            <Form onSubmit={(text && !isAdding) ? handleAddComment : null}>
+                <Form.Group id="fiordur">
+                    <Form.Control type="text" placeholder="Comment" value={text}
+                        onChange={e => dispatch({ type: 'field', fieldName: 'text', payload: e.target.value })}
+                    />
+                </Form.Group>
+                <Col className="d-flex justify-content-end" >
+                    <Button disabled={isAdding || !text}
+                        type="submit"
+                        className="mt-3" variant="primary">
+                        Submit
+                    </Button>
+                </Col>
+            </Form>
+            {/*  <TextField
                 value={text}
                 onChange={e => dispatch({ type: 'field', fieldName: 'text', payload: e.target.value })}
                 type="text"
@@ -258,14 +270,8 @@ function Comments(props) {
                 label="Comment"
                 multiline
                 fullWidth
-                maxrow="4" />
-            <Col className="d-flex justify-content-end" >
-                <Button disabled={isAdding || !text}
-                    className="mt-3" variant="primary"
-                    onClick={(text && !isAdding) ? handleAddComment : null}>
-                    Submit
-                </Button>
-            </Col>
+                maxrow="4" /> */}
+
 
             {
                 isAdding && <div style={{ height: 32 + 'px' }} className="d-flex justify-content-center">
@@ -285,17 +291,12 @@ function Comments(props) {
                                 </p>
                                 {
                                     user.id === comment.author_id &&
-                                    <Col
-                                        xs={2} sm={2}
-                                        className="d-flex justify-content-center align-items-center remove-holder p-0 m-0 ms-auto"
-                                        style={{ height: 24 + 'px', width: 24 + "px" }}>
-                                        <ButtonBase
-                                            style={{ borderRadius: 20 + "px", width: 24 + "px", height: 24 + "px" }}
-                                            className="m-button cursor-pointer"
-                                            onClick={() => handleRemoveComment(comment)}>
-                                            <FontAwesomeIcon icon="trash-alt" />
-                                        </ButtonBase>
-                                    </Col>
+
+                                    <RippleButton className="m-button cursor-pointer button-ripple-24 d-flex justify-content-center align-items-center remove-holder p-0 m-0 ms-auto"
+                                        onClick={() => handleRemoveComment(comment)}>
+                                        <FontAwesomeIcon icon="trash-alt" />
+
+                                    </RippleButton>
                                 }
                             </div>
                             <p className="d-block d-sm-block">

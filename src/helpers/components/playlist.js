@@ -36,7 +36,7 @@ const Playlist = ({ playlist, handleRedirect, handleRemove, isProfile, dispatchP
                     </Row>
                 </div>
 
-                <Row className="m-0">
+                <Row className="m-0 mt-1">
                     <Col xs={colWidth} sm={colWidth} className="p-0">
                         <TextTruncate line={1} text={playlist.title}
                             className="mb-1 mt-1 title " />

@@ -160,6 +160,25 @@
     height: 32px;
 }
 
+.button-ripple {
+    box-shadow: 0 0 0 !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.button-ripple-24 {
+    border: none;
+    border-radius: 20px;
+    width: 24px;
+    height: 24px;
+    color: black
+}
+
+.button-ripple-24:hover {
+    background-color: hsla(0, 0%, 0%, 0.15);
+    color: black
+}
+
 @media (hover: none) {
     .remove-holder {
         opacity: 0.8;

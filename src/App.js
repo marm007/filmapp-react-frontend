@@ -102,7 +102,7 @@ function App(props) {
                                     render={(props) => <SearchComponent {...props} />} />
 
                                 <PrivateRoute exact path={[`${pathName}add`, `${pathName}add/settings`]}
-                                    render={(props) => <AddFilmComponent {...props} />} />
+                                    component={AddFilmComponent} />
 
                                 <Route exact path={[`${pathName}playlists`, `${pathName}playlists/login`, `${pathName}playlists/settings`, `${pathName}playlists/register`, `${pathName}playlists/reset/:token`,
                                 `${pathName}playlists/forgot`]} render={(props) => <PlaylistsPage {...props} />} />
