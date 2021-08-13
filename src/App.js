@@ -85,11 +85,9 @@ function App(props) {
 
                         <Route exact path={[`${pathName}forgot`, `${pathName}film/:id/forgot`, `${pathName}search/forgot`, `${pathName}add/forgot`, `${pathName}playlists/forgot`]}
                             render={(props) => <ForgotPasswordComponent {...props} />} />
+
                         <Suspense fallback={<div className="suspense-loader"> <Spinner className="suspense-loader-spinner" animation="border" /></div>}>
-
-
                             <Switch>
-
                                 <Route exact path={[`${pathName}film/:id`, `${pathName}film/:id/login`, `${pathName}film/:id/register`, `${pathName}film/:id/reset/:token`,
                                 `${pathName}film/:id/forgot`, `${pathName}film/:id/settings`]}
                                     render={(props) => <FilmComponent {...props} />} />
