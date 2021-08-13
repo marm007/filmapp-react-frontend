@@ -313,8 +313,11 @@ const Search = (props) => {
             </Row>
 
             {
-                !isAllFetched && <div style={{ height: 32 + 'px', width: '100%' }} className="d-flex justify-content-center">
-                    {(isLoading || !isInitialLoaded) && <Spinner animation="border" />}
+                !isAllFetched && <div className={!isInitialLoaded ? "suspense-loader" : "fetch-loader d-flex justify-content-center"}>
+                    {
+                        (isLoading || !isInitialLoaded) &&
+                        <Spinner className={!isInitialLoaded ? "suspense-loader-spinner" : ""} animation="border" />
+                    }
                 </div>
             }
         </>
