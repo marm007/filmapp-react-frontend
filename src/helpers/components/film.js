@@ -10,7 +10,7 @@ import { checkIfPlaylistButtonClick } from '../index'
 import RemoveButton from './removeButton';
 import '../../components/filmPage/film.css'
 
-const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommendations }) => {
+const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommendations, filmDispatch }) => {
 
     const recommendationsClass = "row mx-0 mb-4"
     const normalClass = "col mb-5 col-12 col-sm-6 col-md-3 col-lg-2"
@@ -44,6 +44,8 @@ const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommen
                                 isProfile ?
                                     <RemoveButton handleRemove={handleRemove} /> :
                                     <PlaylistAddButtonComponent
+                                        isRecommendations={isRecommendations}
+                                        filmDispatch={filmDispatch}
                                         index={index}
                                         filmID={film.id} />
                             }

@@ -1,22 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import { Ratio } from 'react-bootstrap'
+import { useState, useRef } from 'react';
+import useIntersectionObserver from '../../helpers/hooks/useIntersectionObserver';
+import "./blurred.css";
 
-function BlurredImageComponent(props) {
-
-    const [image, setImage] = useState("data:image/gif;base64,R0lGODlhAQABAPAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==")
-
-    useEffect(() => {
-        setImage(props.image);
-    }, [props.image])
-
+const Image = ({ src, thumb }) => {
+    const [isLoaded, setIsLoaded] = useState(false);
 
     return (
-        <Ratio aspectRatio="16x9" className="overflow-hidden">
+        <div className="ratio ratio-16x9">
             <img
+                className="image thumb"
                 alt=""
-                className="embed-responsive-item play-image"
-                src={image} />
-        </Ratio>);
+                src={thumb}
+                style={{ visibility: isLoaded ? "hidden" : "visible" }}
+            />
+            <img
+                onLoad={() => {
+                    setIsLoaded(true);
+                }}
+                className="image full"
+                style={{ opacity: isLoaded ? 1 : 0 }}
+                alt=""
+                src={src}
+            />
+        </div>
+    );
+}
+function BlurredImageComponent({ image }) {
+    const ref = useRef();
+    const [isVisible, setIsVisible] = useState(false);
+    
+    useIntersectionObserver({
+        target: ref,
+        onIntersect: ([{ isIntersecting }], observerElement) => {
+            if (isIntersecting) {
+                setIsVisible(true);
+                observerElement.unobserve(ref.current);
+            }
+        }
+    });
+
+    return (
+        <div
+            ref={ref}
+            className="image-container ratio ratio-16x9 play-image"
+        >
+            {isVisible && (
+                <Image  src={image.concat('?width=small_webp')} thumb={image.concat('?width=preview_webp')} />
+            )}
+        </div>
+    );
 }
 
 export default BlurredImageComponent;

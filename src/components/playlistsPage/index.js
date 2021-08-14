@@ -37,7 +37,7 @@ function PlaylistsPage(props) {
                     let filtered = result.filter(playlist => playlist.film_id)
 
                     filtered.forEach(playlist => {
-                        playlist.img = `${process.env.REACT_APP_API_URL}films/${playlist.film_id}/thumbnail?width=small_webp`
+                        playlist.img = `${process.env.REACT_APP_API_URL}films/${playlist.film_id}/thumbnail`
                     });
 
                     dispatch({
@@ -66,7 +66,7 @@ function PlaylistsPage(props) {
                     let filtered = result.filter(playlist => playlist.film_id)
 
                     filtered.forEach(playlist => {
-                        playlist.img = `${process.env.REACT_APP_API_URL}films/${playlist.film_id}/thumbnail?width=small_webp`
+                        playlist.img = `${process.env.REACT_APP_API_URL}films/${playlist.film_id}/thumbnail`
                     });
 
                     dispatch({

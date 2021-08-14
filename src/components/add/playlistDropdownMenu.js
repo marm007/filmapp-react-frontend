@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { playlistButtonMaxFetchCount } from '../../config';
 import RippleButton from '../../helpers/components/rippleButton';
 
-function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isPreview, filmDispatch }) {
+function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isRecommendations, filmDispatch }) {
 
 
     const { createToast } = useContext(ToastContext);
@@ -110,7 +110,7 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isPreview, filmDisp
                         type: 'add-success'
                     })
 
-                    if (isPreview) {
+                    if (isRecommendations) {
                         filmDispatch({
                             type: 'field',
                             fieldName: 'reloadPlaylist',
@@ -122,7 +122,7 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isPreview, filmDisp
                 .catch(err => console.error(err))
         }
         if (isAdding && playlistToUpgrade) addToPlaylist()
-    }, [isAdding, playlistToUpgrade, createToast, filmDispatch, filmID, isPreview])
+    }, [isAdding, playlistToUpgrade, createToast, filmDispatch, filmID, isRecommendations])
 
     const handleAddToPlaylist = (playlist) => {
         dispatch({

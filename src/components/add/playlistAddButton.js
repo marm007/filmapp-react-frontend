@@ -31,7 +31,7 @@ function PlaylistAddButton(props) {
             <Dropdown show={isOpen}
                 onToggle={(isOpen, event, metadata) => {
                     setIsOpen(isOpen)
-                }} className={props.isPreview ? previewClass : allClass} >
+                }} className={props.isRecommendations ? previewClass : allClass} >
                 <Dropdown.Toggle variant="link" bsPrefix="p-0"
                     className="m-button button-ripple"
                     style={{ color: "black" }}>
@@ -46,7 +46,7 @@ function PlaylistAddButton(props) {
                     </div>
                 </Dropdown.Toggle>
                 {isOpen && <PlaylistDropdownMenu
-                    isPreview={props.isPreview}
+                    isRecommendations={props.isRecommendations}
                     filmDispatch={props.filmDispatch}
                     isOpen={isOpen}
                     filmID={props.filmID}

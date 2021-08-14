@@ -62,14 +62,14 @@ const Profile = (props) => {
                 films = response.value.data.films.map(film => {
                     return {
                         ...film,
-                        img: `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small_webp`,
+                        img: `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail`,
 
                     }
                 })
 
                 playlists = response.value.data.playlists.map(playlist => {
                     const image = playlist.film_id ?
-                        `${process.env.REACT_APP_API_URL}films/${playlist.film_id}/thumbnail?width=small_webp` :
+                        `${process.env.REACT_APP_API_URL}films/${playlist.film_id}/thumbnail` :
                         image_not_found
                     return {
                         ...playlist,
@@ -110,14 +110,14 @@ const Profile = (props) => {
                 films = response.value.data.films.map(film => {
                     return {
                         ...film,
-                        img: `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small_webp`,
+                        img: `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail`,
 
                     }
                 })
 
                 playlists = response.value.data.playlists.map(playlist => {
                     const image = playlist.film_id ?
-                        `${process.env.REACT_APP_API_URL}films/${playlist.film_id}/thumbnail?width=small_webp` :
+                        `${process.env.REACT_APP_API_URL}films/${playlist.film_id}/thumbnail` :
                         image_not_found
                     return {
                         ...playlist,

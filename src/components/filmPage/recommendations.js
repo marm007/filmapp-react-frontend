@@ -36,7 +36,7 @@ function FilmsRecommendations(props) {
                     let films = res.data;
 
                     films.forEach(film => {
-                        film.img = `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small_webp`
+                        film.img = `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail`
 
                     });
 
@@ -75,7 +75,7 @@ function FilmsRecommendations(props) {
                 let films = res.data;
 
                 films.forEach(film => {
-                    film.img = `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small_webp`
+                    film.img = `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail`
 
                 });
 
@@ -93,7 +93,7 @@ function FilmsRecommendations(props) {
         <Col>
 
             {
-                films && films.map((film, index) => <Film key={film.id} film={film} index={index} isRecommendations={true} handleRedirect={() => props.handleRedirect(film.id)} />)
+                films && films.map((film, index) => <Film key={film.id} film={film} index={index} isRecommendations={true} filmDispatch={filmDispatch} handleRedirect={() => props.handleRedirect(film.id)} />)
             }
 
 

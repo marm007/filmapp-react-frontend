@@ -19,6 +19,7 @@ import UserContext from '../../helpers/contexts/user/userContext';
 import RemoveButton from '../../helpers/components/removeButton';
 import ChangePrivacyButton from '../../helpers/components/changePrivacyButton';
 import RemoveModalContext from '../../helpers/contexts/removeModal/removeModalContext';
+import BlurredImageComponent from '../blurredImage';
 
 function Playlist(props) {
 
@@ -280,9 +281,9 @@ function Playlist(props) {
                                                         justifyContent: 'center',
                                                         alignItems: 'center'
                                                     }}>
-                                                    <div className="embed-responsive embed-responsive-16by9 z-depth-1-half play-container">
-                                                        <img alt="" className="embed-responsive-item play-image"
-                                                            src={`${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small_webp`} />
+                                                    <div className="embed-responsive embed-responsive-16by9 z-depth-1-half w-100 play-container">
+                                                        <BlurredImageComponent
+                                                            image={`${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail`} />
                                                     </div>
                                                 </Col>
                                                 <Col xs={5} sm={5} className="p-0">
@@ -296,7 +297,9 @@ function Playlist(props) {
                                         </Col>
                                         {
                                             user.id === playlist.author_id &&
-                                            <RemoveButton handleRemove={() => handleRemoveFromPlaylist(film.id)} />
+                                            <Col className="d-flex align-items-center justify-content-center">
+                                                <RemoveButton handleRemove={() => handleRemoveFromPlaylist(film.id)} />
+                                            </Col>
                                         }
 
                                     </Row>
@@ -330,7 +333,9 @@ function Playlist(props) {
                                         </Col>
                                         {
                                             user.id === playlist.author_id &&
-                                            <RemoveButton handleRemove={() => handleRemoveFromPlaylist(film.id)} />
+                                            <Col className="d-flex align-items-center justify-content-center">
+                                                <RemoveButton handleRemove={() => handleRemoveFromPlaylist(film.id)} />
+                                            </Col>
                                         }
 
                                     </Row>
