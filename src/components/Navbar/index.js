@@ -33,6 +33,7 @@ function NavbarComponent(props) {
     let location = useLocation();
 
     const onSmallScreen = useWindowsWidth();
+    const onMediumScreen = useWindowsWidth(768);
 
     const { user, logout } = useContext(UserContext);
 
@@ -380,7 +381,7 @@ function NavbarComponent(props) {
                                 (
                                     <Menu
                                         className="avatar-menu-items"
-                                        align="end"
+                                        align={onMediumScreen ? "start" : "end"}
                                         viewScroll="close"
                                         offsetY={12}
                                         position="initial"

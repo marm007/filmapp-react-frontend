@@ -3,11 +3,12 @@ import React, { useContext, lazy, Suspense } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
+import PrivateRoute from './helpers/components/privateRoute'
+
 import NavbarComponent from './components/navbar';
 import LoginComponent from './components/auth/login'
 import ResetPasswordComponent from './components/auth/resetPassword';
 import ForgotPasswordComponent from './components/auth/forgotPassword';
-import PrivateRoute from './helpers/components/privateRoute'
 import SettingsComponent from './components/settings'
 import RegisterComponent from './components/auth/register'
 
@@ -101,23 +102,14 @@ function App(props) {
                                 <Route exact path={[`${pathName}search`, `${pathName}search/login`, `${pathName}search/settings`, `${pathName}search/register`, `${pathName}search/reset/:token`, `${pathName}search/forgot`]}
                                     render={(props) => <SearchComponent {...props} />} />
 
-                                <PrivateRoute exact path={[`${pathName}add`, `${pathName}add/settings`]}
-                                    component={AddFilmComponent} />
-
                                 <Route exact path={[`${pathName}playlists`, `${pathName}playlists/login`, `${pathName}playlists/settings`, `${pathName}playlists/register`, `${pathName}playlists/reset/:token`,
                                 `${pathName}playlists/forgot`]} render={(props) => <PlaylistsPage {...props} />} />
 
-                                <Route exact path={[`${pathName}profile`, `${pathName}profile/settings`]}
-                                    render={props =>
-                                        localStorage.getItem('accessToken') ? (
-                                            <ProfileComponent {...props} />
-                                        ) : (
-                                            <Redirect to={{
-                                                pathname: `${process.env.REACT_APP_PATH_NAME}login`,
-                                                state: { from: props.location }
-                                            }} />
-                                        )
-                                    } />
+                                <PrivateRoute exact path={[`${pathName}add`, `${pathName}add/settings`]}
+                                    component={AddFilmComponent} />
+
+                                <PrivateRoute exact path={[`${pathName}profile`, `${pathName}profile/settings`]}
+                                    component={ProfileComponent} />
 
                                 <Route exact path="*" render={(props) => <NotFoundComponent {...props} />} />
 

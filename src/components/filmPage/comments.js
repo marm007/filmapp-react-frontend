@@ -308,8 +308,8 @@ function Comments(props) {
             }
 
             {
-                !isAllFetched && <div style={{ height: 32 + 'px' }} className="d-flex justify-content-center">
-                    {(isLoading || !isInitialLoaded || isSorting) && !error && <Spinner animation="border" />}
+                !isAllFetched && <div className="fetch-loader d-flex justify-content-center">
+                    {(isLoading || isSorting) && !error && <Spinner animation="border" />}
                 </div>
             }
 

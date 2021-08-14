@@ -33,7 +33,7 @@ export function playlistDropdownMenuReducer(state, action) {
                 ...state,
                 playlists: [...state.playlists, ...action.payload],
                 isLoading: false,
-                isAllFetched: action.payload < playlistButtonMaxFetchCount,
+                isAllFetched: action.payload.length < playlistButtonMaxFetchCount,
                 error: '',
             }
         }

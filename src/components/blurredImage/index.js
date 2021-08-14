@@ -11,7 +11,7 @@ function BlurredImageComponent(props) {
 
 
     return (
-        <Ratio aspectRatio="16x9">
+        <Ratio aspectRatio="16x9" className="overflow-hidden">
             <img
                 alt=""
                 className="embed-responsive-item play-image"

@@ -7,9 +7,9 @@ const RippleButton = ({ onClick, children, className }) => {
 
     return (
         <Button variant="link" onClick={(e) => {
-            addRipple(e)
             onClick(e)
         }}
+            onMouseDown={addRipple}
             className={`button-ripple ${className}`}>
             {children}
             {ripples}

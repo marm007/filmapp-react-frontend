@@ -100,10 +100,10 @@ function PlaylistsPage(props) {
                 playlists && playlists.map((playlist, index) => <Playlist key={playlist.id} playlist={playlist} index={index} handleRedirect={setRedirect} />)
             }
             {
-                !isAllFetched && <div className={!isInitialLoaded ? "suspense-loader" : "fetch-loader d-flex justify-content-center"}>
+                !isAllFetched && <div className="fetch-loader d-flex justify-content-center">
                     {
-                        (isLoading || !isInitialLoaded) &&
-                        <Spinner className={!isInitialLoaded ? "suspense-loader-spinner" : ""} animation="border" />
+                        (isLoading) &&
+                        <Spinner animation="border" />
                     }
                 </div>
             }

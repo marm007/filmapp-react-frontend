@@ -98,8 +98,8 @@ function FilmsRecommendations(props) {
 
 
             {
-                !isAllFetched && <div style={{ height: 32 + 'px' }} className="d-flex justify-content-center">
-                    {(isLoading || !isInitialLoaded) && !error && <Spinner animation="border" />}
+                !isAllFetched && <div className="fetch-loader d-flex justify-content-center">
+                    {(isLoading) && !error && <Spinner animation="border" />}
                 </div>
             }
         </Col>

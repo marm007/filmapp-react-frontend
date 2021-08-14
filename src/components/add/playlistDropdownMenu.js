@@ -185,7 +185,10 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isPreview, filmDisp
                 }
 
                 {
-                    !isAllFetched && <div style={{ height: 32 + 'px' }} className="d-flex justify-content-center">
+                    !isAllFetched && <div style={{
+                        height: 3 + 'rem'
+                    }}
+                        className="fetch-spinner d-flex justify-content-center align-items-center">
                         {isLoading && <Spinner animation="border" />}
                     </div>
                 }
