@@ -1,18 +1,19 @@
 import React, { useContext, useEffect, useReducer, useCallback } from 'react';
-
 import { Button, Col, Dropdown, DropdownButton, Row, Spinner, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import * as commentApi from '../../services/commentService'
-
-import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
 import { commentsReducer, commentsInitialState } from './reducers/commentsReducer';
-import { commentsMaxFetchCount } from "../../config"
-import UserContext from '../../helpers/contexts/user/userContext';
-import FilmContext from '../../helpers/contexts/film/filmContext';
-import { displayCommentDate } from '../../helpers';
-import RemoveModalContext from '../../helpers/contexts/removeModal/removeModalContext';
-import RippleButton from '../../helpers/components/rippleButton';
+
+import * as commentApi from '../../../services/commentService'
+
+import { commentsMaxFetchCount } from "../../../config"
+
+import { displayCommentDate } from '../../../helpers';
+import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
+import UserContext from '../../../helpers/contexts/user/userContext';
+import FilmContext from '../../../helpers/contexts/film/filmContext';
+import RemoveModalContext from '../../../helpers/contexts/removeModal/removeModalContext';
+import RippleButton from '../../../helpers/components/rippleButton';
 
 function Comments(props) {
 

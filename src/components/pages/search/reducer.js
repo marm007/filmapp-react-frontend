@@ -1,7 +1,7 @@
-import { pageMaxFetchCount } from "../../config"
+import { pageMaxFetchCount } from "../../../config"
 
 export const searchInitialState = {
-    films: [],
+    films: null,
     isLoading: false,
     isAllFetched: false,
     isInitialLoaded: false,

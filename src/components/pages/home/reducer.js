@@ -1,4 +1,4 @@
-import { pageInitialMaxFetchCount, pageMaxFetchCount } from "../../config"
+import { pageInitialMaxFetchCount, pageMaxFetchCount } from "../../../config"
 
 export const initialState = {
     films: null,

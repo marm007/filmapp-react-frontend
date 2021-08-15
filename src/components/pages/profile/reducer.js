@@ -1,4 +1,4 @@
-import { pageMaxFetchCount } from "../../config"
+import { pageMaxFetchCount } from "../../../config"
 
 export const initialProfileState = {
     data: [],

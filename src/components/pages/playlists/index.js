@@ -2,15 +2,17 @@ import React, { useEffect, useReducer, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Row, Spinner } from 'react-bootstrap';
 
-import * as playlistApi from '../../services/playlistService'
-
 import { playlistsPageReducer, initialState } from './reducer'
-import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
-import Playlist from '../playlist';
-import { pageInitialMaxFetchCount, pageMaxFetchCount } from '../../config';
 
-import { jsxLoop } from '../../helpers';
-import FilmSkeleton from '../playlist/skeleton';
+import FilmSkeleton from '../../playlist/skeleton';
+import Playlist from '../../playlist';
+
+import * as playlistApi from '../../../services/playlistService'
+
+import { pageInitialMaxFetchCount, pageMaxFetchCount } from '../../../config';
+
+import { jsxLoop } from '../../../helpers';
+import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
 
 const pathName = process.env.REACT_APP_PATH_NAME;
 

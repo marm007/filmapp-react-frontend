@@ -1,4 +1,4 @@
-import { recommendationsMaxFetchCount } from "../../../config"
+import { recommendationsMaxFetchCount } from "../../../../config"
 
 export const recommendationsInitialState = {
     films: null,

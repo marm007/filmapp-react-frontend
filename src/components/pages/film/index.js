@@ -1,16 +1,16 @@
 import React from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-
+import { Row, Col } from "react-bootstrap";
 import queryString from "query-string";
 
 import FilmPreview from './preview'
-import { Row, Col } from "react-bootstrap";
 import FilmsRecommendations from './recommendations';
 import Comments from './comments';
 import PlaylistContainer from './playlistContainer';
-import useWindowWidth from '../../helpers/hooks/useWindowsWidth'
 
-import FilmProvider from '../../helpers/contexts/film/filmProvider'
+import useWindowWidth from '../../../helpers/hooks/useWindowsWidth'
+import FilmProvider from '../../../helpers/contexts/film/filmProvider'
+
 import './film.css'
 
 

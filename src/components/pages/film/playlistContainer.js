@@ -3,23 +3,23 @@ import { useLocation } from 'react-router-dom'
 import { Col, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import queryString from "query-string";
-
 import TextTruncate from "react-text-truncate";
-import image_not_found from '../../images/image_not_found.png'; // Tell Webpack this JS file uses this image
-
-import 'react-perfect-scrollbar/dist/css/styles.css';
 import PerfectScrollbar from 'react-perfect-scrollbar'
-
-import * as playlistApi from '../../services/playlistService'
-import FilmContext from '../../helpers/contexts/film/filmContext';
+import 'react-perfect-scrollbar/dist/css/styles.css';
 
 import { filmPlaylistInitialState, filmPlaylistReducer } from './reducers/playlistReducer';
 
-import UserContext from '../../helpers/contexts/user/userContext';
-import RemoveButton from '../../helpers/components/removeButton';
-import ChangePrivacyButton from '../../helpers/components/changePrivacyButton';
-import RemoveModalContext from '../../helpers/contexts/removeModal/removeModalContext';
-import BlurredImageComponent from '../blurredImage';
+import BlurredImageComponent from '../../blurredImage';
+
+import * as playlistApi from '../../../services/playlistService'
+
+import FilmContext from '../../../helpers/contexts/film/filmContext';
+import UserContext from '../../../helpers/contexts/user/userContext';
+import RemoveModalContext from '../../../helpers/contexts/removeModal/removeModalContext';
+import RemoveButton from '../../../helpers/components/removeButton';
+import ChangePrivacyButton from '../../../helpers/components/changePrivacyButton';
+
+import image_not_found from '../../../images/image_not_found.png'; // Tell Webpack this JS file uses this image
 
 function PlaylistContainer(props) {
 

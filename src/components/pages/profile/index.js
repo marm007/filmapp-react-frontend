@@ -3,19 +3,21 @@ import { useHistory } from 'react-router-dom';
 import { Row, Spinner } from 'react-bootstrap';
 
 import { initialProfileState, profileReducer } from './reducer';
-import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
 
-import Film from '../film';
-import Playlist from '../playlist';
+import Film from '../../film';
+import Playlist from '../../playlist';
 
-import * as userApi from '../../services/userService'
-import * as playlistApi from '../../services/playlistService'
-import * as filmApi from '../../services/filmService'
+import * as userApi from '../../../services/userService'
+import * as playlistApi from '../../../services/playlistService'
+import * as filmApi from '../../../services/filmService'
 
-import image_not_found from '../../images/image_not_found.png'; // Tell Webpack this JS file uses this image
-import RemoveModalContext from '../../helpers/contexts/removeModal/removeModalContext';
-import UserContext from '../../helpers/contexts/user/userContext';
-import { pageInitialMaxFetchCount, pageMaxFetchCount } from '../../config';
+import { pageInitialMaxFetchCount, pageMaxFetchCount } from '../../../config';
+
+import UserContext from '../../../helpers/contexts/user/userContext';
+import RemoveModalContext from '../../../helpers/contexts/removeModal/removeModalContext';
+import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
+
+import image_not_found from '../../../images/image_not_found.png'; // Tell Webpack this JS file uses this image
 
 const Profile = (props) => {
 

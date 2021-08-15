@@ -2,16 +2,19 @@ import React, { useEffect, useReducer, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Row, Spinner } from 'react-bootstrap';
 
-
-import * as filmApi from '../../services/filmService'
 import { homePageReducer, initialState } from './reducer';
-import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
 
-import { jsxLoop } from '../../helpers';
-import Film from '../film'
-import FilmSkeleton from '../film/skeleton';
+import Film from '../../film'
+import FilmSkeleton from '../../film/skeleton';
 
-import { pageMaxFetchCount, pageInitialMaxFetchCount } from '../../config';
+import * as filmApi from '../../../services/filmService'
+
+import { pageMaxFetchCount, pageInitialMaxFetchCount } from '../../../config';
+
+import { jsxLoop } from '../../../helpers';
+import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
+
+
 
 function Home(props) {
 

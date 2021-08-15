@@ -1,4 +1,4 @@
-import { commentsMaxFetchCount } from "../../../config"
+import { commentsMaxFetchCount } from "../../../../config"
 
 export const commentsInitialState = {
     comments: null,

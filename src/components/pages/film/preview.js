@@ -1,20 +1,19 @@
 import React, { useState, useEffect, useCallback, useContext, useReducer } from 'react';
 import { useHistory, useLocation } from 'react-router-dom'
-
 import { Button, Col, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import * as filmApi from '../../services/filmService'
-import * as userApi from '../../services/userService'
-
+import { faEye, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 import { Player } from 'video-react';
 import TextTruncate from 'react-text-truncate';
+import "../../../../node_modules/video-react/dist/video-react.css";
 
-import FilmContext from '../../helpers/contexts/film/filmContext'
-
-import "../../../node_modules/video-react/dist/video-react.css";
 import { initialPreviewState, previewReducer } from './reducers/previewReducer';
-import UserContext from '../../helpers/contexts/user/userContext';
-import { faEye, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
+
+import * as filmApi from '../../../services/filmService'
+import * as userApi from '../../../services/userService'
+
+import FilmContext from '../../../helpers/contexts/film/filmContext'
+import UserContext from '../../../helpers/contexts/user/userContext';
 
 
 function FilmPreview(props) {

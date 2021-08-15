@@ -5,7 +5,6 @@ import './App.css';
 
 import PrivateRoute from './helpers/components/privateRoute'
 
-import NavbarComponent from './components/navbar';
 import LoginComponent from './components/auth/login'
 import ResetPasswordComponent from './components/auth/resetPassword';
 import ForgotPasswordComponent from './components/auth/forgotPassword';
@@ -14,7 +13,7 @@ import RegisterComponent from './components/auth/register'
 
 import RemoveModal from './helpers/components/removeModal'
 
-import { Route, BrowserRouter as Router, Redirect } from 'react-router-dom';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { Spinner, Toast } from "react-bootstrap";
 
 //  --------- icons ------------
@@ -40,13 +39,15 @@ library.add(faPlay, faSortDown, faSortUp, faTrashAlt, faTimes, faGlobeEurope, fa
 
 const pathName = process.env.REACT_APP_PATH_NAME
 
-const ProfileComponent = lazy(() => import('./components/profilePage'))
-const HomeComponent = lazy(() => import('./components/homePage'))
-const FilmComponent = lazy(() => import('./components/filmPage'))
-const SearchComponent = lazy(() => import('./components/searchPage'))
-const PlaylistsPage = lazy(() => import('./components/playlistsPage'))
+const NavbarComponent = lazy(() => import('./components/navbar'))
+
+const ProfileComponent = lazy(() => import('./components/pages/profile'))
+const HomeComponent = lazy(() => import('./components/pages/home'))
+const FilmComponent = lazy(() => import('./components/pages/film'))
+const SearchComponent = lazy(() => import('./components/pages/search'))
+const PlaylistsPage = lazy(() => import('./components/pages/playlists'))
 const AddFilmComponent = lazy(() => import('./components/add/filmAdd'))
-const NotFoundComponent = lazy(() => import('./components/notFound'))
+const NotFoundComponent = lazy(() => import('./components/pages/notFound'))
 
 function App(props) {
 
@@ -73,23 +74,24 @@ function App(props) {
             <Router>
                 <UserProvider>
                     <WithAxios>
-                        <Route render={() => <NavbarComponent />} />
-                        <PrivateRoute exact path={[`${pathName}settings`, `${pathName}profile/settings`, `${pathName}film/:id/settings`, `${pathName}search/settings`, `${pathName}add/settings`, `${pathName}playlists/settings`]}
-                            component={SettingsComponent} />
-
-                        <Route exact path={[`${pathName}login`, `${pathName}film/:id/login`, `${pathName}search/login`, `${pathName}add/login`, `${pathName}playlists/login`]}
-                            render={(props) => <LoginComponent {...props} />} />
-
-                        <Route exact path={[`${pathName}register`, `${pathName}film/:id/register`, `${pathName}search/register`, `${pathName}add/register`, `${pathName}playlists/register`]}
-                            render={(props) => <RegisterComponent {...props} />} />
-
-                        <Route exact path={[`${pathName}reset/:token`, `${pathName}film/:id/reset/:token`, `${pathName}search/reset/:token`, `${pathName}add/reset/:token`, `${pathName}playlists/reset/:token`]}
-                            render={(props) => <ResetPasswordComponent {...props} />} />
-
-                        <Route exact path={[`${pathName}forgot`, `${pathName}film/:id/forgot`, `${pathName}search/forgot`, `${pathName}add/forgot`, `${pathName}playlists/forgot`]}
-                            render={(props) => <ForgotPasswordComponent {...props} />} />
-
                         <Suspense fallback={<div className="suspense-loader"> <Spinner className="suspense-loader-spinner" animation="border" /></div>}>
+
+                            <Route render={() => <NavbarComponent />} />
+                            <PrivateRoute exact path={[`${pathName}settings`, `${pathName}profile/settings`, `${pathName}film/:id/settings`, `${pathName}search/settings`, `${pathName}add/settings`, `${pathName}playlists/settings`]}
+                                component={SettingsComponent} />
+
+                            <Route exact path={[`${pathName}login`, `${pathName}film/:id/login`, `${pathName}search/login`, `${pathName}add/login`, `${pathName}playlists/login`]}
+                                render={(props) => <LoginComponent {...props} />} />
+
+                            <Route exact path={[`${pathName}register`, `${pathName}film/:id/register`, `${pathName}search/register`, `${pathName}add/register`, `${pathName}playlists/register`]}
+                                render={(props) => <RegisterComponent {...props} />} />
+
+                            <Route exact path={[`${pathName}reset/:token`, `${pathName}film/:id/reset/:token`, `${pathName}search/reset/:token`, `${pathName}add/reset/:token`, `${pathName}playlists/reset/:token`]}
+                                render={(props) => <ResetPasswordComponent {...props} />} />
+
+                            <Route exact path={[`${pathName}forgot`, `${pathName}film/:id/forgot`, `${pathName}search/forgot`, `${pathName}add/forgot`, `${pathName}playlists/forgot`]}
+                                render={(props) => <ForgotPasswordComponent {...props} />} />
+
                             <Switch>
                                 <Route exact path={[`${pathName}film/:id`, `${pathName}film/:id/login`, `${pathName}film/:id/register`, `${pathName}film/:id/reset/:token`,
                                 `${pathName}film/:id/forgot`, `${pathName}film/:id/settings`]}

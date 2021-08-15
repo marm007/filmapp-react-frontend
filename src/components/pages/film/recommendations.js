@@ -1,14 +1,18 @@
 import React, { useEffect, useReducer, useCallback, useContext } from 'react';
-
 import { Col, Spinner } from "react-bootstrap";
 
-import * as filmApi from '../../services/filmService'
 
-import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
-import Film from '../film';
+
 import { recommendationsReducer, recommendationsInitialState } from './reducers/recommendationsReducer'
-import { recommendationsMaxFetchCount } from "../../config"
-import FilmContext from '../../helpers/contexts/film/filmContext';
+
+import Film from '../../film';
+
+import * as filmApi from '../../../services/filmService'
+
+import { recommendationsMaxFetchCount } from "../../../config"
+
+import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
+import FilmContext from '../../../helpers/contexts/film/filmContext';
 
 function FilmsRecommendations(props) {
 

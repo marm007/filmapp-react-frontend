@@ -1,7 +1,8 @@
-import { Col, Row } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
 
-import '../../components/filmPage/film.css'
 import Skeleton from 'react-loading-skeleton';
+
+import '../pages/film/film.css'
 
 const FilmSkeleton = () => {
 
@@ -12,7 +13,7 @@ const FilmSkeleton = () => {
             <Col xs={12} sm={12}>
                 <div className="embed-responsive embed-responsive-16by9 z-depth-1-half play-container">
                     <div className="ratio ratio-16x9">
-                        <Skeleton className="w-100 h-100" />
+                        <Skeleton className="w-100 h-100" style={{ lineHeight: '1.5' }} />
                     </div>
                 </div>
             </Col>
