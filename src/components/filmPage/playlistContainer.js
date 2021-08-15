@@ -21,7 +21,7 @@ import ChangePrivacyButton from '../../helpers/components/changePrivacyButton';
 import RemoveModalContext from '../../helpers/contexts/removeModal/removeModalContext';
 import BlurredImageComponent from '../blurredImage';
 
-function Playlist(props) {
+function PlaylistContainer(props) {
 
     const { showModal, clear, removeModalData } = useContext(RemoveModalContext)
 
@@ -353,4 +353,4 @@ function Playlist(props) {
 }
 
 
-export default Playlist
+export default PlaylistContainer

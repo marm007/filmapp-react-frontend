@@ -6,8 +6,11 @@ import * as playlistApi from '../../services/playlistService'
 
 import { playlistsPageReducer, initialState } from './reducer'
 import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
-import Playlist from '../../helpers/components/playlist';
+import Playlist from '../playlist';
 import { pageInitialMaxFetchCount, pageMaxFetchCount } from '../../config';
+
+import { jsxLoop } from '../../helpers';
+import FilmSkeleton from '../playlist/skeleton';
 
 const pathName = process.env.REACT_APP_PATH_NAME;
 
@@ -97,7 +100,10 @@ function PlaylistsPage(props) {
     return (
         <Row className="mt-5 mx-2">
             {
-                playlists && playlists.map((playlist, index) => <Playlist key={playlist.id} playlist={playlist} index={index} handleRedirect={setRedirect} />)
+                playlists ? playlists.map((playlist, index) => <Playlist key={playlist.id} playlist={playlist} index={index} handleRedirect={setRedirect} />)
+                    : [...jsxLoop(20, i =>
+                        <FilmSkeleton key={i} />
+                    )]
             }
             {
                 !isAllFetched && <div className="fetch-loader d-flex justify-content-center">

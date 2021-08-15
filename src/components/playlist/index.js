@@ -3,9 +3,9 @@ import { Col, Row } from 'react-bootstrap';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TextTruncate from "react-text-truncate";
-import BlurredImageComponent from "../../components/blurredImage";
-import RemoveButton from './removeButton';
-import ChangePrivacyButton from './changePrivacyButton';
+import BlurredImageComponent from "../blurredImage";
+import RemoveButton from '../../helpers/components/removeButton';
+import ChangePrivacyButton from '../../helpers/components/changePrivacyButton';
 
 const Playlist = ({ playlist, handleRedirect, handleRemove, isProfile, dispatchPrivacyUpdate }) => {
 

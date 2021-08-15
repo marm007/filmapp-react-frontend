@@ -5,8 +5,8 @@ import { Row, Spinner } from 'react-bootstrap';
 import { initialProfileState, profileReducer } from './reducer';
 import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
 
-import Film from '../../helpers/components/film';
-import Playlist from '../../helpers/components/playlist';
+import Film from '../film';
+import Playlist from '../playlist';
 
 import * as userApi from '../../services/userService'
 import * as playlistApi from '../../services/playlistService'

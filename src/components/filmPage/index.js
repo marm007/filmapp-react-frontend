@@ -7,7 +7,7 @@ import FilmPreview from './preview'
 import { Row, Col } from "react-bootstrap";
 import FilmsRecommendations from './recommendations';
 import Comments from './comments';
-import Playlist from './playlist';
+import PlaylistContainer from './playlistContainer';
 import useWindowWidth from '../../helpers/hooks/useWindowsWidth'
 
 import FilmProvider from '../../helpers/contexts/film/filmProvider'
@@ -36,7 +36,7 @@ function Film(props) {
                     {!onSmallScreen && <Comments {...props} />}
                 </Col>
                 <Col xs={{ span: 12, order: 2 }} sm={4}>
-                    <Playlist handleRedirect={handleRedirect} {...props} />
+                    <PlaylistContainer handleRedirect={handleRedirect} {...props} />
                     <FilmsRecommendations handleRedirect={handleRedirect} {...props} />
                 </Col>
                 {onSmallScreen &&

@@ -3,12 +3,13 @@ import { Col, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TextTruncate from "react-text-truncate";
 
-import BlurredImageComponent from "../../components/blurredImage";
-import PlaylistAddButtonComponent from "../../components/add/playlistAddButton";
+import BlurredImageComponent from "../blurredImage";
+import PlaylistAddButtonComponent from "../add/playlistAddButton";
 
-import { checkIfPlaylistButtonClick } from '../index'
-import RemoveButton from './removeButton';
-import '../../components/filmPage/film.css'
+import { checkIfPlaylistButtonClick } from '../../helpers';
+import RemoveButton from '../../helpers/components/removeButton';
+
+import '../filmPage/film.css'
 
 const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommendations, filmDispatch }) => {
 

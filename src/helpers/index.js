@@ -70,3 +70,9 @@ export const parseSearchDate = (film) => {
 
     return time;
 };
+
+
+export function* jsxLoop(times, callback) {
+    for (var i = 0; i < times; ++i)
+        yield callback(i);
+}

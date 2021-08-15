@@ -1,9 +1,9 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import useIntersectionObserver from '../../helpers/hooks/useIntersectionObserver';
 import "./blurred.css";
 
-const Image = ({ src, thumb }) => {
-    const [isLoaded, setIsLoaded] = useState(false);
+const BlurredImage = ({ src, thumb, isCached }) => {
+    const [isLoaded, setIsLoaded] = useState(isCached);
 
     return (
         <div className="ratio ratio-16x9">
@@ -25,14 +25,19 @@ const Image = ({ src, thumb }) => {
         </div>
     );
 }
+
 function BlurredImageComponent({ image }) {
     const ref = useRef();
     const [isVisible, setIsVisible] = useState(false);
-    
+    const [isCached, setIsCached] = useState(false);
+
     useIntersectionObserver({
         target: ref,
         onIntersect: ([{ isIntersecting }], observerElement) => {
             if (isIntersecting) {
+                let tmp = new Image();
+                tmp.src = image.concat('?width=small_webp');
+                setIsCached(tmp.complete)
                 setIsVisible(true);
                 observerElement.unobserve(ref.current);
             }
@@ -45,7 +50,7 @@ function BlurredImageComponent({ image }) {
             className="image-container ratio ratio-16x9 play-image"
         >
             {isVisible && (
-                <Image  src={image.concat('?width=small_webp')} thumb={image.concat('?width=preview_webp')} />
+                <BlurredImage isCached={isCached} src={image.concat('?width=small_webp')} thumb={image.concat('?width=preview_webp')} />
             )}
         </div>
     );

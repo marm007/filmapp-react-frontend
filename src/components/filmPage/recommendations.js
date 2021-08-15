@@ -5,7 +5,7 @@ import { Col, Spinner } from "react-bootstrap";
 import * as filmApi from '../../services/filmService'
 
 import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
-import Film from '../../helpers/components/film';
+import Film from '../film';
 import { recommendationsReducer, recommendationsInitialState } from './reducers/recommendationsReducer'
 import { recommendationsMaxFetchCount } from "../../config"
 import FilmContext from '../../helpers/contexts/film/filmContext';

@@ -7,7 +7,10 @@ import * as filmApi from '../../services/filmService'
 import { homePageReducer, initialState } from './reducer';
 import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
 
-import Film from '../../helpers/components/film'
+import { jsxLoop } from '../../helpers';
+import Film from '../film'
+import FilmSkeleton from '../film/skeleton';
+
 import { pageMaxFetchCount, pageInitialMaxFetchCount } from '../../config';
 
 function Home(props) {
@@ -45,7 +48,6 @@ function Home(props) {
             })
         }
         fetchData()
-
     }, [])
 
     useEffect(() => {
@@ -72,10 +74,15 @@ function Home(props) {
         history.push({ pathname: `${process.env.REACT_APP_PATH_NAME}film/` + id });
     };
 
+  
+
     return (
         <Row className="mt-5 mx-2">
             {
-                films && films.map((film, index) => <Film key={film.id} film={film} index={index} handleRedirect={handleRedirect} />)
+                films ? films.map((film, index) => <Film key={film.id} film={film} index={index} handleRedirect={handleRedirect} />)
+                    : [...jsxLoop(20, i =>
+                        <FilmSkeleton key={i} />
+                    )]
             }
 
             {
