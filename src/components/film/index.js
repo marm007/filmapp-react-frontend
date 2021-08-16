@@ -9,7 +9,7 @@ import PlaylistAddButtonComponent from "../add/playlistAddButton";
 import { checkIfPlaylistButtonClick } from '../../helpers';
 import RemoveButton from '../../helpers/components/removeButton';
 
-import '../filmPage/film.css'
+import '../pages/film/film.css'
 
 const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommendations, filmDispatch }) => {
 
@@ -17,7 +17,7 @@ const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommen
     const normalClass = "col mb-5 col-12 col-sm-6 col-md-3 col-lg-2"
 
     return (
-        <div className={isRecommendations ? recommendationsClass : normalClass}>
+        <div className={`${isRecommendations ? recommendationsClass : normalClass}`}>
             <div className={(isRecommendations ? "row p-0 m-0" : "col").concat(" play-outer-container remove-container")}
                 onClick={(e) => {
                     const isPlaylistButton = checkIfPlaylistButtonClick(e.target)
@@ -25,8 +25,8 @@ const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommen
                 }}>
                 <Col xs={isRecommendations ? 6 : 12} sm={isRecommendations ? 6 : 12}
                     className="m-0 p-0">
-                    <div
-                        className="embed-responsive embed-responsive-16by9 z-depth-1-half play-container">
+                    <div className="embed-responsive embed-responsive-16by9 z-depth-1-half play-container">
+                
                         <BlurredImageComponent
                             image={film.img} />
                         <FontAwesomeIcon className="play-middle" icon="play" />
