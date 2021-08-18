@@ -1,5 +1,4 @@
-import React, { useState, useContext } from 'react';
-import { Col, Dropdown } from "react-bootstrap";
+import { useState, useContext, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import PlaylistDropdownMenu from './playlistDropdownMenu'
@@ -7,10 +6,13 @@ import UserContext from '../../helpers/contexts/user/userContext';
 import useRipple from "useripple"
 
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons'
+import { Dropdown } from 'bootstrap'
 
 import './playlistAdd.css'
 
-function PlaylistAddButton(props) {
+function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
+
+    const menuRef = useRef()
 
     const { user } = useContext(UserContext);
 
@@ -18,40 +20,76 @@ function PlaylistAddButton(props) {
 
     const [isOpen, setIsOpen] = useState(false)
 
+    const [dropdownMenu, setDropdownMenu] = useState(null)
+
     const handlePlaylistClose = () => {
+        setIsOpen(false)
+        dropdownMenu.hide()
+    }
+
+    const handleOpenMenu = () => {
+        console.log('open')
+        setIsOpen(true)
+
+    }
+
+    const handleCloseMenu = () => {
+        console.log('close')
         setIsOpen(false)
     }
 
-    const allClass = ""
-    const previewClass = "col-sm-2 col-2 p-0"
+    useEffect(() => {
+        const ref = menuRef.current;
+
+        if (ref && user.auth) {
+
+            ref.addEventListener('show.bs.dropdown', handleOpenMenu)
+            ref.addEventListener('hide.bs.dropdown', handleCloseMenu)
+
+            setDropdownMenu(new Dropdown(`#playlist-dropdown-${filmID}`))
+
+            return () => {
+                ref.removeEventListener('show.bs.dropdown', handleOpenMenu)
+                ref.removeEventListener('hide.bs.dropdown', handleCloseMenu)
+            }
+        }
+
+    }, [filmID, menuRef, user.auth])
 
     return (
 
         user.auth ?
-            <Dropdown show={isOpen}
-                onToggle={(isOpen, event, metadata) => {
-                    setIsOpen(isOpen)
-                }} className={props.isRecommendations ? previewClass : allClass} >
-                <Dropdown.Toggle variant="link" bsPrefix="p-0"
-                    className="m-button button-ripple"
+            <div ref={menuRef}
+
+                className="p-0 dropdown" style={{ width: '26px' }} >
+                <button onClick={() => {
+                    if (dropdownMenu) {
+                        if (isOpen) dropdownMenu.show()
+                        else dropdownMenu.hide()
+                    }
+                }}
+                    className="btn btn-link m-button button-ripple dropdown-toggle p-0"
+                    type="button" id={`playlist-dropdown-${filmID}`}
+                    data-bs-toggle="dropdown" aria-expanded="false"
                     style={{ color: "black" }}>
                     <div style={{ display: 'inline-block', width: '100%', height: '100%' }}>
-                        <Col
-                            onClick={addRipple}
-                            className="playlist-add-icon-holder p-0 button-ripple button-ripple-24">
+                        <div onClick={addRipple}
+                            className="col playlist-add-icon-holder p-0 button-ripple button-ripple-24">
                             <FontAwesomeIcon style={{ opacity: (isOpen ? 1 : "") }}
                                 className="playlist-add-icon" icon={faEllipsisV} />
                             {ripples}
-                        </Col>
+                        </div>
                     </div>
-                </Dropdown.Toggle>
-                {isOpen && <PlaylistDropdownMenu
-                    isRecommendations={props.isRecommendations}
-                    filmDispatch={props.filmDispatch}
-                    isOpen={isOpen}
-                    filmID={props.filmID}
-                    handlePlaylistClose={handlePlaylistClose} />}
-            </Dropdown>
+                </button>
+                <div className="dropdown-menu" aria-labelledby={`playlist-dropdown-${filmID}`}>
+                    {isOpen && <PlaylistDropdownMenu
+                        isRecommendations={isRecommendations}
+                        filmDispatch={filmDispatch}
+                        filmID={filmID}
+                        handlePlaylistClose={handlePlaylistClose} />
+                    }
+                </div>
+            </div >
             :
             null
 

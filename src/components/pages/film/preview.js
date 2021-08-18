@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback, useContext, useReducer } from 'react';
+import { useState, useEffect, useCallback, useContext, useReducer } from 'react';
 import { useHistory, useLocation } from 'react-router-dom'
-import { Button, Col, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 import { Player } from 'video-react';
@@ -16,7 +15,7 @@ import FilmContext from '../../../helpers/contexts/film/filmContext'
 import UserContext from '../../../helpers/contexts/user/userContext';
 
 
-function FilmPreview(props) {
+const FilmPreview = (props) => {
 
     let history = useHistory()
     let location = useLocation()
@@ -170,65 +169,64 @@ function FilmPreview(props) {
 
     const TruncateButton = (title) => {
         return (<span>
-            <Button variant="link"
-                className="p-0 m-0 mb-1 title fw-bold"
-                onClick={handleTruncate}>{title}</Button>
+            <button className="btn btn-link p-0 m-0 mb-1 title fw-bold"
+                onClick={handleTruncate}>{title}</button>
         </span>)
     }
     return (
 
-        <Col>
-            <Col sm={12}>
+        <div>
+            <div className="col col-sm-12">
                 <div ref={playerRef}>
                     <Player
                         playsInline
                         poster={film.img}
                         src={film.video} />
                 </div>
-            </Col>
+            </div>
             {
                 film &&
-                <React.Fragment>
-                    <Col className="mt-4" sm={12}>
-                        <Row className="p-0 m-0">
-                            <Col sm={12} className="p-0">
+                <>
+                    <div className="col col-sm-12 mt-4">
+                        <div className="row p-0 m-0">
+                            <div className="col col-sm-12 p-0">
                                 {!film.title && <p className="fw-bold"><br /></p>}
                                 <p className="fw-bold">{film.title}</p>
-                            </Col>
-                            <Col xs={4} sm={4} className="p-0">
+                            </div>
+                            <div className="col-4 col-sm-4 p-0">
                                 <p><FontAwesomeIcon icon={faEye} /> &ensp;{film.views}</p>
-                            </Col>
-                            <Col xs={4} sm={4} className="text-right d-flex justify-content-end">
+                            </div>
+                            <div className="col-4 col-sm-4 text-right d-flex justify-content-end">
                                 <p style={{ cursor: "pointer" }}
                                     className={isLiked ? 'film-picked-thumb-color' : ''}
                                     onClick={() => handleLike('like')}>
                                     <FontAwesomeIcon icon={faThumbsUp} />
                                     &ensp;{film.likes}
                                 </p>
-                            </Col>
-                            <Col xs={4} sm={4}>
+                            </div>
+                            <div className="col-4 col-sm-4">
                                 <p style={{ cursor: "pointer" }} className={isDisliked ? 'film-picked-thumb-color' : ''}
                                     onClick={() => handleLike('dislike')}>
                                     <FontAwesomeIcon icon={faThumbsDown} />
                                     &ensp;{film.dislikes}
                                 </p>
-                            </Col>
-                            <Col sm={12} className="mt-4 mb-4 divider" />
+                            </div>
+                            <div className="col col-sm-12 mt-4 mb-4 divider" />
 
-                            <Col sm={12} className="p-0" style={{ whiteSpace: 'pre-line', textAlign: 'justify' }}>
+                            <div className="col col-sm-12 p-0" style={{ whiteSpace: 'pre-line', textAlign: 'justify' }}>
                                 <TextTruncate line={!isDescExpanded && 2}
                                     truncateText="…"
                                     text={film.description}
                                     textTruncateChild={TruncateButton('Show more')} />
 
                                 {isDescExpanded && TruncateButton('Show less')}
-                            </Col>
-                        </Row>
-                    </Col>
-                    <Col sm={12} className="mt-4 mb-2 divider" />
-                </React.Fragment>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col col-sm-12 mt-4 mb-2 divider" />
+                </>
             }
-        </Col>
+        </div>
 
 
     )

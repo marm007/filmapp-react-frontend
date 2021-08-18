@@ -1,6 +1,5 @@
-import React, { useEffect, useReducer, useCallback } from 'react';
+import { useEffect, useReducer, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Row, Spinner } from 'react-bootstrap';
 
 import { homePageReducer, initialState } from './reducer';
 
@@ -15,14 +14,12 @@ import { jsxLoop } from '../../../helpers';
 import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
 
 
-
-function Home(props) {
+function Home() {
 
     let history = useHistory()
 
     const [state, dispatch] = useReducer(homePageReducer, initialState)
     const { films, isLoading, isAllFetched, isInitialLoaded } = state
-
 
     const handleOnHomePageData = useCallback(() => {
         if (!isLoading && !isAllFetched && isInitialLoaded) {
@@ -48,7 +45,7 @@ function Home(props) {
                     type: 'initial-load',
                     payload: response
                 })
-            })
+            }).catch(err => console.error(err))
         }
         fetchData()
     }, [])
@@ -77,10 +74,10 @@ function Home(props) {
         history.push({ pathname: `${process.env.REACT_APP_PATH_NAME}film/` + id });
     };
 
-  
+
 
     return (
-        <Row className="mt-5 mx-2">
+        <div className="row mt-5 mx-2">
             {
                 films ? films.map((film, index) => <Film key={film.id} film={film} index={index} handleRedirect={handleRedirect} />)
                     : [...jsxLoop(20, i =>
@@ -92,12 +89,12 @@ function Home(props) {
                 !isAllFetched && <div className="fetch-loader d-flex justify-content-center">
                     {
                         (isLoading) &&
-                        <Spinner animation="border" />
+                        <div className="spinner-border" />
                     }
                 </div>
             }
 
-        </Row>
+        </div>
     )
 }
 

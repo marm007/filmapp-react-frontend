@@ -5,16 +5,11 @@ import './App.css';
 
 import PrivateRoute from './helpers/components/privateRoute'
 
-import LoginComponent from './components/auth/login'
-import ResetPasswordComponent from './components/auth/resetPassword';
-import ForgotPasswordComponent from './components/auth/forgotPassword';
-import SettingsComponent from './components/settings'
-import RegisterComponent from './components/auth/register'
+//import SettingsComponent from './components/settings'
 
 import RemoveModal from './helpers/components/removeModal'
 
 import { Route, BrowserRouter as Router } from 'react-router-dom';
-import { Spinner, Toast } from "react-bootstrap";
 
 //  --------- icons ------------
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -49,34 +44,38 @@ const PlaylistsPage = lazy(() => import('./components/pages/playlists'))
 const AddFilmComponent = lazy(() => import('./components/add/filmAdd'))
 const NotFoundComponent = lazy(() => import('./components/pages/notFound'))
 
-function App(props) {
 
-    const { toast, clearToast } = useContext(ToastContext)
+const LoginComponent = lazy(() => import('./components/auth/login'))
+const ResetPasswordComponent = lazy(() => import('./components/auth/resetPassword'))
+const ForgotPasswordComponent = lazy(() => import('./components/auth/forgotPassword'))
+const RegisterComponent = lazy(() => import('./components/auth/register'))
+const SettingsComponent = lazy(() => import('./components/settings'))
+
+function App() {
+
+    const { toast } = useContext(ToastContext)
 
     return (
         <div>
             {
                 <div className="toast-root">
-                    <Toast
-
-                        show={toast.isOpen}
-                        onClose={clearToast}
-                        autohide
-                        className="toast-element bg-secondary">
-                        <Toast.Header>
-                            <strong className="me-auto">Playlist</strong>
-                        </Toast.Header>
-                        <Toast.Body>{toast.message}</Toast.Body>
-                    </Toast>
+                    <div className="toast bg-secondary"
+                        id="mainToast" data-bs-autohide="false"
+                        role="alert" aria-live="assertive" aria-atomic="true">
+                        <div className="toast-header">
+                            <strong className="me-auto">{toast.header}</strong>
+                        </div>
+                        <div className="toast-body">
+                            {toast.message}
+                        </div>
+                    </div>
                 </div>
             }
 
             <Router>
                 <UserProvider>
                     <WithAxios>
-                        <Suspense fallback={<div className="suspense-loader"> <Spinner className="suspense-loader-spinner" animation="border" /></div>}>
-
-                            <Route render={() => <NavbarComponent />} />
+                        <Suspense fallback={<></>}>
                             <PrivateRoute exact path={[`${pathName}settings`, `${pathName}profile/settings`, `${pathName}film/:id/settings`, `${pathName}search/settings`, `${pathName}add/settings`, `${pathName}playlists/settings`]}
                                 component={SettingsComponent} />
 
@@ -91,6 +90,13 @@ function App(props) {
 
                             <Route exact path={[`${pathName}forgot`, `${pathName}film/:id/forgot`, `${pathName}search/forgot`, `${pathName}add/forgot`, `${pathName}playlists/forgot`]}
                                 render={(props) => <ForgotPasswordComponent {...props} />} />
+
+                        </Suspense>
+
+                        <Suspense fallback={<div className="suspense-loader"> <div className="spinner-border" /></div>}>
+
+                            <Route render={() => <NavbarComponent />} />
+
 
                             <Switch>
                                 <Route exact path={[`${pathName}film/:id`, `${pathName}film/:id/login`, `${pathName}film/:id/register`, `${pathName}film/:id/reset/:token`,
@@ -122,7 +128,7 @@ function App(props) {
 
             </Router>
             <RemoveModal />
-        </div>
+        </div >
     );
 }
 

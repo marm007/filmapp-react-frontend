@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useContext, useReducer } from 'react';
-import { Button, Col, Dropdown, Form, FormCheck, FormControl, Row, Spinner } from "react-bootstrap";
+import { useCallback, useEffect, useContext, useReducer, useRef } from 'react';
 
 import * as userApi from '../../services/userService'
 import * as playlistApi from '../../services/playlistService'
@@ -16,6 +15,9 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isRecommendations, 
 
 
     const { createToast } = useContext(ToastContext);
+
+    const titleInputRef = useRef()
+
     const [state, dispatch] = useReducer(playlistDropdownMenuReducer, playlistDropdownMenuInitialState);
 
     const { playlists, title, isPublic, isLoading, isAllFetched, isCreating, isAdding, playlistToUpgrade, error } = state
@@ -78,7 +80,7 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isRecommendations, 
                     } else if (err.response && err.response.data && err.response.data.errors) {
                         errorMessage = err.response.data.errors[0]
                     }
-
+                    titleInputRef.current.classList.add('is-invalid')
                     dispatch({
                         type: 'error',
                         payload: errorMessage === "Path `title` is required." ? 'Playlist title is required' : errorMessage
@@ -131,8 +133,19 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isRecommendations, 
         })
     };
 
-    const handleCreatePlaylist = (e) => {
+    const handleChange = (fieldName, payload) => {
+        titleInputRef.current.classList.remove('is-invalid')
+        dispatch({
+            type: 'field',
+            fieldName: fieldName,
+            payload: payload
+        })
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
         e.stopPropagation()
+
         dispatch({
             type: 'create'
         })
@@ -140,39 +153,38 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isRecommendations, 
 
     return (
 
-        <Dropdown.Menu
-            onClick={e => e.stopPropagation()}
+        <div onClick={e => e.stopPropagation()}
             style={{ width: 240 + "px", left: '50px !important' }}>
-            <Row className="m-0 m-button button-ripple" >
-                <Col className="playlist-add-exit-text-width">Save to...</Col>
+            <div className="row m-0 m-button button-ripple" >
+                <div className="col playlist-add-exit-text-width">Save to...</div>
                 <RippleButton className="button-ripple-24 playlist-add-icon-holder p-0 d-flex align-items-center text-center justify-content-center"
                     onClick={() => setTimeout(handlePlaylistClose, 150)}>
                     <FontAwesomeIcon icon="times" />
                 </RippleButton>
-            </Row>
-            <Dropdown.Divider />
-            <div
-                ref={scrollRef}
+            </div>
+            <hr className="dropdown-divider" />
+            <div ref={scrollRef}
                 style={{
                     maxHeight: 100 + 'px', overflowY: 'scroll', minHeight: 3 + 'rem'
                 }}>
-
                 {
                     playlists.map((playlist, index) => {
-                        return (<Row className="m-0 playlist-form-group" key={playlist.id} >
-                            <Col xs={10} sm={10} className="p-0">
-                                <Form.Check id={playlist.id} className="form-check">
-                                    <FormCheck.Input type="checkbox"
+                        return (<div className="row m-0 playlist-form-group" key={playlist.id} >
+                            <div className="col-10 col-sm-10 p-0">
+                                <div id={playlist.id} className="form-check">
+                                    <input type="checkbox"
+                                        id={`add-playlist-${playlist.id}`}
+                                        className="form-check-input"
                                         onChange={() => handleAddToPlaylist(playlist)}
                                         checked={playlist.contains} />
-                                    <FormCheck.Label>
+                                    <label className="form-check-label" htmlFor={`add-playlist-${playlist.id}`}>
                                         <p className="playlist-check-label">
                                             {playlist.title}
                                         </p>
-                                    </FormCheck.Label>
-                                </Form.Check>
+                                    </label>
+                                </div>
 
-                            </Col>
+                            </div>
                             <ChangePrivacyButton
                                 id={playlist.id}
                                 isPublic={playlist.is_public}
@@ -180,7 +192,7 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isRecommendations, 
                                 filmDispatch={filmDispatch}
                                 dispatchPrivacyUpdate={dispatch} />
 
-                        </Row>)
+                        </div>)
                     })
                 }
 
@@ -189,45 +201,49 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isRecommendations, 
                         height: 3 + 'rem'
                     }}
                         className="fetch-spinner d-flex justify-content-center align-items-center">
-                        {isLoading && <Spinner animation="border" />}
+                        {isLoading && <div className="spinner-border" />}
                     </div>
                 }
             </div>
-            <Dropdown.Divider />
-            <Dropdown.ItemText>Create a new playlist</Dropdown.ItemText>
-            <Row className="m-0 p-0">
-                <Form>
-                    <FormControl
-                        isInvalid={error !== ''}
-                        onChange={(e) => dispatch({ type: 'field', fieldName: 'title', payload: e.target.value })}
-                        className="mb-2 mt-2"
-                        placeholder="Enter playlist title..." />
+            <hr className="dropdown-divider" />
+            <div className="row m-0 p-0">
+                <span className="m-0">Create a new playlist</span>
+            </div>
+            <div className="row m-0 p-0">
+                <form onSubmit={handleSubmit}>
+                    <div className="input-group mb-2 mt-2" >
+                        <input type="text" className="form-control" aria-label="playlistNameInput"
+                            placeholder="Enter playlist title..." ref={titleInputRef}
+                            onChange={(e) => handleChange('title', e.target.value)}
+                        />
+                        <div className="invalid-feedback">
+                            {error}
+                        </div>
+                    </div>
+                    <div className="mb-2 mt-2">
+                        <select className="form-select"
+                            onChange={(e) => handleChange('isPublic', e.target.value === 'public')}>
+                            <option value="private">Private</option>
+                            <option value="public">Public</option>
+                        </select>
+                    </div>
 
-                    <FormControl.Feedback type="invalid"
-                        className="mb-2 mt-2">
-                        {error}
-                    </FormControl.Feedback>
-                    <Form.Select aria-label="Privacy" className="mb-2 mt-2"
-                        onChange={(e) => dispatch({ type: 'field', fieldName: 'isPublic', payload: e.target.value === 'public' })}>
-                        <option value="private">Private</option>
-                        <option value="public">Public</option>
-                    </Form.Select>
-
-                    <Form.Group className="d-flex align-items-center mt-2">
-                        <Button disabled={isCreating}
-                            onClick={isCreating ? null : handleCreatePlaylist}>Create</Button>
+                    <div className="d-flex align-items-center mt-2">
+                        <button type="submit" className="btn btn-primary" disabled={isCreating}>
+                            Create
+                        </button>
 
                         {
                             isCreating &&
-                            <Spinner className="ms-2" animation="grow" />
+                            <div className="spinner-grow ms-2" />
                         }
-                    </Form.Group>
+                    </div>
 
-                </Form>
+                </form>
 
-            </Row>
+            </div>
 
-        </Dropdown.Menu >
+        </div >
 
 
     )

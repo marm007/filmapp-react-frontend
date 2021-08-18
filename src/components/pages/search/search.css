@@ -27,3 +27,7 @@
     display: block;
     content: "";
 }
+
+.author-nick-search {
+    font-size: smaller;
+}

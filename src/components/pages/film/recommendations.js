@@ -1,7 +1,4 @@
-import React, { useEffect, useReducer, useCallback, useContext } from 'react';
-import { Col, Spinner } from "react-bootstrap";
-
-
+import { useEffect, useReducer, useCallback, useContext } from 'react';
 
 import { recommendationsReducer, recommendationsInitialState } from './reducers/recommendationsReducer'
 
@@ -14,7 +11,7 @@ import { recommendationsMaxFetchCount } from "../../../config"
 import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
 import FilmContext from '../../../helpers/contexts/film/filmContext';
 
-function FilmsRecommendations(props) {
+const FilmsRecommendations = (props) => {
 
     // eslint-disable-next-line no-unused-vars
     const [filmState, filmDispatch] = useContext(FilmContext)
@@ -87,14 +84,14 @@ function FilmsRecommendations(props) {
                     type: 'success',
                     payload: films
                 })
-            })
+            }).catch(err => console.error(err))
         }
         if (isLoading && films && id) fetchData()
     }, [isLoading, id, films])
 
     return (
 
-        <Col>
+        <div className="col">
 
             {
                 films && films.map((film, index) => <Film key={film.id} film={film} index={index} isRecommendations={true} filmDispatch={filmDispatch} handleRedirect={() => props.handleRedirect(film.id)} />)
@@ -103,10 +100,10 @@ function FilmsRecommendations(props) {
 
             {
                 !isAllFetched && <div className="fetch-loader d-flex justify-content-center">
-                    {(isLoading) && !error && <Spinner animation="border" />}
+                    {(isLoading) && !error && <div className="spinner-border" />}
                 </div>
             }
-        </Col>
+        </div>
     )
 }
 

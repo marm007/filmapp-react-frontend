@@ -1,13 +1,15 @@
-import React, { useState, useReducer, useEffect } from 'react';
+import { useReducer, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Alert, Button, Form, Modal, Spinner } from 'react-bootstrap';
-import * as authApi from '../../services/authService'
+
+import Modal from './modal';
+import Input from './input';
+
 import { authInitialState, authReducer } from './reducer';
 
-function ForgotPassword(props) {
-    let history = useHistory()
+import * as authApi from '../../services/authService'
 
-    const [show, setShow] = useState(true)
+const ForgotPassword = () => {
+    let history = useHistory()
 
     const [state, dispatch] = useReducer(authReducer, authInitialState)
 
@@ -54,73 +56,50 @@ function ForgotPassword(props) {
     };
 
     const modalClose = () => {
-        setShow(false)
         history.goBack();
     };
 
 
     return (
 
-        <Modal
-            onHide={modalClose}
-            show={show}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered>
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Forgot
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form onSubmit={handleSubmitForgotRequest}>
-                    <Form.Group>
-                        <Form.Label htmlFor="email">Email</Form.Label>
-                        <Form.Control
-                            isInvalid={(isSubmitted && !email)}
+        <Modal id="forgotPasswordModal" title="Forgot" onClose={modalClose}>
+            <form onSubmit={handleSubmitForgotRequest}>
+                <div>
+                    <label htmlFor="email">Email</label>
+                    <Input
+                        isInvalid={(isSubmitted && !email)}
+                        type="email" name="email" value={email} onChange={e => dispatch({ type: 'field', fieldName: 'email', payload: e.target.value })} />
+                    <div className="invalid-feedback">
+                        Email is required
+                    </div>
+                </div>
 
-                            type="email" name="email" value={email} onChange={e => dispatch({ type: 'field', fieldName: 'email', payload: e.target.value })}>
-                        </Form.Control>
-                        <Form.Control.Feedback type="invalid">
-                            Email is required
-                        </Form.Control.Feedback>
-                    </Form.Group>
+                {
+                    isSuccess &&
+                    <div className="alert alert-danger mt-2">
+                        Email with link to reset password has been sent.
+                    </div>
+                }
 
+                {
+                    isError &&
+                    <div className="alert alert-danger mt-2">
+                        {error ? error : "Error while sending email."}
+                    </div>
+                }
 
-
-                    {
-                        isSuccess &&
-                        <Alert variant="success" className="mt-2">
-                            Email with link to reset password has been sent.
-                        </Alert>
-                    }
+                <div className="d-flex align-items-center mt-2">
+                    <button type="submit" className="btn btn-primary">
+                        Reset password
+                    </button>
 
                     {
-                        isError &&
-                        <Alert variant="danger" className="mt-2">
-                            {error ? error : "Error while sending email."}
-                        </Alert>
+                        isSending &&
+                        <div className="spinner-grow ms-2" />
                     }
+                </div>
 
-                    <Form.Group className="d-flex align-items-center mt-2">
-                        <Button type="submit" className="btn-primary">
-                            Reset password
-                        </Button>
-
-                        {
-                            isSending &&
-                            <Spinner className="ms-2" animation="grow" />
-                        }
-                    </Form.Group>
-
-                </Form>
-
-            </Modal.Body>
-
-            <Modal.Footer>
-                <Button onClick={modalClose}>Close</Button>
-            </Modal.Footer>
-
+            </form>
 
         </Modal>
 

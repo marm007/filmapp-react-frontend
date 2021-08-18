@@ -1,16 +1,18 @@
 import './filmAdd.css'
 
-import React, { useRef, useReducer, useEffect, useContext } from 'react';
+import { useRef, useReducer, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Alert, Button, Col, Form, FormControl, Row, Ratio, Spinner } from "react-bootstrap";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import Input from '../auth/input';
+
 import { CHOOSE_FILM, CHOOSE_THUMBNAIL, filmAddInitialState, filmAddReducer } from './reducers/filmAddReducer';
 
 import * as filmApi from '../../services/filmService'
 import UserContext from '../../helpers/contexts/user/userContext';
 
-function FilmAdd() {
+const FilmAdd = () => {
 
 
     const { user, clearUser } = useContext(UserContext)
@@ -113,20 +115,19 @@ function FilmAdd() {
     }
 
     return (
-        <Row className="mt-4 mx-2" sm={12}>
-            <Col className="mb-4" sm={6} lg={5}>
+        <div className="row mt-4 mx-2">
+            <div className="col col-sm-6 col-lg-5 mb-4">
 
-                <Col className="mb-4" xs={12} sm={12} lg={10} >
+                <div className="col-12 col-sm-12 col-lg-10 mb-4">
                     <div className="embed-responsive embed-responsive-16by9 z-depth-1-half">
                         <div
                             className="position-relative justify-content-center d-flex align-items-center embed-responsive-item text-center box has-advanced-upload">
 
-
-                            <Ratio aspectRatio="16x9">
+                            <div className="ratio ratio-16x9">
                                 <video muted={true} autoPlay={true} className="embed-responsive-item" loop={true}
                                     src={film.preview ? film.preview : ""}>
                                 </video>
-                            </Ratio>
+                            </div>
 
                             <input id="film" accept="video/mp4, video/ogg"
                                 onChange={event => handleFileChoose(event, 'film')}
@@ -140,7 +141,7 @@ function FilmAdd() {
 
                             {
                                 film.preview &&
-                                <Col className="card-img-overlay film-add-item-opacity" />
+                                <div className="col card-img-overlay film-add-item-opacity" />
                             }
 
                             {
@@ -154,15 +155,15 @@ function FilmAdd() {
 
                         </div>
                     </div>
-                </Col>
-                <Col xs={12} sm={12} lg={10}>
+                </div>
+                <div className="col-12 col-sm-12 col-lg-10">
                     <div
                         className="embed-responsive embed-responsive-16by9 z-depth-1-half">
                         <div
                             className="position-relative justify-content-center d-flex align-items-center embed-responsive-item text-center box has-advanced-upload">
-                            <Ratio aspectRatio="16x9">
+                            <div className="ratio ratio-16x9">
                                 <img alt="" src={thumbnail.preview ? thumbnail.preview : "data:image/gif;base64,R0lGODlhAQABAPAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="} />
-                            </Ratio>
+                            </div>
                             <input id="thumbnail" accept="image/jpg, image/png, image/jpeg"
                                 onChange={event => handleFileChoose(event, 'thumbnail')}
                                 type="file" ref={thumbnailInputRef} className=" inputfile position-absolute" />
@@ -175,7 +176,7 @@ function FilmAdd() {
                             </label>
                             {
                                 thumbnail.preview &&
-                                <Col className="card-img-overlay film-add-item-opacity" />
+                                <div className="col card-img-overlay film-add-item-opacity" />
                             }
 
                             {
@@ -188,67 +189,66 @@ function FilmAdd() {
                         </div>
                     </div>
 
-                </Col>
-            </Col>
-            <Col className="mb-2" sm={6} lg={5}>
+                </div>
+            </div>
+            <div className="col col-sm-6 col-lg-5 mb-2">
 
-                <Form.Group className="mb-3" sm={12}>
-                    <FormControl
-                        placeholder="Title"
-                        aria-label="Title"
-                        aria-describedby="basic-addon1"
+                <div className="mb-3">
+                <label className="form-label" htmlFor="title">Title</label>
+                <Input  placeholder="Title"
+                type="text"
                         isInvalid={isSubmitted && !title}
                         name="title"
                         value={title}
-                        onChange={e => dispatch({ type: 'field', fieldName: 'title', payload: e.target.value })}
-                    />
-                    <Form.Control.Feedback type="invalid">
+                        onChange={e => dispatch({ type: 'field', fieldName: 'title', payload: e.target.value })}/>
+                    
+                    <div className="invalid-feedback">
                         Title is required
-                    </Form.Control.Feedback>
-                </Form.Group>
+                    </div>
+                </div>
 
-                <Form.Group className="mb-3" sm={12}>
-                    <FormControl
+                <div className="mb-3" >
+                            <label className="form-label" htmlFor="description">Description</label>
+                    <Input
                         placeholder="Description"
-                        as="textarea"
-                        aria-label="With textarea"
+                        type="textarea"
                         isInvalid={isSubmitted && !description}
                         name="description"
                         value={description}
                         onChange={e => dispatch({ type: 'field', fieldName: 'description', payload: e.target.value })}
                     />
-                    <Form.Control.Feedback type="invalid">
+                    <div className="invalid-feedback">
                         Description is required
-                    </Form.Control.Feedback>
-                </Form.Group>
+                    </div>
+                </div>
 
-                <Col className="mb-3 p-0 " sm={12}>
-                    <Form.Group className="d-flex align-items-center">
-                        <Button variant="primary"
+                <div className="col col-sm-12 mb-3 p-0">
+                    <div className="d-flex align-items-center">
+                        <button className="btn btn-primary"
                             disabled={isSending || !title || !description}
                             onClick={!isSending ? handleSubmit : null}>
                             {isSending ? 'Loading…' : 'Add'}
-                        </Button>
+                        </button>
 
                         {
                             isSending &&
-                            <Spinner className="ms-2" animation="grow" />
+                            <div className="spinner-grow ms-2" />
 
                         }
-                    </Form.Group>
-                </Col>
+                    </div>
+                </div>
 
                 {
                     isError &&
-                    <Alert variant="danger">
+                    <div className="alert alert-danger">
                         {error ? error : 'Error while creating film.'}
-                    </Alert>
+                    </div>
                 }
 
-            </Col>
+            </div>
 
 
-        </Row>
+        </div >
     )
 }
 

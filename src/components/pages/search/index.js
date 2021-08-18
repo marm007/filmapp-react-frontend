@@ -1,8 +1,7 @@
-import React, { useEffect, useReducer, useState, useCallback } from 'react';
+import { useEffect, useReducer, useState, useCallback } from 'react';
 import { useLocation, useHistory } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
-import { Col, Collapse, Row, Spinner } from 'react-bootstrap';
 import queryString from 'query-string';
 import TextTruncate from "react-text-truncate";
 import Truncate from "react-truncate";
@@ -31,7 +30,7 @@ let filters = [
     { id: 'this_year', title: 'This year' },
 ];
 
-const Search = (props) => {
+const Search = () => {
 
     const history = useHistory();
     const location = useLocation();
@@ -191,22 +190,23 @@ const Search = (props) => {
 
     return (
         <>
-            <RippleButton className="mt-3 mx-3 search-button"
+            <RippleButton className="mt-3 mx-4 search-button p-0"
                 onClick={() => setIsOpen(!isOpen)}>
-                <span
+                <div
                     aria-controls="filter-collapse"
                     aria-expanded={isOpen}
-                    className="p-2">
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#searchCollapse"
+                    className="px-4 py-2">
                     <FontAwesomeIcon style={{ cursor: "pointer" }} icon={faFilter} />
-                </span>
+                </div>
             </RippleButton>
-            <Collapse in={isOpen}>
-                <Row id="filter-collapse" className="mx-2">
-                    <Col className="mt-4" sm={4}>
+            <div className="collapse" id="searchCollapse">
+                <div id="filter-collapse" className="row mx-2">
+                    <div className="col col-sm-4 mt-4">
                         <p style={{ 'fontWeight': 500 }}>UPLOAD DATE</p>
 
-                        <Col sm={8} className="mt-3 mb-3 divider" />
-
+                        <div className="col col-sm-8 mt-3 mb-3 divider" />
 
                         {
                             filters.map((filterTmp) => {
@@ -218,16 +218,16 @@ const Search = (props) => {
                             })
                         }
 
-                    </Col>
+                    </div>
 
-                    <Col className="mt-4" sm={4}>
+                    <div className="col col-sm-4 mt-4">
                         <p style={{ 'fontWeight': 500 }}>SORT BY</p>
 
-                        <Col sm={8} className="mt-3 mb-3 divider" />
+                        <div className="col col-sm-8 mt-3 mb-3 divider" />
 
                         {
                             sorts.map((sortTmp) => {
-                                return (<Col key={sortTmp.id} className="d-flex">
+                                return (<div key={sortTmp.id} className="col d-flex">
                                     <p style={sort === sortTmp.id ?
                                         { fontWeight: 700, fontSize: 80 + '%' } :
                                         { fontWeight: 400, fontSize: 80 + '%' }}
@@ -238,42 +238,40 @@ const Search = (props) => {
                                         <FontAwesomeIcon className="ms-2" icon="sort-up" /> :
                                         sort === sortTmp.id && sortTmp.dir === -1 ?
                                             <FontAwesomeIcon className="ms-2" icon="sort-down" /> : ""}
-                                </Col>)
+                                </div>)
                             })
                         }
 
-                    </Col>
+                    </div>
 
-                </Row>
-            </Collapse>
+                </div>
+            </div>
 
-            <Col sm={12} className="mt-2 mb-3 divider" />
+            <div className="col col-sm-12 mt-2 mb-3 divider" />
 
-            <Row className="mx-2 mt-4">
+            <div className="row mx-2 mt-4">
                 {
                     films ? films.map((film, index) => {
                         const time = parseSearchDate(film);
 
-                        return <Col xs={12} sm={12} lg={8}
+                        return <div className="col-12 col-sm-12 col-lg-8"
                             key={film.id}>
-                            <Col className="play-outer-container m-0 mb-1"
+                            <div className="col play-outer-container m-0 mb-1"
                                 onClick={(e) => {
                                     const isPlaylistButton = checkIfPlaylistButtonClick(e.target)
                                     if (!isPlaylistButton) setRedirect(e, film.id)
-
-
                                 }} >
-                                <Row className="search-style mb-4 m-0">
-                                    <Col xs={8} sm={4} className="p-0">
+                                <div className="row search-style mb-4 m-0">
+                                    <div className="col-8 col-sm-4 p-0">
                                         <div className="embed-responsive embed-responsive-16by9 z-depth-1-half play-container">
                                             <BlurredImageComponent
                                                 image={`${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail`} />
                                             <FontAwesomeIcon className="play-middle" icon="play" />
                                         </div>
-                                    </Col>
-                                    <Col xs={4} sm={8}>
-                                        <Row className="m-0">
-                                            <Col className="p-0 mb-1"
+                                    </div>
+                                    <div className="col-4 col-sm-8">
+                                        <div className="row m-0">
+                                            <div className="col p-0 mb-1"
                                                 style={{
                                                     flex: '0 0 auto !important',
                                                     width: 'calc(83.33333333% - 24px) !important'
@@ -282,42 +280,42 @@ const Search = (props) => {
                                                     className="mb-0 search-title fw-bold">
                                                     {film.title}
                                                 </Truncate>
-                                            </Col>
-                                            <Col className="d-flex justify-content-end">
+                                            </div>
+                                            <div className="col d-flex justify-content-end">
                                                 <PlaylistAddButtonComponent
                                                     index={index}
                                                     filmID={film.id} />
-                                            </Col>
-                                        </Row>
+                                            </div>
+                                        </div>
                                         <p className="d-none d-sm-inline mb-1 author-nick-search">
-                                            <small>{film.author_name} &#183; {film.views} views &#183; {time}</small>
+                                            <span>{film.author_name} &#183; {film.views} views &#183; {time}</span>
                                         </p>
 
-                                        <p className="d-inline d-sm-none mb-0 author-nick-color">
-                                            <small>{film.author_name} &#183; {film.views} views</small>
+                                        <p className="d-inline d-sm-none mb-0 author-nick">
+                                            <span>{film.author_name} &#183; {film.views} views</span>
                                         </p>
 
-                                        <small className="d-none d-sm-inline">
-                                            <TextTruncate className="mb-0 author-nick-search"
+                                        <span className="d-none d-sm-inline  author-nick-search">
+                                            <TextTruncate className="mb-0"
                                                 line={2} text={film.description} />
-                                        </small>
+                                        </span>
 
-                                    </Col>
-                                </Row>
-                            </Col>
-                        </Col>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     }) : [...jsxLoop(20, i =>
                         <SearchSkeleton key={i} />
                     )]
                 }
 
-            </Row>
+            </div>
 
             {
                 !isAllFetched && <div className="fetch-loader d-flex justify-content-center">
                     {
                         (isLoading) &&
-                        <Spinner animation="border" />
+                        <div className="spinner-border" />
                     }
                 </div>
             }

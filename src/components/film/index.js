@@ -1,12 +1,9 @@
-import React from 'react';
-import { Col, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TextTruncate from "react-text-truncate";
 
 import BlurredImageComponent from "../blurredImage";
 import PlaylistAddButtonComponent from "../add/playlistAddButton";
 
-import { checkIfPlaylistButtonClick } from '../../helpers';
 import RemoveButton from '../../helpers/components/removeButton';
 
 import '../pages/film/film.css'
@@ -18,29 +15,26 @@ const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommen
 
     return (
         <div className={`${isRecommendations ? recommendationsClass : normalClass}`}>
-            <div className={(isRecommendations ? "row p-0 m-0" : "col").concat(" play-outer-container remove-container")}
-                onClick={(e) => {
-                    const isPlaylistButton = checkIfPlaylistButtonClick(e.target)
-                    if (!isPlaylistButton) handleRedirect(film.id)
-                }}>
-                <Col xs={isRecommendations ? 6 : 12} sm={isRecommendations ? 6 : 12}
-                    className="m-0 p-0">
+            <div className={(isRecommendations ? "row p-0 m-0" : "col").concat(" play-outer-container remove-container")}>
+                <div className={`${isRecommendations ? 'col-6 col-sm-6' : 'col-12 col-sm-12'} m-0 p-0`} onClick={() => handleRedirect(film.id)}>
                     <div className="embed-responsive embed-responsive-16by9 z-depth-1-half play-container">
-                
                         <BlurredImageComponent
                             image={film.img} />
                         <FontAwesomeIcon className="play-middle" icon="play" />
                     </div>
-                </Col>
-                <Col xs={isRecommendations ? 6 : 12} sm={isRecommendations ? 6 : 12}
-                    className={isRecommendations ? "m-0" : "m-0 p-0"}>
-                    <Row className="m-0 mt-1">
-                        <Col className="film-preview-playlist-title-width p-0">
+                </div>
+                <div className={`${isRecommendations ? 'col-6 col-sm-6' : 'col-12 col-sm-12 p-0'} m-0`}>
+                    <div className="row mx-0 mb-0 mt-1">
+                        <div className="col button-ripple-div-next-width p-0 pe-2 cursor-pointer" onClick={() => handleRedirect(film.id)}>
                             <TextTruncate line={1} text={film.title}
                                 className="mb-1 mt-1 title " />
-                        </Col>
+                            <div className="mb-0 author-nick">
+                                <span>{film.author_name}&nbsp;</span>
+                                <span>•&nbsp;</span>
+                                <span>{film.views} views</span>
+                            </div>
+                        </div>
 
-                        <Col className="p-0 d-flex justify-content-end">
                             {
                                 isProfile ?
                                     <RemoveButton handleRemove={handleRemove} /> :
@@ -50,15 +44,9 @@ const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommen
                                         index={index}
                                         filmID={film.id} />
                             }
-                        </Col>
-                    </Row>
-                    <p className="mb-0 author-nick-color">
-                        <small>{film.author_name}</small>
-                    </p>
-                    <p className="mb-0 film-views">
-                        <small>{film.views} views</small>
-                    </p>
-                </Col>
+                    </div>
+
+                </div>
             </div>
         </div>
     )

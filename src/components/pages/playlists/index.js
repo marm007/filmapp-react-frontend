@@ -1,6 +1,5 @@
-import React, { useEffect, useReducer, useCallback } from 'react';
+import { useEffect, useReducer, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Row, Spinner } from 'react-bootstrap';
 
 import { playlistsPageReducer, initialState } from './reducer'
 
@@ -16,7 +15,7 @@ import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListe
 
 const pathName = process.env.REACT_APP_PATH_NAME;
 
-function PlaylistsPage(props) {
+function PlaylistsPage() {
 
     let history = useHistory()
 
@@ -100,7 +99,7 @@ function PlaylistsPage(props) {
 
 
     return (
-        <Row className="mt-5 mx-2">
+        <div className="row mt-5 mx-2">
             {
                 playlists ? playlists.map((playlist, index) => <Playlist key={playlist.id} playlist={playlist} index={index} handleRedirect={setRedirect} />)
                     : [...jsxLoop(20, i =>
@@ -110,13 +109,13 @@ function PlaylistsPage(props) {
             {
                 !isAllFetched && <div className="fetch-loader d-flex justify-content-center">
                     {
-                        (isLoading) &&
-                        <Spinner animation="border" />
+                        isLoading &&
+                        <div className="spinner spinner-border" />
                     }
                 </div>
             }
 
-        </Row>
+        </div>
 
     )
 }

@@ -1,24 +1,55 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import ToastContext from './toastContext'
+import { Toast } from 'bootstrap'
 
 const ToastProvider = ({ children }) => {
-    const [toast, setToast] = useState({ isOpen: false, message: '', isPrevoius: false })
+    const showAnimTimeout = 850
+    const hideAnimTimeout = 1500 + showAnimTimeout
 
-    const createToast = (message) => {
+    const [toast, setToast] = useState({ header: '', message: '', isPrevoius: false })
+
+    const toastAutoHide = useRef(null)
+    const toastShow = useRef(null)
+
+    const createToast = (message, header = 'Playlist') => {
+        let toastElement = Toast.getOrCreateInstance("#mainToast")
+
+        if (toastAutoHide.current) {
+            console.log('hide', toastAutoHide.current)
+            clearTimeout(toastAutoHide.current)
+            toastAutoHide.current = null
+        }
+
         if (toast.isPrevoius) {
-            setToast({ isOpen: false, message: '', isPrevoius: true })
-            setTimeout(() => setToast({ isOpen: true, message: message, isPrevoius: true }), 850)
+            toastElement.hide()
+
+            if (toastShow.current) {
+                console.log('toastShow', toastAutoHide.current)
+
+                clearTimeout(toastShow.current)
+            }
+
+            toastShow.current = setTimeout(() => {
+                console.log('ladladll')
+                toastElement.show()
+                setToast({ header: header, message: message, isPrevoius: true })
+                toastAutoHide.current = setTimeout(() => {
+                    console.log('ccsda')
+                    toastElement.hide()
+                }, hideAnimTimeout)
+            }, showAnimTimeout)
+
         } else {
-            setToast({ isOpen: true, message: message, isPrevoius: true })
+            toastElement.show()
+            setToast({ header: header, message: message, isPrevoius: true })
+            toastShow.current = setTimeout(() => {
+                toastElement.hide()
+            }, hideAnimTimeout)
         }
     }
 
-    const clearToast = () => {
-        setToast({ isOpen: false, message: '', isPrevoius: false })
-    }
-
     return (
-        <ToastContext.Provider value={{ toast, createToast, clearToast }}>
+        <ToastContext.Provider value={{ toast, createToast }}>
             {children}
         </ToastContext.Provider>
     )

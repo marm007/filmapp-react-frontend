@@ -1,11 +1,10 @@
 /* eslint-disable jsx-a11y/role-has-required-aria-props */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useEffect, useCallback, useContext, useReducer, useRef } from 'react';
+import { useEffect, useCallback, useContext, useReducer, useRef } from 'react';
 import { useHistory, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-import { Button, Col, Row, Form, Nav, Navbar, Spinner } from 'react-bootstrap';
-
+import { isMobile } from 'react-device-detect';
+import { Collapse } from 'bootstrap'
 import headerIcon from '../../images/header.png';
 import * as filmApi from '../../services/filmService'
 
@@ -32,14 +31,11 @@ function NavbarComponent(props) {
     let history = useHistory();
     let location = useLocation();
 
-    const onSmallScreen = useWindowsWidth();
     const onMediumScreen = useWindowsWidth(768);
 
     const { user, logout } = useContext(UserContext);
 
     const [state, dispatch] = useReducer(searchReducer, initialSearchState)
-
-    const [isExpanded, setIsExpanded] = useState(false)
 
     const { options, title, isLoading, isAllFetched, isSearching, isOpen, selected } = state
 
@@ -66,7 +62,8 @@ function NavbarComponent(props) {
     })
 
     useEffect(() => {
-        setIsExpanded(false)
+        const bsCollapse = new Collapse('#responsive-navbar-nav', { toggle: false })
+        bsCollapse.hide()
     }, [location])
 
     useEffect(() => {
@@ -75,7 +72,7 @@ function NavbarComponent(props) {
                 .then(({ data }) => {
                     const options = data.map((film) => ({
                         ...film,
-                        img: `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail`
+                        img: `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small_webp`
                     }));
 
                     dispatch({
@@ -97,7 +94,7 @@ function NavbarComponent(props) {
                 .then(({ data }) => {
                     const options = data.map((film) => ({
                         ...film,
-                        img: `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail`
+                        img: `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small_webp`
                     }));
                     dispatch({
                         type: 'success-search',
@@ -123,7 +120,7 @@ function NavbarComponent(props) {
                     handleSearchSubmit(event);
                     break;
                 case 9:
-                    if (onSmallScreen)
+                    if (isMobile)
                         handleSearchSubmit(event);
                     break;
                 default:
@@ -132,19 +129,9 @@ function NavbarComponent(props) {
         }
     };
 
-    const handleSelect = (eventKey) => {
+    const handleAddFilm = () => history.push(`${process.env.REACT_APP_PATH_NAME}add`)
+    const handleShowPlaylists = () => history.push(`${process.env.REACT_APP_PATH_NAME}playlists`)
 
-        switch (eventKey) {
-            case 'add_film': {
-                history.push(`${process.env.REACT_APP_PATH_NAME}add`);
-                break;
-            }
-            case 'playlists':
-                history.push(`${process.env.REACT_APP_PATH_NAME}playlists`)
-                break;
-            default: break;
-        }
-    }
 
     const handleSearchSubmit = (e) => {
         e.preventDefault();
@@ -205,9 +192,6 @@ function NavbarComponent(props) {
         });
     }
 
-    const handleToggle = (expanded) => {
-        setIsExpanded(expanded)
-    }
     const handleSearch = useCallback((query) => {
         dispatch({
             type: 'search',
@@ -227,43 +211,32 @@ function NavbarComponent(props) {
 
     return (
 
-        <Navbar
-            expanded={isExpanded}
-            className="py-2 px-4"
-            expand="md" bg="light" variant="light"
-            onToggle={handleToggle}
-            onSelect={e => handleSelect(e)}>
-
-            <Col className="pb-2"
-                xs={{ span: 5, order: 'first' }}
-                sm={{ span: 2, order: 'first' }}
-                md={{ span: 4, order: 'first' }}>
-                <Navbar.Brand style={{ cursor: 'pointer' }}
-                    className="d-flex align-items-center"
+        <nav
+            className="navbar navbar-expand-md navbar-light bg-light py-2 px-4">
+            <div className="col-5 col-sm-2 col-md-4 order-first order-sm-first order-md-first pb-2">
+                <div className="navbar-brand d-flex align-items-center"
                     onClick={() => history.push(process.env.REACT_APP_PATH_NAME)}>
-                    <Navbar.Brand>
-                        {
-                            <img alt=""
-                                src={headerIcon} width="30"
-                                height="30" />
-                        }
-                    </Navbar.Brand>
-                    {<p className="d-none d-md-inline m-0">FilmApp</p>}
-                </Navbar.Brand>
-            </Col>
+                    <img alt=""
+                        className="cursor-pointer"
+                        src={headerIcon}
+                        width="30"
+                        height="30" />
+                    <span className="navbar-brand d-none d-md-inline m-0 ps-3 cursor-pointer">FilmApp</span>
+                </div>
+            </div>
 
-            <Col className="text-right d-md-none m-button pb-2 "
-                xs={{ span: 6, order: 2 }}
-                sm={{ span: 2, order: 'last' }}>
-                <Navbar.Toggle className="m-button" aria-controls="responsive-navbar-nav" />
-            </Col>
+            <div className="col-6 order-2 col-sm-2 order-sm-last text-right d-md-none m-button">
+                <button type="button" className="navbar-toggler m-button"
+                    aria-controls="responsive-navbar-nav" data-bs-toggle="collapse"
+                    data-bs-target="#responsive-navbar-nav" aria-expanded="false" aria-label="toggle-navigation" >
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+            </div>
 
-            <Col xs={{ span: 12, order: 3 }}
-                sm={{ span: 8, order: 2 }}
-                md={{ span: 5, order: 2 }}>
-                <Form id="search-form" inline="true">
-                    <Row className="m-0" style={{ width: 100 + '%' }}>
-                        <Col xs={12} sm={10} className="p-0">
+            <div className="col-12 order-3 col-sm-8 order-sm-2 col-md-5 order-md-5" >
+                <form id="search-form" className="row row-cols-lg-auto align-items-center">
+                    <div className="row m-0" style={{ width: 100 + '%' }}>
+                        <div className="col-12 col-sm-10 p-0">
                             <AsyncTypeahead
                                 ref={typeaheadRef}
                                 className="search-bar"
@@ -309,7 +282,7 @@ function NavbarComponent(props) {
                                     <AsyncMenu {...menuProps} className="pt-4 pb-4">
                                         {results.map((result, index) => (
                                             <AsyncMenuItem key={result.id} option={result} position={index}>
-                                                <Row className="p-0 m-0 entry__inner" onClick={(e) => {
+                                                <div className="row p-0 m-0 entry__inner" onClick={(e) => {
                                                     e.stopPropagation()
                                                     e.preventDefault()
                                                     dispatch({
@@ -336,7 +309,7 @@ function NavbarComponent(props) {
                                                         }}
                                                     />
                                                     <span className="entry__text">{result.title}</span>
-                                                </Row>
+                                                </div>
                                             </AsyncMenuItem>
                                         ))}
 
@@ -346,76 +319,70 @@ function NavbarComponent(props) {
                                         {isSearching && <a role="option" className="dropdown-item disabled" href="#">Searching...</a>}
                                         {
                                             <div style={{ height: 8 + 'px' }} className="d-flex justify-content-center">
-                                                {isLoading && !isAllFetched && <Spinner animation="border" />}
+                                                {isLoading && !isAllFetched && <div className="spinner-border" />}
                                             </div>
                                         }
                                     </AsyncMenu>
                                 )}
 
                             />
-                        </Col>
-                        <Col sm={2}>
-                            <Button onClick={handleSearchSubmit}
-                                className="d-none d-sm-inline"
-                                variant="light">
+                        </div>
+                        <div className="col col-sm-2">
+                            <button type="button" onClick={handleSearchSubmit}
+                                className="btn btn-light d-none d-sm-inline">
                                 <FontAwesomeIcon icon={faSearch} />
-                            </Button>
-                        </Col>
-                    </Row>
-                </Form>
-            </Col>
-
-
-            <Col xs={{ span: 12, order: 'last' }}
-                sm={{ span: 12, order: 'last' }}
-                md={{ span: 3, order: 'last' }}>
-
-                <Navbar.Collapse className="justify-content-end" id="responsive-navbar-nav">
-
-                    <Nav activeKey="" className="d-block d-sm-block d-md-flex  align-items-center">
-                        <Nav.Link className="px-2" eventKey="playlists">Playlists</Nav.Link>
-                        {user.auth && <Nav.Link className="px-2" eventKey="add_film">Add</Nav.Link>}
-
-                        {
-                            user.auth ?
-                                (
-                                    <Menu
-                                        className="avatar-menu-items"
-                                        align={onMediumScreen ? "start" : "end"}
-                                        viewScroll="close"
-                                        offsetY={12}
-                                        position="initial"
-                                        direction="bottom"
-                                        menuButton={
-                                            <div
-                                                className="pe-2 ps-2 custom-avatar m-button">
-                                                {user.name.toUpperCase().charAt(0)}
-                                            </div>
-                                        }
-                                    >
-                                        <MenuItem onClick={handleProfileClick} > Profile</MenuItem>
-                                        <MenuItem onClick={handleSettingsClick}>Settings</MenuItem>
-                                        <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
-                                    </Menu>
-
-
-                                ) :
-                                (
-                                    <Nav.Link className="pe-2 ps-2" eventKey="login "
-                                        onClick={() => handleLogin()}>
-                                        Login
-                                    </Nav.Link>
-                                )
-                        }
-                    </Nav>
-
-                </Navbar.Collapse>
-
-            </Col>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
 
 
 
-        </Navbar>
+            <div className="collapse navbar-collapse justify-content-end col-12 order-last col-sm-12 order-sm-last col-md-3 order-md-last" id="responsive-navbar-nav">
+
+                <div className="navbar-nav d-block d-sm-block d-md-flex align-items-center">
+                    <div className="nav-item px-2 my-2 px-md-1 my-md-0">
+                        <span className="d-inline cursor-pointer nav-link p-0" onClick={handleShowPlaylists}>Playlists</span>
+                    </div>
+                    {user.auth && <div className="nav-item px-2 mb-2 px-md-1 mb-md-0">
+                        <span className="d-inline cursor-pointer nav-link p-0" onClick={handleAddFilm}>Add</span>
+                    </div>}
+
+                    {
+                        user.auth ?
+                            (
+                                <Menu
+                                    className="avatar-menu-items"
+                                    align={onMediumScreen ? "start" : "end"}
+                                    viewScroll="close"
+                                    offsetY={12}
+                                    position="initial"
+                                    direction="bottom"
+                                    menuButton={
+                                        <div
+                                            className="my-0 p-md-0 custom-avatar m-button">
+                                            {user.name.toUpperCase().charAt(0)}
+                                        </div>
+                                    }
+                                >
+                                    <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
+                                    <MenuItem onClick={handleSettingsClick}>Settings</MenuItem>
+                                    <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
+                                </Menu>
+
+
+                            ) :
+                            (
+                                <a className="nav-link cursor-pointer pe-2 ps-2"
+                                    onClick={() => handleLogin()}>
+                                    Login
+                                </a>
+                            )
+                    }
+                </div>
+            </div>
+        </nav>
     )
 }
 

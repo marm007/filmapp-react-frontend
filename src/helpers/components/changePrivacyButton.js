@@ -1,4 +1,3 @@
-import Col  from "react-bootstrap/Col"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useEffect, useState } from "react"
 import * as playlistApi from '../../services/playlistService'
@@ -51,14 +50,14 @@ const ChangePrivacyButton = ({ isPublic, id, isProfile, dispatchPrivacyUpdate, f
 
     return isProfile ?
         (
-            <Col className="text-center justify-content-center d-flex align-items-center p-0 flex-grow-0"
+            <div className="col text-center justify-content-center d-flex align-items-center p-0 flex-grow-0"
             >
-                <Col
-                    className="remove-holder p-0 m-0 flex-grow-0"
+                <div
+                    className="col remove-holder p-0 m-0 flex-grow-0"
                     style={{ height: '24px', width: '24' }}>
                     {privacyButton}
-                </Col>
-            </Col>
+                </div>
+            </div>
         ) :
         privacyButton
 }

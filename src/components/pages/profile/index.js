@@ -1,6 +1,5 @@
-import React, { useEffect, useReducer, useCallback, useContext } from 'react';
+import { useEffect, useReducer, useCallback, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Row, Spinner } from 'react-bootstrap';
 
 import { initialProfileState, profileReducer } from './reducer';
 
@@ -19,7 +18,7 @@ import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListe
 
 import image_not_found from '../../../images/image_not_found.png'; // Tell Webpack this JS file uses this image
 
-const Profile = (props) => {
+const Profile = () => {
 
     const { user, clearUser } = useContext(UserContext)
 
@@ -196,7 +195,7 @@ const Profile = (props) => {
     }
 
     return (
-        <Row className="mt-5 mx-2">
+        <div className="row mt-5 mx-2">
             {
                 data.map((record, index) => {
                     if (record.isPlaylist) {
@@ -219,11 +218,11 @@ const Profile = (props) => {
                 !isAllFetched && <div className="fetch-loader d-flex justify-content-center">
                     {
                         (isLoading) &&
-                        <Spinner animation="border" />
+                        <div className="spinner-border" />
                     }
                 </div>
             }
-        </Row>
+        </div>
     )
 }
 

@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useCallback, useReducer } from 'react';
+import { useContext, useEffect, useCallback, useReducer } from 'react';
 import { useLocation } from 'react-router-dom'
-import { Col, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import queryString from "query-string";
 import TextTruncate from "react-text-truncate";
@@ -21,7 +20,7 @@ import ChangePrivacyButton from '../../../helpers/components/changePrivacyButton
 
 import image_not_found from '../../../images/image_not_found.png'; // Tell Webpack this JS file uses this image
 
-function PlaylistContainer(props) {
+const PlaylistContainer = (props) => {
 
     const { showModal, clear, removeModalData } = useContext(RemoveModalContext)
 
@@ -211,22 +210,22 @@ function PlaylistContainer(props) {
     return (
 
         playlist && playerHeight && !error &&
-        <Col className='mb-4'>
-            <Col className='p-0 border'>
-                <Col ref={headerRef}
+        <div className='col mb-4'>
+            <div className='col p-0 border'>
+                <div ref={headerRef}
                     style={{ height: headerHeight + 'px' }}
-                    className="remove-container pt-2 pb-2 film-preview-playlist-header" sm={12}>
-                    <Row className="m-0 px-2">
-                        <Col className="film-preview-playlist-title-width">
+                    className="col remove-container pt-2 pb-2 film-preview-playlist-header" sm={12}>
+                    <div className="row m-0 px-2">
+                        <div className="colbutton-ripple-div-next-width">
                             <p className="mb-1 fw-bold film-preview-playlist-text-truncate">{playlist.title}</p>
-                        </Col>
-                        <Col className="justify-content-end d-flex">
+                        </div>
+                        <div className="col justify-content-end d-flex">
                             {
                                 user.id === playlist.author_id &&
                                 <RemoveButton handleRemove={() => handleRemovePlaylist()} />
                             }
-                        </Col>
-                        <Col xs={12} sm={12}>
+                        </div>
+                        <div className="col-12 col-sm-12">
                             {
                                 user.id === playlist.author_id &&
                                 <ChangePrivacyButton
@@ -244,26 +243,28 @@ function PlaylistContainer(props) {
                                 className="film-preview-playlist-index">
                                 - {currentFilmIndex}/{playlist.films.length}
                             </small>
-                        </Col>
-                    </Row>
-                </Col>
-                <Col style={{ height: playerHeight - headerHeight + 'px' }}
-                    className="p-0 film-preview-playlist-container" xs={12} sm={12}>
+                        </div>
+                    </div>
+                </div>
+                <div style={{ height: playerHeight - headerHeight + 'px' }}
+                    className="col-12 col-sm-12 p-0 film-preview-playlist-container">
                     <PerfectScrollbar
                         onYReachEnd={() => { }}
                         onScrollY={() => { }}>
                         {
                             playlist.films.map((film, index) => {
-                                return film && !film.isNonExisting ? (
-                                    <Row xs={12} sm={12} className="m-0 p-0 remove-container" key={film.id}>
-                                        <Col xs={9} sm={9}
-                                            className={index === playlist.films.length - 1 ?
-                                                "mt-3 mb-3 " :
-                                                "mt-3"}
-                                            onClick={() => props.handleRedirect(film.id)} >
-                                            <Row className="m-0 p-0 play-outer-container">
-                                                <Col xs={1} sm={1}
-                                                    className="text-center justify-content-center d-flex align-items-center p-0 ps-1" >
+                                return(
+                                    <div className="row m-0 p-0 pe-2 remove-container" key={film.id}>
+                                        <div className={`${index === playlist.films.length - 1 ?
+                                            "mt-3 mb-3 " :
+                                            "mt-3"} button-ripple-div-next-width col`}
+                                            onClick={() => {
+                                                if (!film.isNonExisting)
+                                                    props.handleRedirect(film.id)
+                                            }}>
+                                            <div className="row m-0 p-0 play-outer-container">
+                                                <div
+                                                    className="col-1 col-sm-1 text-center justify-content-center d-flex align-items-center p-0 ps-1" >
                                                     {
                                                         (currentFilm === film.id) ?
                                                             <small>
@@ -274,79 +275,49 @@ function PlaylistContainer(props) {
                                                             <small>{index + 1}</small>
 
                                                     }
-                                                </Col>
-                                                <Col xs={6} sm={6} className="pe-2 ps-2"
-                                                    style={{
-                                                        display: 'flex',
-                                                        justifyContent: 'center',
-                                                        alignItems: 'center'
-                                                    }}>
+                                                </div>
+                                                <div className="col-6 col-sm-6 pe-2 ps-2">
                                                     <div className="embed-responsive embed-responsive-16by9 z-depth-1-half w-100 play-container">
-                                                        <BlurredImageComponent
-                                                            image={`${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail`} />
+                                                        {film.isNonExisting ?
+                                                            <img alt="" className="embed-responsive-item play-image"
+                                                                src={image_not_found} />
+                                                            :
+                                                            <BlurredImageComponent
+                                                                image={`${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail`} />
+                                                        }
                                                     </div>
-                                                </Col>
-                                                <Col xs={5} sm={5} className="p-0">
-                                                    <TextTruncate line={1} text={film.title}
-                                                        className="mb-0 title fw-bold" />
-                                                    <p className="mb-1 author-nick-color">
-                                                        <small>{film.author_name}</small>
-                                                    </p>
-                                                </Col>
-                                            </Row>
-                                        </Col>
+                                                </div>
+                                                <div className="col-5 col-sm-5 p-0">
+                                                    {film.isNonExisting ?
+                                                        (<TextTruncate line={2} text="Not found"
+                                                            className="mb-0 title fw-bold" />)
+                                                        :
+                                                        (<>
+                                                            <TextTruncate line={1} text={film.title}
+                                                                className="mb-0 title fw-bold" />
+                                                            <p className="mb-1 author-nick">
+                                                                <span>{film.author_name}</span>
+                                                            </p>
+                                                        </>)
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
                                         {
                                             user.id === playlist.author_id &&
-                                            <Col className="d-flex align-items-center justify-content-center">
+                                            <div style={{ width: '24px' }} className="p-0 d-flex align-items-center justify-content-center">
                                                 <RemoveButton handleRemove={() => handleRemoveFromPlaylist(film.id)} />
-                                            </Col>
+                                            </div>
                                         }
 
-                                    </Row>
-                                ) : (
-                                    <Row xs={12} sm={12} className="m-0 p-0 remove-container" key={film.id}>
-                                        <Col xs={9} sm={9}
-                                            className={index === playlist.films.length - 1 ?
-                                                "mt-3 mb-3 " :
-                                                "mt-3"} >
-                                            <Row className="m-0 p-0">
-                                                <Col xs={1} sm={1}
-                                                    className="text-center justify-content-center d-flex align-items-center p-0 ps-1" >
-                                                    <small>{index + 1}</small>
-                                                </Col>
-                                                <Col xs={6} sm={6} className="pe-2 ps-2"
-                                                    style={{
-                                                        display: 'flex',
-                                                        justifyContent: 'center',
-                                                        alignItems: 'center'
-                                                    }}>
-                                                    <div className="embed-responsive embed-responsive-16by9 z-depth-1-half play-container">
-                                                        <img alt="" className="embed-responsive-item play-image"
-                                                            src={image_not_found} />
-                                                    </div>
-                                                </Col>
-                                                <Col xs={5} sm={5} className="p-0">
-                                                    <TextTruncate line={2} text="Not found"
-                                                        className="mb-0 title fw-bold" />
-                                                </Col>
-                                            </Row>
-                                        </Col>
-                                        {
-                                            user.id === playlist.author_id &&
-                                            <Col className="d-flex align-items-center justify-content-center">
-                                                <RemoveButton handleRemove={() => handleRemoveFromPlaylist(film.id)} />
-                                            </Col>
-                                        }
-
-                                    </Row>
+                                    </div>
                                 )
                             })
                         }
                     </PerfectScrollbar>
-
-                </Col>
-            </Col>
-        </Col >
+                </div>
+            </div>
+        </div >
 
 
     )

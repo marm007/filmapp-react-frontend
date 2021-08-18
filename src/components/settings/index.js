@@ -1,11 +1,11 @@
-import { Modal, Form, Button, Spinner, Alert } from "react-bootstrap";
-import { useEffect, useState, useReducer, useContext } from "react";
+import { useEffect, useReducer, useContext } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import UserContext from "../../helpers/contexts/user/userContext";
 import { settingsInitialState, settingsReducer } from "./reducer";
 import * as userApi from '../../services/userService'
+import Modal from "../auth/modal";
 
-const Settings = (props) => {
+const Settings = () => {
 
     const { user, clearUser, updateUser } = useContext(UserContext)
 
@@ -16,11 +16,9 @@ const Settings = (props) => {
     // eslint-disable-next-line no-unused-vars
     const { email, name, password, initialUser, isSubmitted, isSending, isInitialLoaded, success, error } = state
 
-    const [show, setShow] = useState(true)
 
     useEffect(() => {
         if (!user.auth && user.isInitialLoaded) {
-            setShow(false)
             history.replace(`${process.env.REACT_APP_PATH_NAME}`)
             history.push(`${process.env.REACT_APP_PATH_NAME}login`)
             clearUser()
@@ -83,10 +81,6 @@ const Settings = (props) => {
         if (isSending) updateUserData()
     }, [email, initialUser.email, initialUser.name, isSending, name, password, history, location, updateUser])
 
-    const modalClose = () => {
-        setShow(false)
-        history.goBack();
-    };
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -104,63 +98,53 @@ const Settings = (props) => {
         }
     }
 
-    return (
-        <Modal onHide={modalClose}
-            show={show}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered>
-            <Modal.Header closeButton>
-                <Modal.Title>
-                    Settings
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form onSubmit={isSending ? null : handleSubmit}>
-                    <Form.Group>
-                        <Form.Label htmlFor="name">Name</Form.Label>
-                        <Form.Control type="text" name="email"
-                            value={name} placeholder={initialUser.name}
-                            onChange={e => dispatch({ type: 'field', fieldName: 'name', payload: e.target.value })}>
-                        </Form.Control>
-                    </Form.Group>
-                    <Form.Group className="mt-2">
-                        <Form.Label htmlFor="email">Email</Form.Label>
-                        <Form.Control type="email" name="email"
-                            value={email} placeholder={initialUser.email}
-                            onChange={e => dispatch({ type: 'field', fieldName: 'email', payload: e.target.value })}>
-                        </Form.Control>
-                    </Form.Group>
-                    <Form.Group className="mt-2">
-                        <Form.Label htmlFor="password">Password</Form.Label>
-                        <Form.Control type="password" name="password"
-                            value={password} onChange={e => dispatch({ type: 'field', fieldName: 'password', payload: e.target.value })}>
-                        </Form.Control>
-                    </Form.Group>
-                    <Form.Group className="d-flex align-items-center mt-2">
-                        <Button disabled={isSending || !isInitialLoaded} type="submit" className="btn-primary">
-                            Change
-                        </Button>
+    const modalClose = () => {
+        history.goBack()
+    }
 
-                        {
-                            isSending &&
-                            <Spinner className="ms-2" animation="grow" />
-                        }
-                    </Form.Group>
-                </Form>
-                {
-                    error &&
-                    <Alert variant="danger" className="mt-2 mb-0">
-                        {error ? error : 'Error while logging in.'}
-                    </Alert>
-                }
-                {
-                    success &&
-                    <Alert variant="success" className="mt-2 mb-0">
-                        {success}
-                    </Alert>
-                }
-            </Modal.Body>
+    return (
+        <Modal id="settingsModal" title="Settings" onClose={modalClose}>
+            <form onSubmit={isSending ? null : handleSubmit}>
+                <div>
+                    <label className="form-label" htmlFor="name">Name</label>
+                    <input className="form-control" type="text" name="name"
+                        value={name} placeholder={initialUser.name}
+                        onChange={e => dispatch({ type: 'field', fieldName: 'name', payload: e.target.value })} />
+                </div>
+                <div className="mt-2">
+                    <label className="form-label" htmlFor="email">Email</label>
+                    <input className="form-control" type="email" name="email"
+                        value={email} placeholder={initialUser.email}
+                        onChange={e => dispatch({ type: 'field', fieldName: 'email', payload: e.target.value })} />
+                </div>
+                <div className="mt-2">
+                    <label className="form-label" htmlFor="password">Password</label>
+                    <input className="form-control" type="password" name="password"
+                        value={password} onChange={e => dispatch({ type: 'field', fieldName: 'password', payload: e.target.value })} />
+                </div>
+                <div className="d-flex align-items-center mt-2">
+                    <button disabled={isSending || !isInitialLoaded} type="submit" className="btn btn-primary">
+                        Change
+                    </button>
+
+                    {
+                        isSending &&
+                        <div className="ms-2 spinner-grow" />
+                    }
+                </div>
+            </form>
+            {
+                error &&
+                <div className="alert alert-danger mt-2 mb-0">
+                    {error ? error : 'Error while logging in.'}
+                </div>
+            }
+            {
+                success &&
+                <div className="alert alert-success mt-2 mb-0">
+                    {success}
+                </div>
+            }
         </Modal>
     )
 }

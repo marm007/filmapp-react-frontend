@@ -8,7 +8,8 @@
 }
 
 .playlist-form-group {
-    padding: .25rem 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 .playlist-add-icon {
@@ -31,7 +32,11 @@
     height: 24px;
 }
 
-@media (hover: hover) {
+.playlist-add-icon-mobile {
+    opacity: 0.7;
+}
+
+@media (hover: hover) and (pointer: fine) {
 
     .playlist-add-icon {
         transition: .2s ease;
@@ -39,8 +44,7 @@
     }
 }
 
-
-@media (hover: none) {
+@media (pointer: coarse) {
     .playlist-add-icon {
         opacity: 0.7;
     }

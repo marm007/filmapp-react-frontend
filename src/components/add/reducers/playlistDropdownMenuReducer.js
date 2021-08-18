@@ -88,7 +88,6 @@ export function playlistDropdownMenuReducer(state, action) {
             return {
                 ...state,
                 isLoading: false,
-                isAllFetched: false,
                 isCreating: false,
                 error: action.payload,
                 title: ''

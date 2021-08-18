@@ -11,6 +11,7 @@ const useWindowsWidth = (width = 600) => {
     window.addEventListener("resize", checkScreenSize);
 
     return () => window.removeEventListener("resize", checkScreenSize);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return isScreenSmall;

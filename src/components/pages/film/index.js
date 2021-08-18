@@ -1,6 +1,4 @@
-import React from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { Row, Col } from "react-bootstrap";
 import queryString from "query-string";
 
 import FilmPreview from './preview'
@@ -14,12 +12,12 @@ import FilmProvider from '../../../helpers/contexts/film/filmProvider'
 import './film.css'
 
 
-function Film(props) {
+const Film = (props) => {
 
     let history = useHistory()
     let location = useLocation()
 
-    const onSmallScreen = useWindowWidth();
+    const onSmallScreen = useWindowWidth(768);
 
     const handleRedirect = (id) => {
         const parsed = queryString.parse(location.search);
@@ -30,21 +28,21 @@ function Film(props) {
 
     return (
         <FilmProvider>
-            <Row className="p-0 m-0 mt-4 mx-2">
-                <Col xs={{ span: 12, order: 'first' }} sm={8}>
+            <div className="row p-0 m-0 mt-4 mx-2">
+                <div className="col-12 order-first col-sm-12 order-first col-md-8">
                     <FilmPreview {...props} />
                     {!onSmallScreen && <Comments {...props} />}
-                </Col>
-                <Col xs={{ span: 12, order: 2 }} sm={4}>
+                </div>
+                <div className="col-12 order-2 col-sm-12 order-2 col-md-4">
                     <PlaylistContainer handleRedirect={handleRedirect} {...props} />
                     <FilmsRecommendations handleRedirect={handleRedirect} {...props} />
-                </Col>
+                </div>
                 {onSmallScreen &&
-                    <Col xs={{ span: 12, order: 'last' }} sm={8}>
+                    <div className="col-12 order-last col-sm-12 order-sm-last col-md-8">
                         <Comments {...props} />
-                    </Col>
+                    </div>
                 }
-            </Row>
+            </div>
 
         </FilmProvider>
     )

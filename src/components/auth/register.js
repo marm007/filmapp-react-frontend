@@ -1,19 +1,21 @@
-import React, { useState, useReducer, useEffect, useContext } from 'react';
+import { useReducer, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Alert, Button, Form, Modal, Spinner } from 'react-bootstrap';
-import * as authApi from '../../services/authService'
+
+import Modal from './modal';
+import Input from './input';
+
 import { authInitialState, authReducer } from './reducer';
+
+import * as authApi from '../../services/authService'
 import UserContext from '../../helpers/contexts/user/userContext'
 
-function Register(props) {
+const Register = () => {
 
     let history = useHistory()
 
     const { login } = useContext(UserContext)
     const [state, dispatch] = useReducer(authReducer, authInitialState)
     const { email, nick, password, isSubmitted, isSuccess, isSending, isError, error } = state
-
-    const [show, setShow] = useState(true)
 
     useEffect(() => {
         async function submitData() {
@@ -64,95 +66,75 @@ function Register(props) {
     }
 
     const modalClose = () => {
-        setShow(false)
         history.goBack();
     };
 
 
     return (
 
-        <Modal
-            onHide={modalClose}
-            show={show}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered>
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Register
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form onSubmit={handleSubmit}>
-                    <Form.Group>
-                        <Form.Label htmlFor="nick">Nick</Form.Label>
-                        <Form.Control isInvalid={isSubmitted && !nick} type="text" name="nick" value={nick}
-                            onChange={e => dispatch({ type: 'field', fieldName: 'nick', payload: e.target.value })} >
-                        </Form.Control>
-                        <Form.Control.Feedback type="invalid">
-                            Nick is required
-                        </Form.Control.Feedback>
-                    </Form.Group>
+        <Modal id="registerModal" title="Register" onClose={modalClose}>
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <label className="form-label" htmlFor="nick">Nick</label>
+                    <Input isInvalid={isSubmitted && !nick} type="text" name="nick" value={nick}
+                        onChange={e => dispatch({ type: 'field', fieldName: 'nick', payload: e.target.value })} />
+                   
+                    <div className="invalid-feedback">
+                        Nick is required
+                    </div>
+                </div>
 
-                    <Form.Group className="mt-2">
-                        <Form.Label htmlFor="email">Email</Form.Label>
-                        <Form.Control
-                            isInvalid={(isSubmitted && !email)}
-                            type="email" name="email" value={email} onChange={e => dispatch({ type: 'field', fieldName: 'email', payload: e.target.value })} >
-                        </Form.Control>
-                        <Form.Control.Feedback type="invalid">
-                            Email is required
-                        </Form.Control.Feedback>
-                    </Form.Group>
+                <div className="mt-2">
+                    <label className="form-label" htmlFor="email">Email</label>
+                    <Input
+                        isInvalid={(isSubmitted && !email)}
+                        type="email" name="email" value={email} onChange={e => dispatch({ type: 'field', fieldName: 'email', payload: e.target.value })} />
+                   
+                    <div className="invalid-feedback">
+                        Email is required
+                    </div>
+                </div>
 
-                    <Form.Group className="mt-2">
-                        <Form.Label htmlFor="password">Password</Form.Label>
-                        <Form.Control isInvalid={isSubmitted && (password.length < 6)} type="password"
-                            name="password" value={password} maxLength="11"
-                            onChange={e => dispatch({ type: 'field', fieldName: 'password', payload: e.target.value })}>
-                        </Form.Control>
-                        <Form.Control.Feedback type="invalid">
-                            {
-                                password.length === 0 ? "Password is required" : "Password too short (min 6 chars)"
-                            }
-
-                        </Form.Control.Feedback>
-                    </Form.Group>
-
-                    {
-                        isSuccess &&
-                        <Alert variant="success" className="mt-2">
-                            You have successfully registered and logged in.
-                        </Alert>
-                    }
-
-                    {
-                        isError &&
-                        <Alert variant="danger" className="mt-2">
-                            {error ? error : 'Error while registtering.'}
-                        </Alert>
-                    }
-
-                    <Form.Group className="d-flex align-items-center mt-2">
-                        <Button type="submit" className="btn-primary">
-                            Register
-                        </Button>
-
+                <div className="mt-2">
+                    <label className="form-label" htmlFor="password">Password</label>
+                    <Input isInvalid={isSubmitted && (password.length < 6)} type="password"
+                        name="password" value={password}
+                        onChange={e => dispatch({ type: 'field', fieldName: 'password', payload: e.target.value })} />
+                   
+                    <div className="invalid-feedback">
                         {
-                            isSending &&
-                            <Spinner className="ms-2" animation="grow" />
+                            password.length === 0 ? "Password is required" : "Password too short (min 6 chars)"
                         }
-                    </Form.Group>
 
-                </Form>
+                    </div>
+                </div>
 
-            </Modal.Body>
+                {
+                    isSuccess &&
+                    <div className="alert alert-success mt-2">
+                        You have successfully registered and logged in.
+                    </div>
+                }
 
-            <Modal.Footer>
-                <Button onClick={modalClose}>Close</Button>
-            </Modal.Footer>
+                {
+                    isError &&
+                    <div  className="alert alert-danger mt-2">
+                        {error ? error : 'Error while registtering.'}
+                    </div>
+                }
 
+                <div className="d-flex align-items-center mt-2">
+                    <button type="submit" className="btn btn-primary">
+                        Register
+                    </button>
 
+                    {
+                        isSending &&
+                        <div className="spinner-grow ms-2" />
+                    }
+                </div>
+
+            </form>
         </Modal>
     );
 }

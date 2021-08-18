@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useReducer, useCallback } from 'react';
-import { Button, Col, Dropdown, DropdownButton, Row, Spinner, Form } from "react-bootstrap";
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import { useContext, useEffect, useReducer, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { commentsReducer, commentsInitialState } from './reducers/commentsReducer';
@@ -15,7 +15,7 @@ import FilmContext from '../../../helpers/contexts/film/filmContext';
 import RemoveModalContext from '../../../helpers/contexts/removeModal/removeModalContext';
 import RippleButton from '../../../helpers/components/rippleButton';
 
-function Comments(props) {
+const Comments = (props) => {
 
     const { showModal, clear, removeModalData } = useContext(RemoveModalContext)
 
@@ -185,11 +185,12 @@ function Comments(props) {
         showModal(comment.id, 'comment', comment.text.substring(0, 10).concat('...'))
     }
 
-    const handleSortComments = (e) => {
+    const handleSortComments = (e, id) => {
+        e.preventDefault()
 
         let sortToChange = null
 
-        switch (e) {
+        switch (id) {
             case 'created_at':
                 sortToChange = sorts[0]
 
@@ -224,65 +225,58 @@ function Comments(props) {
 
     return (
 
-        <Col>
-            <Row className="p-0 mt-4 mb-4">
-                <Col xs={7} sm={5} md={4} className="d-flex align-items-center ">
+        <div className="col">
+            <div className="row p-0 mt-4 mb-4">
+                <div className="col-7 col-sm-5 col-md-4 d-flex align-items-center ">
                     {commentsCount !== null && <span>{commentsCount}{commentsCount === 1 ? ' comment' : ' comments'} </span>}
-                </Col>
-                <Col xs={2} sm={2}>
-                    <DropdownButton
-                        variant="secondary"
-                        title="Sort"
-                        id="dropdown-button-drop-down"
-                        onSelect={e => handleSortComments(e)}>
+                </div>
+                <div className="dropdown col-2 col-sm-2">
+                    <button className="btn btn-secondary dropdown-toggle" id="sortDropDown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Sort
+                    </button>
+                    <ul className="dropdown-menu" aria-labelledby="#sortDropDown">
                         {
-                            sorts.map(sortTmp => (
-                                <Dropdown.Item key={sortTmp.id} eventKey={sortTmp.id} active={sort && sortTmp.id === sort.id}>
-                                    {sortTmp.title}
-                                    {sort && sort.id === sortTmp.id && sortTmp.dir === 1 ?
-                                        <FontAwesomeIcon className="ms-2" icon="sort-up" /> :
-                                        sort && sort.id === sortTmp.id && sortTmp.dir === -1 ?
-                                            <FontAwesomeIcon className="ms-2" icon="sort-down" /> : ""}
-                                </Dropdown.Item>)
-                            )
+                            sorts.map(sortTmp => {
+                                return (
+                                    <li key={sortTmp.id} onClick={e => handleSortComments(e, sortTmp.id)}>
+                                        <a className={`dropdown-item${(sort && sortTmp.id === sort.id) ? ' active' : ''}`} href="#" role="button">
+                                            {sortTmp.title}
+                                            {sort && sort.id === sortTmp.id && sortTmp.dir === 1 ?
+                                                <FontAwesomeIcon className="ms-2" icon="sort-up" /> :
+                                                sort && sort.id === sortTmp.id && sortTmp.dir === -1 ?
+                                                    <FontAwesomeIcon className="ms-2" icon="sort-down" /> : ""}
+                                        </a></li>);
+                            })
                         }
-                    </DropdownButton>
-                </Col>
-            </Row>
-            <Form onSubmit={(text && !isAdding) ? handleAddComment : null}>
-                <Form.Group id="fiordur">
-                    <Form.Control type="text" placeholder="Comment" value={text}
+
+                    </ul>
+                </div>
+            </div>
+            <form onSubmit={(text && !isAdding) ? handleAddComment : null}>
+                <div id="fiordur">
+                    <input type="text" className="form-input" placeholder="Comment" value={text}
                         onChange={e => dispatch({ type: 'field', fieldName: 'text', payload: e.target.value })}
                     />
-                </Form.Group>
-                <Col className="d-flex justify-content-end" >
-                    <Button disabled={isAdding || !text}
+                </div>
+                <div className="col d-flex justify-content-end" >
+                    <button disabled={isAdding || !text}
                         type="submit"
-                        className="mt-3" variant="primary">
+                        className="btn btn-primary mt-3">
                         Submit
-                    </Button>
-                </Col>
-            </Form>
-            {/*  <TextField
-                value={text}
-                onChange={e => dispatch({ type: 'field', fieldName: 'text', payload: e.target.value })}
-                type="text"
-                id="standard-multiline-flexible"
-                label="Comment"
-                multiline
-                fullWidth
-                maxrow="4" /> */}
-
+                    </button>
+                </div>
+            </form>
 
             {
                 isAdding && <div style={{ height: 32 + 'px' }} className="d-flex justify-content-center">
-                    <Spinner animation="border" />
+                    <div className="spinner-border" />
                 </div>
             }
             {
                 comments && comments.map(comment => {
                     return (
-                        <Col className="p-0 mt-4 remove-container" sm={12} key={comment.id}>
+                        <div className="col col-sm-12 p-0 mt-4 remove-container" key={comment.id}>
                             <div className="d-flex">
                                 <p className="m-0 fw-bold">
                                     <small className="m-0 fw-bold">{comment.author_name}&nbsp;</small>
@@ -303,18 +297,18 @@ function Comments(props) {
                             <p className="d-block d-sm-block">
                                 <small>{comment.text}</small>
                             </p>
-                        </Col>
+                        </div>
                     )
                 })
             }
 
             {
                 !isAllFetched && <div className="fetch-loader d-flex justify-content-center">
-                    {(isLoading || isSorting) && !error && <Spinner animation="border" />}
+                    {(isLoading || isSorting) && !error && <div className="spinner-border" />}
                 </div>
             }
 
-        </Col>
+        </div>
 
     )
 }

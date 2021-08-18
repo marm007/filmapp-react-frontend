@@ -1,18 +1,20 @@
-import React, { useState, useReducer, useEffect } from 'react';
+import { useReducer, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Alert, Button, Form, Modal, Spinner } from 'react-bootstrap';
-import * as authApi from '../../services/authService'
+
+import Modal from './modal';
+import Input from './input';
+
 import { authInitialState, authReducer } from './reducer';
 
-function ResetPassword(props) {
+import * as authApi from '../../services/authService'
+
+const ResetPassword = (props) => {
 
     let history = useHistory()
 
     const [state, dispatch] = useReducer(authReducer, authInitialState)
 
     const { password, isSubmitted, isSending, isSuccess, isError, error } = state
-
-    const [show, setShow] = useState(true)
 
     useEffect(() => {
         async function sendData() {
@@ -23,7 +25,6 @@ function ResetPassword(props) {
                     })
 
                     setTimeout(function () {
-                        setShow(false);
                         history.push(`${process.env.REACT_APP_PATH_NAME}`);
                         setTimeout(function () {
                             history.push(`${process.env.REACT_APP_PATH_NAME}login`);
@@ -43,9 +44,7 @@ function ResetPassword(props) {
                     })
 
                 })
-
         }
-
 
         if (isSending) sendData()
 
@@ -64,74 +63,50 @@ function ResetPassword(props) {
     }
 
     const modalClose = () => {
-        setShow(false)
         history.push(`${process.env.REACT_APP_PATH_NAME}`);
     };
 
     return (
 
-        <Modal
-            onHide={modalClose}
-            show={show}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Reset
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form onSubmit={handleSubmitPasswordChange}>
-                    <Form.Group>
-                        <Form.Label htmlFor="password">Password</Form.Label>
-                        <Form.Control isInvalid={isSubmitted && (password.length < 6)} type="password"
-                            name="password" value={password} maxLength="11"
-                            onChange={e => dispatch({ type: 'field', fieldName: 'password', payload: e.target.value })}>
-                        </Form.Control>
-                        <Form.Control.Feedback type={"invalid"}>
-                            {
-                                password.length === 0 ? "Password is required" : "Password too short (min 6 chars)"
-                            }
-
-                        </Form.Control.Feedback>
-                    </Form.Group>
-
-                    {
-                        isSuccess &&
-                        <Alert variant="success" className="mt-2">
-                            Password has been reseated! Redirecting to login page.
-                        </Alert>
-                    }
-
-                    {
-                        isError &&
-                        <Alert variant="danger" className="mt-2">
-                            {error ? error : 'Error while resetting password.'}
-                        </Alert>
-                    }
-
-                    <Form.Group className="d-flex align-items-center mt-2">
-                        <Button type="submit" className="btn-primary">
-                            Reset password
-                        </Button>
-
+        <Modal id="resetPasswordModal" title="Reset" onClose={modalClose}>
+            <form onSubmit={handleSubmitPasswordChange}>
+                <div>
+                    <label className="form-label" htmlFor="password">Password</label>
+                    <Input isInvalid={isSubmitted && (password.length < 6)}
+                        type="password" name="password" value={password}
+                        onChange={e => dispatch({ type: 'field', fieldName: 'password', payload: e.target.value })} />
+                    <div className="invalid-feedback">
                         {
-                            isSending &&
-                            <Spinner className="ms-2" animation="grow" />
-                            }
-                    </Form.Group>
+                            password.length === 0 ? "Password is required" : "Password too short (min 6 chars)"
+                        }
+                    </div>
+                </div>
 
-                </Form>
+                {
+                    isSuccess &&
+                    <div className="alert alert-success mt-2">
+                        Password has been reseated! Redirecting to login page.
+                    </div>
+                }
 
-            </Modal.Body>
+                {
+                    isError &&
+                    <div className="alert alert-danger mt-2">
+                        {error ? error : 'Error while resetting password.'}
+                    </div>
+                }
 
-            <Modal.Footer>
-                <Button onClick={modalClose}>Close</Button>
-            </Modal.Footer>
+                <div className="d-flex align-items-center mt-2">
+                    <button type="submit" className="btn btn-primary">
+                        Reset password
+                    </button>
 
-
+                    {
+                        isSending &&
+                        <div className="spinner-grow ms-2" />
+                    }
+                </div>
+            </form>
         </Modal>
 
 

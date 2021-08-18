@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useContext, useReducer } from 'react';
+import { useEffect, useContext, useReducer } from 'react';
 import { useHistory, useLocation } from 'react-router-dom'
 
-import { Alert, Button, Col, Form, Modal, Spinner } from 'react-bootstrap';
+import Modal from './modal';
+import Input from './input';
 
 import * as authApi from '../../services/authService'
 
 import UserContext from '../../helpers/contexts/user/userContext'
 import { authInitialState, authReducer } from './reducer';
 
-function Login(props) {
+const Login = () => {
 
     const { login } = useContext(UserContext);
 
@@ -17,7 +18,6 @@ function Login(props) {
 
     const [state, dispatch] = useReducer(authReducer, authInitialState)
     const { email, password, isSubmitted, isSending, isError, error } = state
-    const [show, setShow] = useState(true)
 
     useEffect(() => {
         async function sendData() {
@@ -77,7 +77,6 @@ function Login(props) {
     };
 
     const modalClose = () => {
-        setShow(false)
         if (!location.state) {
             history.goBack();
         } else {
@@ -96,77 +95,51 @@ function Login(props) {
 
 
     return (
+        <Modal id="loginModal" title="Login" onClose={modalClose}>
 
-        <Modal
-            onHide={modalClose}
-            show={show}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered>
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Login
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form onSubmit={isSending ? null : handleSubmit}>
+            <form onSubmit={isSending ? null : handleSubmit}>
+                <div>
+                    <label className="form-label" htmlFor="email">Email</label>
+                    <Input isInvalid={isSubmitted && !email} type="email" name="email" value={email}
+                        onChange={e => dispatch({ type: 'field', fieldName: 'email', payload: e.target.value })} />
+                    <div className="invalid-feedback">
+                        Email is required
+                    </div>
+                </div>
 
-                    <Form.Group>
-                        <Form.Label htmlFor="email">Email</Form.Label>
-                        <Form.Control isInvalid={isSubmitted && !email} type="email" name="email" value={email}
-                            onChange={e => dispatch({ type: 'field', fieldName: 'email', payload: e.target.value })}>
-                        </Form.Control>
-                        <Form.Control.Feedback type="invalid">
-                            Email is required
-                        </Form.Control.Feedback>
-                    </Form.Group>
+                <div className="mt-2">
+                    <label className="form-label" htmlFor="password">Password</label>
+                    <Input isInvalid={isSubmitted && !password} type="password" name="password"
+                        value={password} onChange={e => dispatch({ type: 'field', fieldName: 'password', payload: e.target.value })} />
+                    <div className="invalid-feedback">
+                        Password is required
+                    </div>
+                </div>
 
-                    <Form.Group className="mt-2">
-                        <Form.Label htmlFor="password">Password</Form.Label>
-                        <Form.Control isInvalid={isSubmitted && !password} type="password" name="password"
-                            value={password} onChange={e => dispatch({ type: 'field', fieldName: 'password', payload: e.target.value })}>
-                        </Form.Control>
-                        <Form.Control.Feedback type="invalid">
-                            Password is required
-                        </Form.Control.Feedback>
-                    </Form.Group>
+                <div className="d-flex align-items-center mt-2">
+                    <button disabled={isSending} type="submit" className="btn btn-primary">
+                        Login
+                    </button>
+                    {
+                        isSending &&
+                        <div className="spinner-grow ms-2" />
+                    }
+                </div>
+            </form>
 
-                    <Form.Group className="d-flex align-items-center mt-2">
-                        <Button  disabled={isSending} type="submit" className="btn-primary">
-                            Login
-                        </Button>
+            {
+                isError &&
+                <div className="alert-danger mt-2 mb-0">
+                    {error ? error : 'Error while logging in.'}
+                </div>
+            }
 
-                        {
-                            isSending &&
-                            <Spinner className="ms-2" animation="grow" />
-                        }
-                    </Form.Group>
+            <button onClick={handleRegister} className="p-0 mt-2 btn btn-link">Register</button>
 
-                </Form>
-
-                {
-                    isError &&
-                    <Alert variant="danger" className="mt-2 mb-0">
-                        {error ? error : 'Error while logging in.'}
-                    </Alert>
-                }
-
-                <Button variant="link" onClick={handleRegister} className="p-0 mt-2 btn btn-link">Register</Button>
-
-                <Col className="p-0 m-0 " xs={12} sm={12}>
-                    <Button variant="link" onClick={handleForgotPassword} className="p-0 mt-2 btn btn-link">Forgot password?</Button>
-                </Col>
-
-            </Modal.Body>
-
-            <Modal.Footer>
-                <Button onClick={modalClose}>Close</Button>
-            </Modal.Footer>
-
-
+            <div className="col-12 col-sm-12 p-0 m-0 ">
+                <button type="button" onClick={handleForgotPassword} className="p-0 mt-2 btn btn-link">Forgot password?</button>
+            </div>
         </Modal>
-
-
     );
 }
 

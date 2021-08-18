@@ -1,4 +1,3 @@
-import Button from 'react-bootstrap/Button'
 import useRipple from 'useripple'
 
 const RippleButton = ({ onClick, children, className }) => {
@@ -6,14 +5,14 @@ const RippleButton = ({ onClick, children, className }) => {
     const [addRipple, ripples] = useRipple({ background: 'black' })
 
     return (
-        <Button variant="link" onClick={(e) => {
+        <button style={{ color: 'black' }} onClick={(e) => {
             onClick(e)
         }}
             onMouseDown={addRipple}
-            className={`button-ripple ${className}`}>
+            className={`btn btn-link button-ripple ${className}`}>
             {children}
             {ripples}
-        </Button>
+        </button>
     )
 }
 
