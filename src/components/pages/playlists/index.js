@@ -1,10 +1,10 @@
-import { useEffect, useReducer, useCallback } from 'react';
+import React, { useEffect, useReducer, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { playlistsPageReducer, initialState } from './reducer'
 
-import FilmSkeleton from '../../playlist/skeleton';
-import Playlist from '../../playlist';
+import FilmSkeleton from '../../helpers/playlist/skeleton';
+import Playlist from '../../helpers/playlist';
 
 import * as playlistApi from '../../../services/playlistService'
 

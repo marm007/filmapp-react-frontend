@@ -34,7 +34,7 @@ library.add(faPlay, faSortDown, faSortUp, faTrashAlt, faTimes, faGlobeEurope, fa
 
 const pathName = process.env.REACT_APP_PATH_NAME
 
-const NavbarComponent = lazy(() => import('./components/navbar'))
+const NavbarComponent = lazy(() => import('./components/helpers/navbar'))
 
 const ProfileComponent = lazy(() => import('./components/pages/profile'))
 const HomeComponent = lazy(() => import('./components/pages/home'))
@@ -45,10 +45,10 @@ const AddFilmComponent = lazy(() => import('./components/add/filmAdd'))
 const NotFoundComponent = lazy(() => import('./components/pages/notFound'))
 
 
-const LoginComponent = lazy(() => import('./components/auth/login'))
-const ResetPasswordComponent = lazy(() => import('./components/auth/resetPassword'))
-const ForgotPasswordComponent = lazy(() => import('./components/auth/forgotPassword'))
-const RegisterComponent = lazy(() => import('./components/auth/register'))
+const LoginComponent = lazy(() => import('./components/modals/login'))
+const ResetPasswordComponent = lazy(() => import('./components/modals/resetPassword'))
+const ForgotPasswordComponent = lazy(() => import('./components/modals/forgotPassword'))
+const RegisterComponent = lazy(() => import('./components/modals/register'))
 const SettingsComponent = lazy(() => import('./components/settings'))
 
 function App() {

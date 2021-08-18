@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState, useCallback } from 'react';
+import React, { useEffect, useReducer, useState, useCallback } from 'react';
 import { useLocation, useHistory } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
@@ -8,7 +8,7 @@ import Truncate from "react-truncate";
 
 import { searchReducer, searchInitialState } from './reducer'
 
-import BlurredImageComponent from '../../blurredImage'
+import BlurredImageComponent from '../../helpers/blurredImage'
 import PlaylistAddButtonComponent from '../../add/playlistAddButton';
 
 import * as filmApi from '../../../services/filmService'

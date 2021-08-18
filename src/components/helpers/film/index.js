@@ -2,11 +2,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TextTruncate from "react-text-truncate";
 
 import BlurredImageComponent from "../blurredImage";
-import PlaylistAddButtonComponent from "../add/playlistAddButton";
+import PlaylistAddButtonComponent from "../../add/playlistAddButton";
 
-import RemoveButton from '../../helpers/components/removeButton';
+import RemoveButton from '../../../helpers/components/removeButton';
 
-import '../pages/film/film.css'
+import '../../pages/film/film.css'
 
 const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommendations, filmDispatch }) => {
 

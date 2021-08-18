@@ -1,4 +1,4 @@
-import { useContext, useEffect, useCallback, useReducer } from 'react';
+import React, { useContext, useEffect, useCallback, useReducer } from 'react';
 import { useLocation } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import queryString from "query-string";
@@ -8,7 +8,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 
 import { filmPlaylistInitialState, filmPlaylistReducer } from './reducers/playlistReducer';
 
-import BlurredImageComponent from '../../blurredImage';
+import BlurredImageComponent from '../../helpers/blurredImage';
 
 import * as playlistApi from '../../../services/playlistService'
 

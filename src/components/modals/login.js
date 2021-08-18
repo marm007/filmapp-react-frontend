@@ -1,8 +1,8 @@
-import { useEffect, useContext, useReducer } from 'react';
+import React, { useEffect, useContext, useReducer } from 'react';
 import { useHistory, useLocation } from 'react-router-dom'
 
-import Modal from './modal';
-import Input from './input';
+import Modal from '../helpers/modal';
+import Input from '../helpers/input';
 
 import * as authApi from '../../services/authService'
 

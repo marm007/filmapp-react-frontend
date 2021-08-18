@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useContext, useReducer } from 'react';
+import React, { useState, useEffect, useCallback, useContext, useReducer } from 'react';
 import { useHistory, useLocation } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons'

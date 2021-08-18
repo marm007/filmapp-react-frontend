@@ -1,23 +1,23 @@
 /* eslint-disable jsx-a11y/role-has-required-aria-props */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { useEffect, useCallback, useContext, useReducer, useRef } from 'react';
+import React, { useEffect, useCallback, useContext, useReducer, useRef } from 'react';
 import { useHistory, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isMobile } from 'react-device-detect';
 import { Collapse } from 'bootstrap'
-import headerIcon from '../../images/header.png';
-import * as filmApi from '../../services/filmService'
+import headerIcon from '../../../images/header.png';
+import * as filmApi from '../../../services/filmService'
 
 import { AsyncTypeahead, Menu as AsyncMenu, MenuItem as AsyncMenuItem } from 'react-bootstrap-typeahead';
 
-import UserContext from '../../helpers/contexts/user/userContext'
+import UserContext from '../../../helpers/contexts/user/userContext'
 
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import './navbar.css';
 import { initialSearchState, searchReducer } from './reducer';
 
-import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
-import useWindowsWidth from '../../helpers/hooks/useWindowsWidth';
+import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
+import useWindowsWidth from '../../../helpers/hooks/useWindowsWidth';
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 import {

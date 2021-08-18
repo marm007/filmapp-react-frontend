@@ -1,10 +1,10 @@
-import { useEffect, useReducer, useCallback } from 'react';
+import React, { useEffect, useReducer, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { homePageReducer, initialState } from './reducer';
 
-import Film from '../../film'
-import FilmSkeleton from '../../film/skeleton';
+import Film from '../../helpers/film'
+import FilmSkeleton from '../../helpers/film/skeleton';
 
 import * as filmApi from '../../../services/filmService'
 

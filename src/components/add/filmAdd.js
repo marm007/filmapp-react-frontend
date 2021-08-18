@@ -1,11 +1,11 @@
 import './filmAdd.css'
 
-import { useRef, useReducer, useEffect, useContext } from 'react';
+import React, { useRef, useReducer, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import Input from '../auth/input';
+import Input from '../helpers/input';
 
 import { CHOOSE_FILM, CHOOSE_THUMBNAIL, filmAddInitialState, filmAddReducer } from './reducers/filmAddReducer';
 

@@ -1,10 +1,10 @@
-import { useEffect, useReducer, useCallback, useContext } from 'react';
+import React, { useEffect, useReducer, useCallback, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { initialProfileState, profileReducer } from './reducer';
 
-import Film from '../../film';
-import Playlist from '../../playlist';
+import Film from '../../helpers/film';
+import Playlist from '../../helpers/playlist';
 
 import * as userApi from '../../../services/userService'
 import * as playlistApi from '../../../services/playlistService'

@@ -1,4 +1,4 @@
-import { useState, useContext, useRef, useEffect } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import PlaylistDropdownMenu from './playlistDropdownMenu'

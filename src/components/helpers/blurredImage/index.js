@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
-import useIntersectionObserver from '../../helpers/hooks/useIntersectionObserver';
+import React, { useState, useRef } from 'react';
+import useIntersectionObserver from '../../../helpers/hooks/useIntersectionObserver';
 import "./blurred.css";
 
 const BlurredImage = ({ src, thumb, isCached }) => {

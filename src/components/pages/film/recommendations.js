@@ -1,8 +1,8 @@
-import { useEffect, useReducer, useCallback, useContext } from 'react';
+import React, { useEffect, useReducer, useCallback, useContext } from 'react';
 
 import { recommendationsReducer, recommendationsInitialState } from './reducers/recommendationsReducer'
 
-import Film from '../../film';
+import Film from '../../helpers/film';
 
 import * as filmApi from '../../../services/filmService'
 

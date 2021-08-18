@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { useContext, useEffect, useReducer, useCallback } from 'react';
+import React, { useContext, useEffect, useReducer, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { commentsReducer, commentsInitialState } from './reducers/commentsReducer';
