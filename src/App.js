@@ -3,11 +3,11 @@ import React, { useContext, lazy, Suspense } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-import PrivateRoute from './helpers/components/privateRoute'
+import PrivateRoute from './components/helpers/privateRoute'
 
 //import SettingsComponent from './components/settings'
 
-import RemoveModal from './helpers/components/removeModal'
+import RemoveModal from './components/modals/removeObject'
 
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 
@@ -27,7 +27,7 @@ import { Switch } from "react-router";
 
 import ToastContext from './helpers/contexts/toast/toastContext'
 
-import WithAxios from "./helpers/components/withAxios";
+import WithAxios from "./components/helpers/withAxios";
 import UserProvider from './helpers/contexts/user/userProvider';
 
 library.add(faPlay, faSortDown, faSortUp, faTrashAlt, faTimes, faGlobeEurope, faLock);
@@ -41,7 +41,7 @@ const HomeComponent = lazy(() => import('./components/pages/home'))
 const FilmComponent = lazy(() => import('./components/pages/film'))
 const SearchComponent = lazy(() => import('./components/pages/search'))
 const PlaylistsPage = lazy(() => import('./components/pages/playlists'))
-const AddFilmComponent = lazy(() => import('./components/add/filmAdd'))
+const AddFilmComponent = lazy(() => import('./components/pages/filmAdd'))
 const NotFoundComponent = lazy(() => import('./components/pages/notFound'))
 
 
@@ -49,7 +49,7 @@ const LoginComponent = lazy(() => import('./components/modals/login'))
 const ResetPasswordComponent = lazy(() => import('./components/modals/resetPassword'))
 const ForgotPasswordComponent = lazy(() => import('./components/modals/forgotPassword'))
 const RegisterComponent = lazy(() => import('./components/modals/register'))
-const SettingsComponent = lazy(() => import('./components/settings'))
+const SettingsComponent = lazy(() => import('./components/modals/settings'))
 
 function App() {
 

@@ -1,7 +1,7 @@
 import { pageMaxFetchCount } from "../../../config"
 
 export const initialProfileState = {
-    data: [],
+    data: null,
     isLoading: false,
     isAllFetched: false,
     isRemoving: false,

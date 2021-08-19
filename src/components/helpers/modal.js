@@ -1,17 +1,18 @@
 import { useEffect, useRef } from "react"
 import { Modal as ModalBoostrap } from 'bootstrap'
 
-const Modal = ({ id, title, children, onClose }) => {
+const Modal = ({ id, title, children, onClose, footer, hide }) => {
 
     const modal = useRef(null)
 
     useEffect(() => {
         modal.current = ModalBoostrap.getOrCreateInstance(`#${id}`)
-        modal.current.show()
+        if (hide) modal.current.hide()
+        else modal.current.show()
         return () => {
             modal.current.hide()
         }
-    }, [id])
+    }, [id, hide])
 
     const handleClose = () => {
         onClose()
@@ -31,6 +32,7 @@ const Modal = ({ id, title, children, onClose }) => {
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-primary" onClick={handleClose}>Close</button>
+                        {footer}
                     </div>
 
                 </div>

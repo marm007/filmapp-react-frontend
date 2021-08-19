@@ -9,7 +9,7 @@ import Truncate from "react-truncate";
 import { searchReducer, searchInitialState } from './reducer'
 
 import BlurredImageComponent from '../../helpers/blurredImage'
-import PlaylistAddButtonComponent from '../../add/playlistAddButton';
+import PlaylistAddButtonComponent from '../../helpers/playlistAdd';
 
 import * as filmApi from '../../../services/filmService'
 
@@ -17,10 +17,10 @@ import { pageMaxFetchCount } from '../../../config';
 
 import { parseSearchDate, checkIfPlaylistButtonClick, jsxLoop } from '../../../helpers'
 import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
-import RippleButton from '../../../helpers/components/rippleButton';
+import RippleButton from '../../helpers/rippleButton';
 
 import "./search.css";
-import SearchSkeleton from './skeleton';
+import Skeleton from './skeleton';
 
 let filters = [
     { id: 'last_hour', title: 'Last hour' },
@@ -305,7 +305,7 @@ const Search = () => {
                             </div>
                         </div>
                     }) : [...jsxLoop(20, i =>
-                        <SearchSkeleton key={i} />
+                        <Skeleton key={i} />
                     )]
                 }
 

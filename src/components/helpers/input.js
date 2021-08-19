@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react"
 
-const Input = ({ isInvalid, onChange, type, name, value }) => {
+const Input = ({ isInvalid, onChange, type, name, value, placeholder = '' }) => {
+
+    const InputTag = type === 'textarea' ? 'textarea' : 'input'
 
     const inputRef = useRef(null)
 
@@ -13,7 +15,8 @@ const Input = ({ isInvalid, onChange, type, name, value }) => {
     }, [isInvalid])
 
     return (
-        <input ref={inputRef} className="form-control"
+        <InputTag ref={inputRef} className="form-control"
+            placeholder={placeholder}
             type={type} name={name}
             value={value} onChange={onChange} />
     )

@@ -1,7 +1,7 @@
 import { useContext, useMemo } from 'react'
 import { refresh } from '../../services/authService';
-import axios from '../axios'
-import UserContext from '../contexts/user/userContext';
+import axios from '../../helpers/axios'
+import UserContext from '../../helpers/contexts/user/userContext';
 
 const WithAxios = ({ children }) => {
 

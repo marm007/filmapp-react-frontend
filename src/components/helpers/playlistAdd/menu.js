@@ -1,15 +1,15 @@
 import React, { useCallback, useEffect, useContext, useReducer, useRef } from 'react';
 
-import * as userApi from '../../services/userService'
-import * as playlistApi from '../../services/playlistService'
+import * as userApi from '../../../services/userService'
+import * as playlistApi from '../../../services/playlistService'
 
-import ToastContext from '../../helpers/contexts/toast/toastContext';
-import useBottomScrollListener from '../../helpers/hooks/useBottomScrollListener';
-import { playlistDropdownMenuReducer, playlistDropdownMenuInitialState } from './reducers/playlistDropdownMenuReducer'
-import ChangePrivacyButton from '../../helpers/components/changePrivacyButton';
+import ToastContext from '../../../helpers/contexts/toast/toastContext';
+import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
+import { playlistDropdownMenuReducer, playlistDropdownMenuInitialState } from './reducer'
+import ChangePrivacyButton from '../changePrivacyButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { playlistButtonMaxFetchCount } from '../../config';
-import RippleButton from '../../helpers/components/rippleButton';
+import { playlistButtonMaxFetchCount } from '../../../config';
+import RippleButton from '../rippleButton';
 
 function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isRecommendations, filmDispatch }) {
 

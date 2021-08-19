@@ -1,8 +1,8 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import PlaylistDropdownMenu from './playlistDropdownMenu'
-import UserContext from '../../helpers/contexts/user/userContext';
+import PlaylistDropdownMenu from './menu'
+import UserContext from '../../../helpers/contexts/user/userContext';
 import useRipple from "useripple"
 
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons'

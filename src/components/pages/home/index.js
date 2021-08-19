@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { homePageReducer, initialState } from './reducer';
 
 import Film from '../../helpers/film'
-import FilmSkeleton from '../../helpers/film/skeleton';
+import Skeleton from '../../helpers/film/skeleton';
 
 import * as filmApi from '../../../services/filmService'
 
@@ -81,7 +81,7 @@ function Home() {
             {
                 films ? films.map((film, index) => <Film key={film.id} film={film} index={index} handleRedirect={handleRedirect} />)
                     : [...jsxLoop(20, i =>
-                        <FilmSkeleton key={i} />
+                        <Skeleton key={i} />
                     )]
             }
 

@@ -15,8 +15,8 @@ import * as playlistApi from '../../../services/playlistService'
 import FilmContext from '../../../helpers/contexts/film/filmContext';
 import UserContext from '../../../helpers/contexts/user/userContext';
 import RemoveModalContext from '../../../helpers/contexts/removeModal/removeModalContext';
-import RemoveButton from '../../../helpers/components/removeButton';
-import ChangePrivacyButton from '../../../helpers/components/changePrivacyButton';
+import RemoveButton from '../../helpers/removeButton';
+import ChangePrivacyButton from '../../helpers/changePrivacyButton';
 
 import image_not_found from '../../../images/image_not_found.png'; // Tell Webpack this JS file uses this image
 
@@ -216,10 +216,10 @@ const PlaylistContainer = (props) => {
                     style={{ height: headerHeight + 'px' }}
                     className="col remove-container pt-2 pb-2 film-preview-playlist-header" sm={12}>
                     <div className="row m-0 px-2">
-                        <div className="colbutton-ripple-div-next-width">
+                        <div className="button-ripple-div-next-width colbutton-ripple-div-next-width">
                             <p className="mb-1 fw-bold film-preview-playlist-text-truncate">{playlist.title}</p>
                         </div>
-                        <div className="col justify-content-end d-flex">
+                        <div style={{ width: '24px' }} className="p-0 justify-content-end d-flex">
                             {
                                 user.id === playlist.author_id &&
                                 <RemoveButton handleRemove={() => handleRemovePlaylist()} />

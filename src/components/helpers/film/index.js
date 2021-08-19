@@ -2,9 +2,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TextTruncate from "react-text-truncate";
 
 import BlurredImageComponent from "../blurredImage";
-import PlaylistAddButtonComponent from "../../add/playlistAddButton";
+import PlaylistAddButtonComponent from "../playlistAdd";
 
-import RemoveButton from '../../../helpers/components/removeButton';
+import RemoveButton from '../../helpers/removeButton';
 
 import '../../pages/film/film.css'
 

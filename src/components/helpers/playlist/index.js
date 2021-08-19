@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TextTruncate from "react-text-truncate";
 import BlurredImageComponent from "../blurredImage";
-import RemoveButton from '../../../helpers/components/removeButton';
-import ChangePrivacyButton from '../../../helpers/components/changePrivacyButton';
+import RemoveButton from '../../helpers/removeButton';
+import ChangePrivacyButton from '../changePrivacyButton';
 
 const Playlist = ({ playlist, handleRedirect, handleRemove, isProfile, dispatchPrivacyUpdate }) => {
 

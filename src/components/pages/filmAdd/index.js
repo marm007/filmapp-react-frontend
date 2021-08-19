@@ -5,12 +5,12 @@ import { useHistory } from 'react-router-dom';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import Input from '../helpers/input';
+import Input from '../../helpers/input';
 
-import { CHOOSE_FILM, CHOOSE_THUMBNAIL, filmAddInitialState, filmAddReducer } from './reducers/filmAddReducer';
+import { CHOOSE_FILM, CHOOSE_THUMBNAIL, filmAddInitialState, filmAddReducer } from './reducer';
 
-import * as filmApi from '../../services/filmService'
-import UserContext from '../../helpers/contexts/user/userContext';
+import * as filmApi from '../../../services/filmService'
+import UserContext from '../../../helpers/contexts/user/userContext';
 
 const FilmAdd = () => {
 
@@ -194,21 +194,19 @@ const FilmAdd = () => {
             <div className="col col-sm-6 col-lg-5 mb-2">
 
                 <div className="mb-3">
-                <label className="form-label" htmlFor="title">Title</label>
-                <Input  placeholder="Title"
-                type="text"
+                    <Input placeholder="Title"
+                        type="text"
                         isInvalid={isSubmitted && !title}
                         name="title"
                         value={title}
-                        onChange={e => dispatch({ type: 'field', fieldName: 'title', payload: e.target.value })}/>
-                    
+                        onChange={e => dispatch({ type: 'field', fieldName: 'title', payload: e.target.value })} />
+
                     <div className="invalid-feedback">
                         Title is required
                     </div>
                 </div>
 
                 <div className="mb-3" >
-                            <label className="form-label" htmlFor="description">Description</label>
                     <Input
                         placeholder="Description"
                         type="textarea"

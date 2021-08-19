@@ -1,9 +1,9 @@
-import { useEffect, useReducer, useContext } from "react";
+import React, { useEffect, useReducer, useContext } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import UserContext from "../../helpers/contexts/user/userContext";
+import UserContext from "../../../helpers/contexts/user/userContext";
 import { settingsInitialState, settingsReducer } from "./reducer";
-import * as userApi from '../../services/userService'
-import Modal from "../helpers/modal";
+import * as userApi from '../../../services/userService'
+import Modal from "../../helpers/modal";
 
 const Settings = () => {
 
