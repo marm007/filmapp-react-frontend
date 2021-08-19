@@ -74,7 +74,7 @@ function Home() {
         history.push({ pathname: `${process.env.REACT_APP_PATH_NAME}film/` + id });
     };
 
-
+    throw new Error('I crashed!');
 
     return (
         <div className="row mt-5 mx-2">
