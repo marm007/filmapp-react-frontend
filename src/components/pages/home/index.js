@@ -10,7 +10,6 @@ import * as filmApi from '../../../services/filmService'
 
 import { pageMaxFetchCount, pageInitialMaxFetchCount } from '../../../config';
 
-import { jsxLoop } from '../../../helpers';
 import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
 
 
@@ -74,15 +73,13 @@ function Home() {
         history.push({ pathname: `${process.env.REACT_APP_PATH_NAME}film/` + id });
     };
 
-    throw new Error('I crashed!');
-
     return (
         <div className="row mt-5 mx-2">
             {
                 films ? films.map((film, index) => <Film key={film.id} film={film} index={index} handleRedirect={handleRedirect} />)
-                    : [...jsxLoop(20, i =>
-                        <Skeleton key={i} />
-                    )]
+                    : ([...Array(20)].map((_, index) => (
+                        <Skeleton key={index} />
+                    )))
             }
 
             {

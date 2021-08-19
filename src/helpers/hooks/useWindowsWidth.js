@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 const useWindowsWidth = (width = 600) => {
-  const [isScreenSmall, setIsScreenSmall] = useState(false);
+  const [isScreenSmall, setIsScreenSmall] = useState(window.innerWidth < width);
 
   let checkScreenSize = () => {
     setIsScreenSmall(window.innerWidth < width);

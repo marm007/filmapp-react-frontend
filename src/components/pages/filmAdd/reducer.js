@@ -101,6 +101,8 @@ export const filmAddReducer = (state, action) => {
         case 'error-422': {
             return {
                 ...state,
+                isSending: false,
+                isSuccess: false,
                 isError: true,
                 error: action.payload,
                 film: setFileInitialState(true),

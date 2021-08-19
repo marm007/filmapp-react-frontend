@@ -15,12 +15,17 @@ import * as filmApi from '../../../services/filmService'
 
 import { pageMaxFetchCount } from '../../../config';
 
-import { parseSearchDate, checkIfPlaylistButtonClick, jsxLoop } from '../../../helpers'
+import { parseSearchDate, checkIfPlaylistButtonClick } from '../../../helpers'
 import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
 import RippleButton from '../../helpers/rippleButton';
 
 import "./search.css";
-import Skeleton from './skeleton';
+
+import FilmSkeleton from '../../helpers/film/skeleton';
+import SearchSkeleton from './skeleton';
+
+import useWindowsWidth from '../../../helpers/hooks/useWindowsWidth';
+import Film from '../../helpers/film';
 
 let filters = [
     { id: 'last_hour', title: 'Last hour' },
@@ -31,6 +36,8 @@ let filters = [
 ];
 
 const Search = () => {
+
+    const isSmallScreen = useWindowsWidth(576);
 
     const history = useHistory();
     const location = useLocation();
@@ -118,7 +125,7 @@ const Search = () => {
 
     }, [dir, films, filter, isLoading, search, sort])
 
-    const setRedirect = (e, filmID) => {
+    const setRedirect = (filmID) => {
         history.push(`${process.env.REACT_APP_PATH_NAME}film/` + filmID);
     };
 
@@ -195,7 +202,7 @@ const Search = () => {
                 <div
                     aria-controls="filter-collapse"
                     aria-expanded={isOpen}
-                    data-bs-toggle="collapse" 
+                    data-bs-toggle="collapse"
                     data-bs-target="#searchCollapse"
                     className="px-4 py-2">
                     <FontAwesomeIcon style={{ cursor: "pointer" }} icon={faFilter} />
@@ -203,10 +210,10 @@ const Search = () => {
             </RippleButton>
             <div className="collapse" id="searchCollapse">
                 <div id="filter-collapse" className="row mx-2">
-                    <div className="col col-sm-4 mt-4">
+                    <div className="col-12 col-sm-4 mt-4">
                         <p style={{ 'fontWeight': 500 }}>UPLOAD DATE</p>
 
-                        <div className="col col-sm-8 mt-3 mb-3 divider" />
+                        <div className="col-12 col-sm-8 mt-3 mb-3 divider" />
 
                         {
                             filters.map((filterTmp) => {
@@ -220,10 +227,10 @@ const Search = () => {
 
                     </div>
 
-                    <div className="col col-sm-4 mt-4">
+                    <div className="col-12 col-sm-4 mt-4">
                         <p style={{ 'fontWeight': 500 }}>SORT BY</p>
 
-                        <div className="col col-sm-8 mt-3 mb-3 divider" />
+                        <div className="col-12 col-sm-8 mt-3 mb-3 divider" />
 
                         {
                             sorts.map((sortTmp) => {
@@ -247,66 +254,39 @@ const Search = () => {
                 </div>
             </div>
 
-            <div className="col col-sm-12 mt-2 mb-3 divider" />
+            <div className="col-12 mt-2 mb-3 divider" />
 
             <div className="row mx-2 mt-4">
                 {
                     films ? films.map((film, index) => {
                         const time = parseSearchDate(film);
-
-                        return <div className="col-12 col-sm-12 col-lg-8"
-                            key={film.id}>
-                            <div className="col play-outer-container m-0 mb-1"
-                                onClick={(e) => {
-                                    const isPlaylistButton = checkIfPlaylistButtonClick(e.target)
-                                    if (!isPlaylistButton) setRedirect(e, film.id)
-                                }} >
-                                <div className="row search-style mb-4 m-0">
-                                    <div className="col-8 col-sm-4 p-0">
-                                        <div className="embed-responsive embed-responsive-16by9 z-depth-1-half play-container">
-                                            <BlurredImageComponent
-                                                image={`${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail`} />
-                                            <FontAwesomeIcon className="play-middle" icon="play" />
-                                        </div>
-                                    </div>
-                                    <div className="col-4 col-sm-8">
-                                        <div className="row m-0">
-                                            <div className="col p-0 mb-1"
-                                                style={{
-                                                    flex: '0 0 auto !important',
-                                                    width: 'calc(83.33333333% - 24px) !important'
-                                                }}>
-                                                <Truncate lines={1}
-                                                    className="mb-0 search-title fw-bold">
-                                                    {film.title}
-                                                </Truncate>
-                                            </div>
-                                            <div className="col d-flex justify-content-end">
-                                                <PlaylistAddButtonComponent
-                                                    index={index}
-                                                    filmID={film.id} />
-                                            </div>
-                                        </div>
-                                        <p className="d-none d-sm-inline mb-1 author-nick-search">
-                                            <span>{film.author_name} &#183; {film.views} views &#183; {time}</span>
-                                        </p>
-
-                                        <p className="d-inline d-sm-none mb-0 author-nick">
-                                            <span>{film.author_name} &#183; {film.views} views</span>
-                                        </p>
-
-                                        <span className="d-none d-sm-inline  author-nick-search">
-                                            <TextTruncate className="mb-0"
-                                                line={2} text={film.description} />
-                                        </span>
-
-                                    </div>
-                                </div>
+                        film.img = `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail`
+                        return <Film isSearch={true} key={film.id}
+                            film={film} index={index}
+                            handleRedirect={() => setRedirect(film.id)} >
+                            <div className="col">
+                                <Truncate lines={1}
+                                    className="mb-0 search-title fw-bold">
+                                    {film.title}
+                                </Truncate>
                             </div>
-                        </div>
-                    }) : [...jsxLoop(20, i =>
-                        <Skeleton key={i} />
-                    )]
+                            <p className="d-none d-sm-inline mb-1 author-nick-search">
+                                <span>{film.author_name} &#183; {film.views} views &#183; {time}</span>
+                            </p>
+
+                            <p className="d-inline d-sm-none mb-0 author-nick">
+                                <span>{film.author_name} &#183; {film.views} views</span>
+                            </p>
+
+                            <span className="d-none d-sm-inline  author-nick-search">
+                                <TextTruncate className="mb-0"
+                                    line={2} text={film.description} />
+                            </span>
+                        </Film>
+                    })
+                        : ([...Array(20)].map((_, index) => isSmallScreen ? (
+                            <FilmSkeleton key={index} />) : (<SearchSkeleton key={index} />)
+                        ))
                 }
 
             </div>
@@ -323,5 +303,48 @@ const Search = () => {
 
     )
 }
+
+/*
+ return <div className="col-12 col-lg-8 mb-2 play-outer-container" key={film.id}>
+                            <div className="row m-0 mb-1">
+                                <div className="col-12 col-sm-4 p-0 m-0"
+                                    onClick={(e) => { setRedirect(e, film.id) }} >
+                                    <div className="play-container">
+                                        <BlurredImageComponent
+                                            image={`${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail`} />
+                                        <FontAwesomeIcon className="play-middle" icon="play" />
+                                    </div>
+                                </div>
+                                <div className="col-12 col-sm-8 p-0 ps-sm-3 m-0 mt-2">
+                                    <div className="row m-0 p-0">
+                                        <div className="col button-ripple-div-next-width p-0">
+                                            <Truncate lines={1}
+                                                className="mb-0 search-title fw-bold">
+                                                {film.title}
+                                            </Truncate>
+                                            <div className="mb-0">
+                                                <p className="d-none d-sm-inline mb-1 author-nick-search">
+                                                    <span>{film.author_name} &#183; {film.views} views &#183; {time}</span>
+                                                </p>
+
+                                                <p className="d-inline d-sm-none mb-0 author-nick">
+                                                    <span>{film.author_name} &#183; {film.views} views</span>
+                                                </p>
+
+                                                <span className="d-none d-sm-inline  author-nick-search">
+                                                    <TextTruncate className="mb-0"
+                                                        line={2} text={film.description} />
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <PlaylistAddButtonComponent
+                                            index={index}
+                                            filmID={film.id} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    })
+*/
 
 export default Search

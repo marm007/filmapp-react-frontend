@@ -173,7 +173,8 @@ const Comments = (props) => {
         if (isSorting) sortComments()
     }, [isSorting, sort, id])
 
-    const handleAddComment = () => {
+    const handleAddComment = (e) => {
+        e.preventDefault()
         dispatch({
             type: 'add'
         })
@@ -253,9 +254,9 @@ const Comments = (props) => {
                     </ul>
                 </div>
             </div>
-            <form onSubmit={(text && !isAdding) ? handleAddComment : null}>
+            <form onSubmit={(e) => (text && !isAdding) ? handleAddComment(e) : null}>
                 <div id="fiordur">
-                    <input type="text" className="form-input" placeholder="Comment" value={text}
+                    <input type="text"  placeholder="Comment" value={text}
                         onChange={e => dispatch({ type: 'field', fieldName: 'text', payload: e.target.value })}
                     />
                 </div>

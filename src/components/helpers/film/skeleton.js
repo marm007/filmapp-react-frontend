@@ -2,12 +2,10 @@ import Skeleton from 'react-loading-skeleton';
 
 import '../../pages/film/film.css'
 
-const FilmSkeleton = () => {
-
-    const normalClass = "col mb-5 col-12 col-sm-6 col-md-3 col-lg-2"
+const FilmSkeleton = ({ isRecommendations }) => {
 
     return (
-        <div className={normalClass}>
+        <div className={`${isRecommendations ? 'col-sm-12' : 'col-sm-6'} mb-5 col col-12 col-md-3 col-lg-2`}>
             <div className="col-12 col-sm-12">
                 <div className="embed-responsive embed-responsive-16by9 z-depth-1-half play-container">
                     <div className="ratio ratio-16x9">

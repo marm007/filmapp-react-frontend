@@ -73,6 +73,7 @@ const FilmAdd = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log('lflalfa')
 
         dispatch({ type: 'submit' })
 
@@ -115,10 +116,9 @@ const FilmAdd = () => {
     }
 
     return (
-        <div className="row mt-4 mx-2">
-            <div className="col col-sm-6 col-lg-5 mb-4">
-
-                <div className="col-12 col-sm-12 col-lg-10 mb-4">
+        <div className="row mt-4 mx-2 pb-5">
+            <div className="col-12 col-sm-6 mb-4">
+                <div className="col-12 mb-4">
                     <div className="embed-responsive embed-responsive-16by9 z-depth-1-half">
                         <div
                             className="position-relative justify-content-center d-flex align-items-center embed-responsive-item text-center box has-advanced-upload">
@@ -156,11 +156,9 @@ const FilmAdd = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-12 col-sm-12 col-lg-10">
-                    <div
-                        className="embed-responsive embed-responsive-16by9 z-depth-1-half">
-                        <div
-                            className="position-relative justify-content-center d-flex align-items-center embed-responsive-item text-center box has-advanced-upload">
+                <div className="col-12">
+                    <div>
+                        <div className="position-relative justify-content-center d-flex align-items-center embed-responsive-item text-center box has-advanced-upload">
                             <div className="ratio ratio-16x9">
                                 <img alt="" src={thumbnail.preview ? thumbnail.preview : "data:image/gif;base64,R0lGODlhAQABAPAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="} />
                             </div>
@@ -191,7 +189,7 @@ const FilmAdd = () => {
 
                 </div>
             </div>
-            <div className="col col-sm-6 col-lg-5 mb-2">
+            <div className="col-12 col-sm-6 mb-2">
 
                 <div className="mb-3">
                     <Input placeholder="Title"
@@ -220,7 +218,7 @@ const FilmAdd = () => {
                     </div>
                 </div>
 
-                <div className="col col-sm-12 mb-3 p-0">
+                <div className="col-12 mb-3 p-0">
                     <div className="d-flex align-items-center">
                         <button className="btn btn-primary"
                             disabled={isSending || !title || !description}

@@ -176,7 +176,7 @@ const FilmPreview = (props) => {
     return (
 
         <div>
-            <div className="col col-sm-12">
+            <div className="col-12 col-sm-12">
                 <div ref={playerRef}>
                     <Player
                         playsInline
@@ -187,9 +187,9 @@ const FilmPreview = (props) => {
             {
                 film &&
                 <>
-                    <div className="col col-sm-12 mt-4">
+                    <div className="col-12 col-sm-12 mt-4">
                         <div className="row p-0 m-0">
-                            <div className="col col-sm-12 p-0">
+                            <div className="col-12 col-sm-12 p-0">
                                 {!film.title && <p className="fw-bold"><br /></p>}
                                 <p className="fw-bold">{film.title}</p>
                             </div>
@@ -211,9 +211,9 @@ const FilmPreview = (props) => {
                                     &ensp;{film.dislikes}
                                 </p>
                             </div>
-                            <div className="col col-sm-12 mt-4 mb-4 divider" />
+                            <div className="col-12 col-sm-12 mt-4 mb-4 divider" />
 
-                            <div className="col col-sm-12 p-0" style={{ whiteSpace: 'pre-line', textAlign: 'justify' }}>
+                            <div className="col-12 col-sm-12 p-0" style={{ whiteSpace: 'pre-line', textAlign: 'justify' }}>
                                 <TextTruncate line={!isDescExpanded && 2}
                                     truncateText="…"
                                     text={film.description}
@@ -223,7 +223,7 @@ const FilmPreview = (props) => {
                             </div>
                         </div>
                     </div>
-                    <div className="col col-sm-12 mt-4 mb-2 divider" />
+                    <div className="col-12 col-sm-12 mt-4 mb-2 divider" />
                 </>
             }
         </div>

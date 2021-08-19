@@ -17,7 +17,6 @@ import RemoveModalContext from '../../../helpers/contexts/removeModal/removeModa
 import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
 
 import image_not_found from '../../../images/image_not_found.png'; // Tell Webpack this JS file uses this image
-import { jsxLoop } from '../../../helpers';
 import Skeleton from '../../helpers/film/skeleton'
 
 const Profile = () => {
@@ -213,9 +212,9 @@ const Profile = () => {
                             handleRedirect={() => handleRedirectFilm(record.id)}
                             handleRemove={(e) => handleRemove(e, record)} />
                     }
-                })  : [...jsxLoop(20, i =>
-                        <Skeleton key={i} />
-                    )]
+                })  : ([...Array(20)].map((_, index) => (
+                        <Skeleton key={index} />
+                    )))
             }
 
             {

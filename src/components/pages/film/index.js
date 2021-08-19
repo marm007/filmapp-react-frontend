@@ -38,7 +38,7 @@ const Film = (props) => {
                     <FilmsRecommendations handleRedirect={handleRedirect} {...props} />
                 </div>
                 {onSmallScreen &&
-                    <div className="col-12 order-last col-sm-12 order-sm-last col-md-8">
+                    <div className="col-12 order-last col-sm-12 order-sm-last col-md-8 pb-5">
                         <Comments {...props} />
                     </div>
                 }
