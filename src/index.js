@@ -12,16 +12,13 @@ import * as serviceWorker from './serviceWorker';
 
 import ToastProvider from "./helpers/contexts/toast/toastProvider";
 import RemoveModalProvider from "./helpers/contexts/removeModal/removeModalProvider";
-import ErrorBoundary from './components/helpers/errorBoundary';
 
 ReactDOM.render(
-    <ErrorBoundary>
-        <ToastProvider>
-            <RemoveModalProvider>
-                <App />
-            </RemoveModalProvider>
-        </ToastProvider>
-    </ErrorBoundary>
+    <ToastProvider>
+        <RemoveModalProvider>
+            <App />
+        </RemoveModalProvider>
+    </ToastProvider>
     ,
     document.getElementById('root'));
 

@@ -130,8 +130,8 @@ function NavbarComponent(props) {
     };
 
     const handleAddFilm = () => history.push(`${process.env.REACT_APP_PATH_NAME}add`)
+  
     const handleShowPlaylists = () => history.push(`${process.env.REACT_APP_PATH_NAME}playlists`)
-
 
     const handleSearchSubmit = (e) => {
         e.preventDefault();

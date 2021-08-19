@@ -1,4 +1,5 @@
 import React from 'react'
+import error_500 from '../../../images/error_500.svg'; // Tell Webpack this JS file uses this image
 
 class ErrorBoundary extends React.Component {
     constructor(props) {
@@ -17,10 +18,23 @@ class ErrorBoundary extends React.Component {
 
     render() {
         if (this.state.hasError) {
-            return <h1>Something went wrong!</h1>
+            return <>
+            {this.props.children[1].props.children[0]}
+                <div className="text-center">
+                    <div className="col-12 col-sm-12 my-4 px-4">
+                        <div className="ratio ratio-21x9">
+                            <img className="embed-responsive-item" src={error_500} alt="" />
+                        </div>
+                    </div>
+                    <h1>Something went wrong!</h1>
+                    <h5>Try reloading this page</h5>
+                    <div className="btn btn-success">Reload page</div>
+                </div>
+            </>
         }
 
-        return this.props.children;
+        return this.props.children
+
     }
 }
 
