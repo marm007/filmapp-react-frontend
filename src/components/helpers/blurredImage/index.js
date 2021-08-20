@@ -7,12 +7,17 @@ const BlurredImage = ({ src, srcWebp, thumb, thumbWebp, isCached }) => {
 
     return (
         <div className="ratio ratio-16x9">
-            <img
-                className="image thumb"
-                alt=""
-                src={thumbWebp}
-                style={{ visibility: isLoaded ? "hidden" : "visible" }}
-            />
+
+            <picture>
+                <source type="image/webp" srcSet={thumbWebp} />
+                <source type="image/jpeg" srcSet={thumb} />
+                <img className="image thumb" alt=""
+                    style={{ visibility: isLoaded ? "hidden" : "visible" }}
+                    src={thumb}
+                    onLoad={() => {
+                        setIsLoaded(true);
+                    }} />
+            </picture>
 
             <picture>
                 <source type="image/webp" srcSet={srcWebp} />
