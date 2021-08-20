@@ -5,13 +5,13 @@
     "static/js/1.7bac02b1.chunk.js": "/filmapp-react-frontend/static/js/1.7bac02b1.chunk.js",
     "static/js/1.7bac02b1.chunk.js.map": "/filmapp-react-frontend/static/js/1.7bac02b1.chunk.js.map",
     "static/css/2.b3cf2d41.chunk.css": "/filmapp-react-frontend/static/css/2.b3cf2d41.chunk.css",
-    "static/js/2.4554b193.chunk.js": "/filmapp-react-frontend/static/js/2.4554b193.chunk.js",
-    "static/js/2.4554b193.chunk.js.map": "/filmapp-react-frontend/static/js/2.4554b193.chunk.js.map",
+    "static/js/2.49453ebf.chunk.js": "/filmapp-react-frontend/static/js/2.49453ebf.chunk.js",
+    "static/js/2.49453ebf.chunk.js.map": "/filmapp-react-frontend/static/js/2.49453ebf.chunk.js.map",
     "main.css": "/filmapp-react-frontend/static/css/main.982c68fa.chunk.css",
-    "main.js": "/filmapp-react-frontend/static/js/main.0bc554a0.chunk.js",
-    "main.js.map": "/filmapp-react-frontend/static/js/main.0bc554a0.chunk.js.map",
-    "runtime-main.js": "/filmapp-react-frontend/static/js/runtime-main.930d2533.js",
-    "runtime-main.js.map": "/filmapp-react-frontend/static/js/runtime-main.930d2533.js.map",
+    "main.js": "/filmapp-react-frontend/static/js/main.04a0c552.chunk.js",
+    "main.js.map": "/filmapp-react-frontend/static/js/main.04a0c552.chunk.js.map",
+    "runtime-main.js": "/filmapp-react-frontend/static/js/runtime-main.242c40b9.js",
+    "runtime-main.js.map": "/filmapp-react-frontend/static/js/runtime-main.242c40b9.js.map",
     "static/css/5.4be38407.chunk.css": "/filmapp-react-frontend/static/css/5.4be38407.chunk.css",
     "static/js/5.fe6cf234.chunk.js": "/filmapp-react-frontend/static/js/5.fe6cf234.chunk.js",
     "static/js/5.fe6cf234.chunk.js.map": "/filmapp-react-frontend/static/js/5.fe6cf234.chunk.js.map",
@@ -24,8 +24,8 @@
     "static/js/8.4f382661.chunk.js": "/filmapp-react-frontend/static/js/8.4f382661.chunk.js",
     "static/js/8.4f382661.chunk.js.map": "/filmapp-react-frontend/static/js/8.4f382661.chunk.js.map",
     "static/css/9.d9442999.chunk.css": "/filmapp-react-frontend/static/css/9.d9442999.chunk.css",
-    "static/js/9.80d28ca0.chunk.js": "/filmapp-react-frontend/static/js/9.80d28ca0.chunk.js",
-    "static/js/9.80d28ca0.chunk.js.map": "/filmapp-react-frontend/static/js/9.80d28ca0.chunk.js.map",
+    "static/js/9.afd0861d.chunk.js": "/filmapp-react-frontend/static/js/9.afd0861d.chunk.js",
+    "static/js/9.afd0861d.chunk.js.map": "/filmapp-react-frontend/static/js/9.afd0861d.chunk.js.map",
     "static/js/10.dec520cf.chunk.js": "/filmapp-react-frontend/static/js/10.dec520cf.chunk.js",
     "static/js/10.dec520cf.chunk.js.map": "/filmapp-react-frontend/static/js/10.dec520cf.chunk.js.map",
     "static/js/11.9e58bb41.chunk.js": "/filmapp-react-frontend/static/js/11.9e58bb41.chunk.js",
@@ -71,10 +71,10 @@
     "static/media/page-not-found.0e39e8d9.svg": "/filmapp-react-frontend/static/media/page-not-found.0e39e8d9.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.930d2533.js",
+    "static/js/runtime-main.242c40b9.js",
     "static/css/5.4be38407.chunk.css",
     "static/js/5.fe6cf234.chunk.js",
     "static/css/main.982c68fa.chunk.css",
-    "static/js/main.0bc554a0.chunk.js"
+    "static/js/main.04a0c552.chunk.js"
   ]
 }
