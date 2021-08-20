@@ -1,8 +1,7 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import PlaylistDropdownMenu from './menu'
-import UserContext from '../../../helpers/contexts/user/userContext';
 import useRipple from "useripple"
 
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons'
@@ -13,8 +12,6 @@ import './playlistAdd.css'
 function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
 
     const menuRef = useRef()
-
-    const { user } = useContext(UserContext);
 
     const [addRipple, ripples] = useRipple({ background: "black" })
 
@@ -41,7 +38,7 @@ function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
     useEffect(() => {
         const ref = menuRef.current;
 
-        if (ref && user.auth) {
+        if (ref) {
 
             ref.addEventListener('show.bs.dropdown', handleOpenMenu)
             ref.addEventListener('hide.bs.dropdown', handleCloseMenu)
@@ -54,11 +51,10 @@ function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
             }
         }
 
-    }, [filmID, menuRef, user.auth])
+    }, [filmID, menuRef])
 
     return (
 
-        user.auth ?
             <div ref={menuRef}
 
                 className="p-0 dropdown" style={{ width: '26px' }} >
@@ -90,9 +86,6 @@ function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
                     }
                 </div>
             </div >
-            :
-            null
-
     )
 }
 

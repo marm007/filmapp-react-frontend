@@ -8,14 +8,11 @@ import Truncate from "react-truncate";
 
 import { searchReducer, searchInitialState } from './reducer'
 
-import BlurredImageComponent from '../../helpers/blurredImage'
-import PlaylistAddButtonComponent from '../../helpers/playlistAdd';
-
 import * as filmApi from '../../../services/filmService'
 
 import { pageMaxFetchCount } from '../../../config';
 
-import { parseSearchDate, checkIfPlaylistButtonClick } from '../../../helpers'
+import { parseSearchDate } from '../../../helpers'
 import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
 import RippleButton from '../../helpers/rippleButton';
 
@@ -303,48 +300,5 @@ const Search = () => {
 
     )
 }
-
-/*
- return <div className="col-12 col-lg-8 mb-2 play-outer-container" key={film.id}>
-                            <div className="row m-0 mb-1">
-                                <div className="col-12 col-sm-4 p-0 m-0"
-                                    onClick={(e) => { setRedirect(e, film.id) }} >
-                                    <div className="play-container">
-                                        <BlurredImageComponent
-                                            image={`${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail`} />
-                                        <FontAwesomeIcon className="play-middle" icon="play" />
-                                    </div>
-                                </div>
-                                <div className="col-12 col-sm-8 p-0 ps-sm-3 m-0 mt-2">
-                                    <div className="row m-0 p-0">
-                                        <div className="col button-ripple-div-next-width p-0">
-                                            <Truncate lines={1}
-                                                className="mb-0 search-title fw-bold">
-                                                {film.title}
-                                            </Truncate>
-                                            <div className="mb-0">
-                                                <p className="d-none d-sm-inline mb-1 author-nick-search">
-                                                    <span>{film.author_name} &#183; {film.views} views &#183; {time}</span>
-                                                </p>
-
-                                                <p className="d-inline d-sm-none mb-0 author-nick">
-                                                    <span>{film.author_name} &#183; {film.views} views</span>
-                                                </p>
-
-                                                <span className="d-none d-sm-inline  author-nick-search">
-                                                    <TextTruncate className="mb-0"
-                                                        line={2} text={film.description} />
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <PlaylistAddButtonComponent
-                                            index={index}
-                                            filmID={film.id} />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    })
-*/
 
 export default Search

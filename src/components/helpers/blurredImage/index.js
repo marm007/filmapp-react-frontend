@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import useIntersectionObserver from '../../../helpers/hooks/useIntersectionObserver';
 import "./blurred.css";
 
-const BlurredImage = ({ src, thumb, isCached }) => {
+const BlurredImage = ({ src, srcWebp, thumb, thumbWebp, isCached }) => {
     const [isLoaded, setIsLoaded] = useState(isCached);
 
     return (
@@ -10,18 +10,20 @@ const BlurredImage = ({ src, thumb, isCached }) => {
             <img
                 className="image thumb"
                 alt=""
-                src={thumb}
+                src={thumbWebp}
                 style={{ visibility: isLoaded ? "hidden" : "visible" }}
             />
-            <img
-                onLoad={() => {
-                    setIsLoaded(true);
-                }}
-                className="image full"
-                style={{ opacity: isLoaded ? 1 : 0 }}
-                alt=""
-                src={src}
-            />
+
+            <picture>
+                <source type="image/webp" srcSet={srcWebp} />
+                <source type="image/jpeg" srcSet={src} />
+                <img className="image full" alt=""
+                    style={{ opacity: isLoaded ? 1 : 0 }}
+                    src={src}
+                    onLoad={() => {
+                        setIsLoaded(true);
+                    }} />
+            </picture>
         </div>
     );
 }
@@ -36,7 +38,7 @@ function BlurredImageComponent({ image }) {
         onIntersect: ([{ isIntersecting }], observerElement) => {
             if (isIntersecting) {
                 let tmp = new Image();
-                tmp.src = image.concat('?width=small_webp');
+                tmp.src = image.concat('?width=poster_webp');
                 setIsCached(tmp.complete)
                 setIsVisible(true);
                 observerElement.unobserve(ref.current);
@@ -50,7 +52,11 @@ function BlurredImageComponent({ image }) {
             className="image-container ratio ratio-16x9 play-image"
         >
             {isVisible && (
-                <BlurredImage isCached={isCached} src={image.concat('?width=small_webp')} thumb={image.concat('?width=preview_webp')} />
+                <BlurredImage isCached={isCached}
+                    src={image.concat('?width=poster')}
+                    srcWebp={image.concat('?width=poster_webp')}
+                    thumb={image.concat('?width=preview')}
+                    thumbWebp={image.concat('?width=preview_webp')} />
             )}
         </div>
     );
