@@ -13,7 +13,7 @@ import * as userApi from '../../../services/userService'
 
 import FilmContext from '../../../helpers/contexts/film/filmContext'
 import UserContext from '../../../helpers/contexts/user/userContext';
-import 'core-js/es/promise/all-settled'
+import 'core-js/modules/esnext.promise.all-settled'
 
 const FilmPreview = (props) => {
 
@@ -65,7 +65,7 @@ const FilmPreview = (props) => {
             let requests = [filmApi.index(props.match.params.id), filmApi.view(props.match.params.id)]
             if (user.auth) requests.push(userApi.me({ details: true }))
 
-            console.log(Object.getOwnPropertyNames(Promise))
+            console.log('lldd', Object.getOwnPropertyNames(Promise))
             const [filmResponse, filmViewResponse, userResponse] = await Promise.allSettled(requests);
 
             if (filmResponse.status === "rejected" || filmViewResponse.status === "rejected") {
