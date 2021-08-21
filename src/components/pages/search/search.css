@@ -23,7 +23,7 @@
     background-color: hsla(0, 0%, 0%, 0.15);
 }
 
-.search-skeleton::before {
+.search-skeleton:before {
     display: block;
     content: "";
 }

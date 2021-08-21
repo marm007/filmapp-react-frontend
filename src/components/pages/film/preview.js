@@ -65,7 +65,6 @@ const FilmPreview = (props) => {
             let requests = [filmApi.index(props.match.params.id), filmApi.view(props.match.params.id)]
             if (user.auth) requests.push(userApi.me({ details: true }))
 
-            console.log('lldd', Object.getOwnPropertyNames(Promise))
             const [filmResponse, filmViewResponse, userResponse] = await Promise.allSettled(requests);
 
             if (filmResponse.status === "rejected" || filmViewResponse.status === "rejected") {
