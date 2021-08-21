@@ -161,3 +161,9 @@
         padding-left: 0 !important;
     }
  }
+
+ .ratio:before {
+    display: block;
+    padding-top: var(--bs-aspect-ratio);
+    content: "";
+}
