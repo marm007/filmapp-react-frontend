@@ -13,7 +13,7 @@ import * as userApi from '../../../services/userService'
 
 import FilmContext from '../../../helpers/contexts/film/filmContext'
 import UserContext from '../../../helpers/contexts/user/userContext';
-
+import 'core-js/stable/promise/all-settled'
 
 const FilmPreview = (props) => {
 

@@ -18,6 +18,7 @@ import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListe
 
 import image_not_found from '../../../images/image_not_found.png'; // Tell Webpack this JS file uses this image
 import Skeleton from '../../helpers/film/skeleton'
+import 'core-js/stable/promise/all-settled'
 
 const Profile = () => {
 
