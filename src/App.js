@@ -31,6 +31,8 @@ import WithAxios from "./components/helpers/withAxios";
 import UserProvider from './helpers/contexts/user/userProvider';
 import ErrorBoundary from './components/helpers/errorBoundary';
 
+import { isMobile } from 'react-device-detect'
+
 library.add(faPlay, faSortDown, faSortUp, faTrashAlt, faTimes, faGlobeEurope, faLock);
 
 const pathName = process.env.REACT_APP_PATH_NAME
@@ -51,6 +53,9 @@ const ResetPasswordComponent = lazy(() => import('./components/modals/resetPassw
 const ForgotPasswordComponent = lazy(() => import('./components/modals/forgotPassword'))
 const RegisterComponent = lazy(() => import('./components/modals/register'))
 const SettingsComponent = lazy(() => import('./components/modals/settings'))
+
+const MobileStyle = lazy(() => import('./helpers/css/mobileStyle'))
+const DesktopStyle = lazy(() => import('./helpers/css/desktopStyle'))
 
 function App() {
 
@@ -79,6 +84,7 @@ function App() {
                         <ErrorBoundary>
 
                             <Suspense fallback={<></>}>
+                                {isMobile ? <MobileStyle /> : <DesktopStyle />}
                                 <PrivateRoute exact path={[`${pathName}settings`, `${pathName}profile/settings`, `${pathName}film/:id/settings`, `${pathName}search/settings`, `${pathName}add/settings`, `${pathName}playlists/settings`]}
                                     component={SettingsComponent} />
 

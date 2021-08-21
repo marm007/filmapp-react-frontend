@@ -116,7 +116,7 @@ const FilmAdd = () => {
     }
 
     return (
-        <div className="row mt-4 mx-2 pb-5">
+        <div className="row mt-4 pb-5 mx-2">
             <div className="col-12 col-sm-6 mb-4">
                 <div className="col-12 mb-4">
                     <div className="embed-responsive embed-responsive-16by9 z-depth-1-half">

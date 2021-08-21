@@ -5,7 +5,7 @@ const SearchSkeleton = () => {
 
     return (
 
-        <div className="col-12 col-sm-12 col-lg-8 m-0 mb-1">
+        <div className="col-12 col-sm-12 col-lg-8 m-0 mb-1 container-px">
             <div className="row mb-4 m-0">
                 <div className="col-8 col-sm-4 p-0">
                     <div className="ratio ratio-16x9">

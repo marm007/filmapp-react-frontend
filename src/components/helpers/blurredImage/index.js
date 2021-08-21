@@ -46,7 +46,8 @@ function BlurredImageComponent({ image }) {
                 tmp.src = image.concat('?width=poster_webp');
                 setIsCached(tmp.complete)
                 setIsVisible(true);
-                observerElement.unobserve(ref.current);
+                if (ref.current)
+                    observerElement.unobserve(ref.current);
             }
         }
     });

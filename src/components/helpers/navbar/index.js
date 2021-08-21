@@ -236,7 +236,7 @@ function NavbarComponent(props) {
             <div className="col-12 order-3 col-sm-8 order-sm-2 col-md-5 order-md-5" >
                 <form id="search-form" className="row row-cols-lg-auto align-items-center">
                     <div className="row m-0" style={{ width: 100 + '%' }}>
-                        <div className="col-12 col-sm-10 p-0">
+                        <div className="col-12 col-sm-10 p-0 mt-2 m-sm-0">
                             <AsyncTypeahead
                                 ref={typeaheadRef}
                                 className="search-bar"

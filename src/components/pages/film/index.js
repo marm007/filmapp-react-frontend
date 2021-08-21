@@ -29,16 +29,16 @@ const Film = (props) => {
     return (
         <FilmProvider>
             <div className="row p-0 m-0 mt-4 mx-2">
-                <div className="col-12 order-first col-sm-12 order-first col-md-8">
+                <div className="col-12 order-first col-sm-12 order-first col-md-8 film-preview-container-px">
                     <FilmPreview {...props} />
                     {!onSmallScreen && <Comments {...props} />}
                 </div>
-                <div className="col-12 order-2 col-sm-12 order-2 col-md-4">
+                <div className="col-12 order-2 col-sm-12 order-2 col-md-4 p-0">
                     <PlaylistContainer handleRedirect={handleRedirect} {...props} />
                     <FilmsRecommendations handleRedirect={handleRedirect} {...props} />
                 </div>
                 {onSmallScreen &&
-                    <div className="col-12 order-last col-sm-12 order-sm-last col-md-8 pb-5">
+                    <div className="col-12 order-last col-sm-12 order-sm-last col-md-8 pb-5 container-px">
                         <Comments {...props} />
                     </div>
                 }

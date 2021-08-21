@@ -8,25 +8,31 @@ import RemoveButton from '../../helpers/removeButton';
 
 import '../../pages/film/film.css'
 import useWindowsWidth from '../../../helpers/hooks/useWindowsWidth';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import UserContext from '../../../helpers/contexts/user/userContext';
 
+import getFilmClass from './helper'
+
 const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommendations, isSearch, filmDispatch, children }) => {
+    const isSmallScreen = useWindowsWidth((isRecommendations ? 768 : 576))
+
+    const [filmCSS, setFilmCSS] = useState(getFilmClass(isRecommendations, isSearch, isSmallScreen))
 
     const { user } = useContext(UserContext);
 
-    const isSmallScreen = useWindowsWidth((isRecommendations ? 768 : 576))
 
-    const flag = isRecommendations || isSearch
+    useEffect(() => {
+        setFilmCSS(getFilmClass(isRecommendations, isSearch, isSmallScreen))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSmallScreen])
+
 
     return (
-        <div className={`${(flag && !isSmallScreen) ?
-            `${isSearch ? 'col-12 col-lg-8' : 'row'} mx-0 mb-4` :
-            `${isRecommendations ? 'col-sm-12' : 'col-sm-6'} mb-5 col-12 col-md-3 col-lg-2`}`}>
-            <div className={`${(flag && !isSmallScreen) ?
-                'row p-0 m-0' : 'col'} play-outer-container remove-container`}>
-                <div className={`${(flag && !isSmallScreen) ?
-                    `${isSearch ? 'col-sm-4' : ''} col-6` : 'col-12 col-sm-12'} m-0 p-0`}
+        <div className={filmCSS[0]}>
+
+            <div className={filmCSS[1]}>
+
+                <div className={filmCSS[2]}
                     onClick={() => handleRedirect(film.id)}>
                     <div className="play-container">
                         <BlurredImageComponent
@@ -34,21 +40,21 @@ const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommen
                         <FontAwesomeIcon className="play-middle" icon="play" />
                     </div>
                 </div>
-                <div className={`${(flag && !isSmallScreen) ?
-                    `${isSearch ? 'col-sm-8' : ''} col-6 ` : 'col-12 col-sm-12 p-0'} m-0`}>
-                    <div className="row mx-0 mb-0 mt-1">
+
+                <div className={filmCSS[3]}>
+
+                    <div className={filmCSS[4]}>
                         <div className={`${user.auth ? 'button-ripple-div-next-width' : 'col-12'} col p-0 pe-2 cursor-pointer`}
                             onClick={() => handleRedirect(film.id)}>
 
-                            {children ? children : <>
-                                <TextTruncate line={1} text={film.title}
-                                    className="mb-1 mt-1 title " />
-                                <div className="mb-0 author-nick">
-                                    <span>{film.author_name}&nbsp;</span>
-                                    <span>•&nbsp;</span>
-                                    <span>{film.views} views</span>
-                                </div>
-                            </>
+                            <TextTruncate line={1} text={film.title}
+                                className={filmCSS[5]} />
+
+                            {children ? children : <div className="mb-0 author-nick">
+                                <span>{film.author_name}&nbsp;</span>
+                                <span>•&nbsp;</span>
+                                <span>{film.views} views</span>
+                            </div>
                             }
                         </div>
 
@@ -66,7 +72,7 @@ const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommen
 
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

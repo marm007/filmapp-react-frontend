@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import queryString from 'query-string';
 import TextTruncate from "react-text-truncate";
-import Truncate from "react-truncate";
 
 import { searchReducer, searchInitialState } from './reducer'
 
@@ -261,24 +260,16 @@ const Search = () => {
                         return <Film isSearch={true} key={film.id}
                             film={film} index={index}
                             handleRedirect={() => setRedirect(film.id)} >
-                            <div className="col">
-                                <Truncate lines={1}
-                                    className="mb-0 search-title fw-bold">
-                                    {film.title}
-                                </Truncate>
+                            <div className="pt-2">
+                                <p className="mb-1 author-nick-search">
+                                    <span>{film.author_name} &#183; {film.views} views &#183; {time}</span>
+                                </p>
+
+                                <span className="d-none d-sm-inline  author-nick-search">
+                                    <TextTruncate className="mb-0"
+                                        line={2} text={film.description} />
+                                </span>
                             </div>
-                            <p className="d-none d-sm-inline mb-1 author-nick-search">
-                                <span>{film.author_name} &#183; {film.views} views &#183; {time}</span>
-                            </p>
-
-                            <p className="d-inline d-sm-none mb-0 author-nick">
-                                <span>{film.author_name} &#183; {film.views} views</span>
-                            </p>
-
-                            <span className="d-none d-sm-inline  author-nick-search">
-                                <TextTruncate className="mb-0"
-                                    line={2} text={film.description} />
-                            </span>
                         </Film>
                     })
                         : ([...Array(20)].map((_, index) => isSmallScreen ? (

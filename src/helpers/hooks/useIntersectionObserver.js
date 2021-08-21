@@ -1,4 +1,6 @@
 import React from "react";
+require('intersection-observer');
+
 const useIntersectionObserver = ({
   target,
   onIntersect,

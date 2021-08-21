@@ -1,11 +1,11 @@
 import Skeleton from 'react-loading-skeleton';
 
-const SearchSkeleton = () => {
+const RecommendationsSkeleton = () => {
 
 
     return (
 
-        <div className="row mx-0 mb-4">
+        <div className="row mx-0 mb-4 container-px">
             <div className="row p-0 m-0">
                 <div className='col-6 col-sm-6 m-0 p-0' >
                     <div className="ratio ratio-16x9">
@@ -27,4 +27,4 @@ const SearchSkeleton = () => {
     )
 }
 
-export default SearchSkeleton
+export default RecommendationsSkeleton

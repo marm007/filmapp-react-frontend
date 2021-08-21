@@ -35,17 +35,3 @@
 .playlist-add-icon-mobile {
     opacity: 0.7;
 }
-
-@media (hover: hover) and (pointer: fine) {
-
-    .playlist-add-icon {
-        transition: .2s ease;
-        opacity: 0;
-    }
-}
-
-@media (pointer: coarse) {
-    .playlist-add-icon {
-        opacity: 0.7;
-    }
-}

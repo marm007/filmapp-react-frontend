@@ -99,7 +99,7 @@ const FilmsRecommendations = (props) => {
 
     return (
 
-        <div className="row">
+        <div className="row m-0">
 
             {
                 films ? films.map((film, index) => <Film key={film.id} film={film} index={index} isRecommendations={true} filmDispatch={filmDispatch} handleRedirect={() => props.handleRedirect(film.id)} />)

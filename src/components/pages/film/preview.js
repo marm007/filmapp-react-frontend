@@ -176,7 +176,7 @@ const FilmPreview = (props) => {
     return (
 
         <div>
-            <div className="col-12 col-sm-12">
+            <div className="col-12 col-sm-12 preview-margins">
                 <div ref={playerRef}>
                     <Player
                         playsInline
@@ -186,7 +186,7 @@ const FilmPreview = (props) => {
             </div>
             {
                 film &&
-                <>
+                <div className="px-2 px-md-0">
                     <div className="col-12 col-sm-12 mt-4">
                         <div className="row p-0 m-0">
                             <div className="col-12 col-sm-12 p-0">
@@ -224,7 +224,7 @@ const FilmPreview = (props) => {
                         </div>
                     </div>
                     <div className="col-12 col-sm-12 mt-4 mb-2 divider" />
-                </>
+                </div>
             }
         </div>
 
