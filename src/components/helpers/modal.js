@@ -6,6 +6,7 @@ const Modal = ({ id, title, children, onClose, footer, hide }) => {
     const modal = useRef(null)
 
     useEffect(() => {
+        console.log('modal', ModalBoostrap.getOrCreateInstance(`#${id}`))
         modal.current = ModalBoostrap.getOrCreateInstance(`#${id}`)
         if (hide) modal.current.hide()
         else modal.current.show()
