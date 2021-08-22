@@ -22,7 +22,7 @@ class ErrorBoundary extends React.Component {
                 <div className="text-center">
                     <div className="col-12 col-sm-12 my-4 px-4">
 
-                        <div className="ratio" style={{ '--bs-aspect-ratio': '35%' }}>
+                        <div className="ratio" style={{ 'paddingTop': '35%' }}>
                             <img src={error_500} alt="" />
                         </div>
                     </div>

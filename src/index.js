@@ -1,8 +1,8 @@
-import "es6-promise";
-import "isomorphic-fetch";
-
 import 'react-app-polyfill/ie9';
 import 'react-app-polyfill/ie11';
+import 'react-app-polyfill/stable'
+
+import "es6-promise";
 
 import React from 'react';
 import ReactDOM from 'react-dom';
