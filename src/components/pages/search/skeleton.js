@@ -8,7 +8,7 @@ const SearchSkeleton = () => {
         <div className="col-12 col-sm-12 col-lg-8 m-0 mb-1 container-px">
             <div className="row mb-4 m-0">
                 <div className="col-8 col-sm-4 p-0">
-                    <div className="ratio ratio-16x9">
+                    <div className="embed-responsive embed-responsive-16by9 ">
                         <Skeleton className="w-100 h-100" style={{ lineHeight: '1.5' }} />
                     </div>
                 </div>

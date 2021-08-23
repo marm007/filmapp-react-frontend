@@ -6,9 +6,9 @@ const BlurredImage = ({ src, srcWebp, thumb, thumbWebp, isCached }) => {
     const [isLoaded, setIsLoaded] = useState(isCached);
 
     return (
-        <div className="ratio ratio-16x9">
+        <div>
 
-            <picture>
+            <picture >
                 <source type="image/webp" srcSet={thumbWebp} />
                 <source type="image/jpeg" srcSet={thumb} />
                 <img className="image thumb" alt=""
@@ -19,7 +19,7 @@ const BlurredImage = ({ src, srcWebp, thumb, thumbWebp, isCached }) => {
                     }} />
             </picture>
 
-            <picture>
+            <picture >
                 <source type="image/webp" srcSet={srcWebp} />
                 <source type="image/jpeg" srcSet={src} />
                 <img className="image full" alt=""
@@ -55,7 +55,7 @@ function BlurredImageComponent({ image }) {
     return (
         <div
             ref={ref}
-            className="image-container ratio ratio-16x9 play-image"
+            className="image-container embed-responsive embed-responsive-16by9  play-image"
         >
             {isVisible && (
                 <BlurredImage isCached={isCached}

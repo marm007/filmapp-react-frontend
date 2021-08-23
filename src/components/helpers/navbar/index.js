@@ -4,7 +4,6 @@ import React, { useEffect, useCallback, useContext, useReducer, useRef } from 'r
 import { useHistory, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isMobile } from 'react-device-detect';
-import { Collapse } from 'bootstrap'
 import headerIcon from '../../../images/header.png';
 import * as filmApi from '../../../services/filmService'
 
@@ -62,8 +61,6 @@ function NavbarComponent(props) {
     })
 
     useEffect(() => {
-        const bsCollapse = new Collapse('#responsive-navbar-nav', { toggle: false })
-        bsCollapse.hide()
     }, [location])
 
     useEffect(() => {
@@ -221,7 +218,7 @@ function NavbarComponent(props) {
                         src={headerIcon}
                         width="30"
                         height="30" />
-                    <span className="navbar-brand d-none d-md-inline m-0 ps-3 cursor-pointer">FilmApp</span>
+                    <span className="navbar-brand d-none d-md-inline m-0 pl-3 cursor-pointer">FilmApp</span>
                 </div>
             </div>
 
@@ -374,7 +371,7 @@ function NavbarComponent(props) {
 
                             ) :
                             (
-                                <a className="nav-link cursor-pointer pe-2 ps-2"
+                                <a className="nav-link cursor-pointer pr-2 pl-2"
                                     onClick={() => handleLogin()}>
                                     Login
                                 </a>

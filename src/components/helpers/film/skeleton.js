@@ -8,7 +8,7 @@ const FilmSkeleton = ({ isRecommendations }) => {
         <div className={`${isRecommendations ? 'col-sm-12' : 'col-sm-6'} mb-5 col col-12 col-md-3 col-lg-2 container-px`}>
             <div className="col-12 col-sm-12">
                 <div className="embed-responsive embed-responsive-16by9 z-depth-1-half play-container">
-                    <div className="ratio ratio-16x9">
+                    <div className="embed-responsive-item">
                         <Skeleton className="w-100 h-100" style={{ lineHeight: '1.5' }} />
                     </div>
                 </div>

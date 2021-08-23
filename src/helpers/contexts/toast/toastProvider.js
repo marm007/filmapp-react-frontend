@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react'
 import ToastContext from './toastContext'
-import { Toast } from 'bootstrap'
 
 const ToastProvider = ({ children }) => {
     const showAnimTimeout = 850
@@ -12,7 +11,7 @@ const ToastProvider = ({ children }) => {
     const toastShow = useRef(null)
 
     const createToast = (message, header = 'Playlist') => {
-        let toastElement = Toast.getOrCreateInstance("#mainToast")
+        let toastElement = null
 
         if (toastAutoHide.current) {
             console.log('hide', toastAutoHide.current)

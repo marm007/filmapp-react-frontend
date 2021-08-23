@@ -102,8 +102,7 @@ const FilmsRecommendations = (props) => {
         <div className="row m-0">
 
             {
-                films ? films.map((film, index) => <Film key={film.id} film={film} index={index} isRecommendations={true} filmDispatch={filmDispatch} handleRedirect={() => props.handleRedirect(film.id)} />)
-                    : ([...Array(20)].map((_, index) => isSmallScreen ?
+                 ([...Array(20)].map((_, index) => isSmallScreen ?
                         (<FilmSkeleton key={index} isRecommendations={true} />) :
                         (<RecommendationsSkeleton key={index} />)
                     ))

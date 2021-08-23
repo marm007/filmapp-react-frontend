@@ -254,7 +254,7 @@ const PlaylistContainer = (props) => {
                         {
                             playlist.films.map((film, index) => {
                                 return(
-                                    <div className="row m-0 p-0 pe-2 remove-container" key={film.id}>
+                                    <div className="row m-0 p-0 pr-2 remove-container" key={film.id}>
                                         <div className={`${index === playlist.films.length - 1 ?
                                             "mt-3 mb-3 " :
                                             "mt-3"} button-ripple-div-next-width col`}
@@ -264,7 +264,7 @@ const PlaylistContainer = (props) => {
                                             }}>
                                             <div className="row m-0 p-0 play-outer-container">
                                                 <div
-                                                    className="col-1 col-sm-1 text-center justify-content-center d-flex align-items-center p-0 ps-1" >
+                                                    className="col-1 col-sm-1 text-center justify-content-center d-flex align-items-center p-0 pl-1" >
                                                     {
                                                         (currentFilm === film.id) ?
                                                             <small>
@@ -276,7 +276,7 @@ const PlaylistContainer = (props) => {
 
                                                     }
                                                 </div>
-                                                <div className="col-6 col-sm-6 pe-2 ps-2">
+                                                <div className="col-6 col-sm-6 pr-2 pl-2">
                                                     <div className="embed-responsive embed-responsive-16by9 z-depth-1-half w-100 play-container">
                                                         {film.isNonExisting ?
                                                             <img alt="" className="embed-responsive-item play-image"

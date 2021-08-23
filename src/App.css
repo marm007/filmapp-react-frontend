@@ -162,18 +162,3 @@
     }
  }
 
- .row > * {
-    padding-right: 0.75rem;
-    padding-left: 0.75rem;
-    margin-top: 0;
-    padding-right: calc(var(--bs-gutter-x) * .5);
-    padding-left: calc(var(--bs-gutter-x) * .5);
-    margin-top: var(--bs-gutter-y);
- }
-
- .ratio-16x9.ratio::before {
-    display: block;
-    padding-top: 52.25%;
-    padding-top: var(--bs-aspect-ratio);
-    content: " ";
-}

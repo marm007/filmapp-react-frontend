@@ -1,5 +1,5 @@
 const recommendationsNormal = [
-    'row mx-0 mb-4 container-px',
+    'col-12 mb-4 container-px',
     'row p-0 m-0 play-outer-container remove-container',
     'col-6 m-0 p-0',
     'col-6 col-sm-6',

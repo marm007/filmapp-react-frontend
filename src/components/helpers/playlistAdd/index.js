@@ -5,7 +5,6 @@ import PlaylistDropdownMenu from './menu'
 import useRipple from "useripple"
 
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons'
-import { Dropdown } from 'bootstrap'
 
 import './playlistAdd.css'
 
@@ -21,7 +20,6 @@ function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
 
     const handlePlaylistClose = () => {
         setIsOpen(false)
-        dropdownMenu.hide()
     }
 
     const handleOpenMenu = () => {
@@ -42,8 +40,6 @@ function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
 
             ref.addEventListener('show.bs.dropdown', handleOpenMenu)
             ref.addEventListener('hide.bs.dropdown', handleCloseMenu)
-
-            setDropdownMenu(new Dropdown(`#playlist-dropdown-${filmID}`))
 
             return () => {
                 ref.removeEventListener('show.bs.dropdown', handleOpenMenu)

@@ -123,7 +123,7 @@ const FilmAdd = () => {
                         <div
                             className="position-relative justify-content-center d-flex align-items-center embed-responsive-item text-center box has-advanced-upload">
 
-                            <div className="ratio ratio-16x9">
+                            <div className="embed-responsive embed-responsive-16by9 ">
                                 <video muted={true} autoPlay={true} className="embed-responsive-item" loop={true}
                                     src={film.preview ? film.preview : ""}>
                                 </video>
@@ -159,7 +159,7 @@ const FilmAdd = () => {
                 <div className="col-12">
                     <div>
                         <div className="position-relative justify-content-center d-flex align-items-center embed-responsive-item text-center box has-advanced-upload">
-                            <div className="ratio ratio-16x9">
+                            <div className="embed-responsive embed-responsive-16by9 ">
                                 <img alt="" src={thumbnail.preview ? thumbnail.preview : "data:image/gif;base64,R0lGODlhAQABAPAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="} />
                             </div>
                             <input id="thumbnail" accept="image/jpg, image/png, image/jpeg"

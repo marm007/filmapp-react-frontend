@@ -20,7 +20,7 @@ const Playlist = ({ playlist, handleRedirect, handleRemove, isProfile, dispatchP
         <div className="col-12 col-sm-6 col-md-3 col-lg-2"
             key={playlist.id}>
             <div className={`col ${style}`} onClick={() => handleRedirect(playlist.id, playlist.film_id)}>
-                <div className="embed-responsive embed-responsive-16by9 z-depth-1-half play-container">
+                <div className="play-container">
                     <BlurredImageComponent
                         image={playlist.img} />
 

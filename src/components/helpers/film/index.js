@@ -44,7 +44,7 @@ const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommen
                 <div className={filmCSS[3]}>
 
                     <div className={filmCSS[4]}>
-                        <div className={`${user.auth ? 'button-ripple-div-next-width' : 'col-12'} col p-0 pe-2 cursor-pointer`}
+                        <div className={`${user.auth ? 'button-ripple-div-next-width' : 'col-12'} col p-0 pr-2 cursor-pointer`}
                             onClick={() => handleRedirect(film.id)}>
 
                             <TextTruncate line={1} text={film.title}
