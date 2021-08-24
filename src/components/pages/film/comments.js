@@ -226,14 +226,14 @@ const Comments = (props) => {
 
     return (
 
-        <div className="col">
+        <div className="col p-0">
             <div className="row p-0 mt-4 mb-4">
                 <div className="col-7 col-sm-5 col-md-4 d-flex align-items-center ">
                     {commentsCount !== null && <span>{commentsCount}{commentsCount === 1 ? ' comment' : ' comments'} </span>}
                 </div>
                 <div className="dropdown col-2 col-sm-2">
                     <button className="btn btn-secondary dropdown-toggle" id="sortDropDown"
-                        data-bs-toggle="dropdown" aria-expanded="false">
+                        data-toggle="dropdown" aria-expanded="false">
                         Sort
                     </button>
                     <ul className="dropdown-menu" aria-labelledby="#sortDropDown">
@@ -244,9 +244,9 @@ const Comments = (props) => {
                                         <a className={`dropdown-item${(sort && sortTmp.id === sort.id) ? ' active' : ''}`} href="#" role="button">
                                             {sortTmp.title}
                                             {sort && sort.id === sortTmp.id && sortTmp.dir === 1 ?
-                                                <FontAwesomeIcon className="ms-2" icon="sort-up" /> :
+                                                <FontAwesomeIcon className="ml-2" icon="sort-up" /> :
                                                 sort && sort.id === sortTmp.id && sortTmp.dir === -1 ?
-                                                    <FontAwesomeIcon className="ms-2" icon="sort-down" /> : ""}
+                                                    <FontAwesomeIcon className="ml-2" icon="sort-down" /> : ""}
                                         </a></li>);
                             })
                         }
@@ -279,8 +279,8 @@ const Comments = (props) => {
                     return (
                         <div className="col col-sm-12 p-0 mt-4 remove-container" key={comment.id}>
                             <div className="d-flex">
-                                <p className="m-0 fw-bold">
-                                    <small className="m-0 fw-bold">{comment.author_name}&nbsp;</small>
+                                <p className="m-0 font-weight-bold">
+                                    <small className="m-0 font-weight-bold">{comment.author_name}&nbsp;</small>
                                 </p>
                                 <p >
                                     <small className="m-0">{displayCommentDate(comment)}</small>
@@ -288,7 +288,7 @@ const Comments = (props) => {
                                 {
                                     user.id === comment.author_id &&
 
-                                    <RippleButton className="m-button cursor-pointer button-ripple-24 d-flex justify-content-center align-items-center remove-holder p-0 m-0 ms-auto"
+                                    <RippleButton className="m-button cursor-pointer button-ripple-24 d-flex justify-content-center align-items-center remove-holder p-0 m-0 ml-auto"
                                         onClick={() => handleRemoveComment(comment)}>
                                         <FontAwesomeIcon icon="trash-alt" />
 

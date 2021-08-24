@@ -9,18 +9,18 @@ const Playlist = ({ playlist, handleRedirect, handleRemove, isProfile, dispatchP
 
     const colWidth = isProfile ? 8 : 10
 
-    const [style, setStyle] = useState("mb-5 play-outer-container remove-container")
+    const [style, setStyle] = useState("mb-4 play-outer-container remove-container")
 
     useEffect(() => {
-        if (!playlist.film_id) setStyle("mb-5 play-cursor-default remove-container")
+        if (!playlist.film_id) setStyle("mb-4 play-cursor-default remove-container")
     }, [playlist.film_id])
 
 
     return (
-        <div className="col-12 col-sm-6 col-md-3 col-lg-2"
+        <div className="col-12 col-sm-6 col-md-3 col-lg-2 container-px"
             key={playlist.id}>
-            <div className={`col ${style}`} onClick={() => handleRedirect(playlist.id, playlist.film_id)}>
-                <div className="play-container">
+            <div className={`col ${style} p-0`} onClick={() => handleRedirect(playlist.id, playlist.film_id)}>
+                <div className="play-container p-0">
                     <BlurredImageComponent
                         image={playlist.img} />
 
@@ -29,7 +29,7 @@ const Playlist = ({ playlist, handleRedirect, handleRemove, isProfile, dispatchP
                             <FontAwesomeIcon icon="play" />
                         </div>
                         <div className="col-7 col-sm-7" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-                            <small className="fw-bold" >Play all</small>
+                            <small className="font-weight-bold" >Play all</small>
                         </div>
                     </div>
                 </div>

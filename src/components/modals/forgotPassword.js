@@ -95,7 +95,7 @@ const ForgotPassword = () => {
 
                     {
                         isSending &&
-                        <div className="spinner-grow ms-2" />
+                        <div className="spinner-grow ml-2" />
                     }
                 </div>
 

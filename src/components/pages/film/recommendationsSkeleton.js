@@ -15,11 +15,11 @@ const RecommendationsSkeleton = () => {
                 <div className='col-6 col-sm-6 m-0'>
                     <div className="row m-0 h-25">
                         <div className="col p-0 w-100 h-100">
-                            <Skeleton className="w-100 h-100" />
+                            <Skeleton className="w-100 h-100 line-height-unset" />
                         </div>
                     </div>
                     <div className="pt-2 h-75">
-                            <Skeleton className="w-100 h-100" />
+                            <Skeleton className="w-100 h-100 line-height-unset" />
                         </div>
                 </div>
             </div>

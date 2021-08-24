@@ -77,11 +77,11 @@ const Login = () => {
     };
 
     const modalClose = () => {
-        if (!location.state) {
+        //if (!location.state) {
             history.goBack();
-        } else {
-            history.push(process.env.REACT_APP_PATH_NAME)
-        }
+        //} else {
+        //    history.push(process.env.REACT_APP_PATH_NAME)
+        //}
     };
 
     const handleRegister = () => {
@@ -122,7 +122,7 @@ const Login = () => {
                     </button>
                     {
                         isSending &&
-                        <div className="spinner-grow ms-2" />
+                        <div className="spinner-grow ml-2" />
                     }
                 </div>
             </form>

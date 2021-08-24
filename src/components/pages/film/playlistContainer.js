@@ -217,7 +217,7 @@ const PlaylistContainer = (props) => {
                     className="col remove-container pt-2 pb-2 film-preview-playlist-header" sm={12}>
                     <div className="row m-0 px-2">
                         <div className="button-ripple-div-next-width colbutton-ripple-div-next-width">
-                            <p className="mb-1 fw-bold film-preview-playlist-text-truncate">{playlist.title}</p>
+                            <p className="mb-1 font-weight-bold film-preview-playlist-text-truncate">{playlist.title}</p>
                         </div>
                         <div style={{ width: '24px' }} className="p-0 justify-content-end d-flex">
                             {
@@ -225,7 +225,7 @@ const PlaylistContainer = (props) => {
                                 <RemoveButton handleRemove={() => handleRemovePlaylist()} />
                             }
                         </div>
-                        <div className="col-12 col-sm-12">
+                        <div className="col-12 col-sm-12 p-0">
                             {
                                 user.id === playlist.author_id &&
                                 <ChangePrivacyButton
@@ -277,7 +277,7 @@ const PlaylistContainer = (props) => {
                                                     }
                                                 </div>
                                                 <div className="col-6 col-sm-6 pr-2 pl-2">
-                                                    <div className="embed-responsive embed-responsive-16by9 z-depth-1-half w-100 play-container">
+                                                    <div className="w-100 play-container">
                                                         {film.isNonExisting ?
                                                             <img alt="" className="embed-responsive-item play-image"
                                                                 src={image_not_found} />
@@ -290,11 +290,11 @@ const PlaylistContainer = (props) => {
                                                 <div className="col-5 col-sm-5 p-0">
                                                     {film.isNonExisting ?
                                                         (<TextTruncate line={2} text="Not found"
-                                                            className="mb-0 title fw-bold" />)
+                                                            className="mb-0 title font-weight-bold" />)
                                                         :
                                                         (<>
                                                             <TextTruncate line={1} text={film.title}
-                                                                className="mb-0 title fw-bold" />
+                                                                className="mb-0 title font-weight-bold" />
                                                             <p className="mb-1 author-nick">
                                                                 <span>{film.author_name}</span>
                                                             </p>

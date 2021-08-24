@@ -1,11 +1,11 @@
 import useRipple from 'useripple'
 
-const RippleButton = ({ onClick, children, className }) => {
+const RippleButton = ({ onClick, children, className, id }) => {
 
     const [addRipple, ripples] = useRipple({ background: 'black' })
 
     return (
-        <button style={{ color: 'black' }} onClick={(e) => {
+        <button id={id ? id : ''} style={{ color: 'black' }} onClick={(e) => {
             onClick(e)
         }}
             onMouseDown={addRipple}

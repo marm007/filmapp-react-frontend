@@ -129,7 +129,7 @@ const Settings = () => {
 
                     {
                         isSending &&
-                        <div className="ms-2 spinner-grow" />
+                        <div className="ml-2 spinner-grow" />
                     }
                 </div>
             </form>

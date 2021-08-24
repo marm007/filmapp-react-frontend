@@ -1,6 +1,10 @@
 import React, { useContext, lazy, Suspense } from 'react';
 
+import 'jquery/dist/jquery.min.js';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+
 import './App.css';
 
 import PrivateRoute from './components/helpers/privateRoute'
@@ -69,7 +73,7 @@ function App() {
                         id="mainToast" data-bs-autohide="false"
                         role="alert" aria-live="assertive" aria-atomic="true">
                         <div className="toast-header">
-                            <strong className="me-auto">{toast.header}</strong>
+                            <strong className="mr-auto">{toast.header}</strong>
                         </div>
                         <div className="toast-body">
                             {toast.message}

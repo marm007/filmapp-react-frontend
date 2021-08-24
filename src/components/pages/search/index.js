@@ -198,8 +198,8 @@ const Search = () => {
                 <div
                     aria-controls="filter-collapse"
                     aria-expanded={isOpen}
-                    data-bs-toggle="collapse"
-                    data-bs-target="#searchCollapse"
+                    data-toggle="collapse"
+                    data-target="#searchCollapse"
                     className="px-4 py-2">
                     <FontAwesomeIcon style={{ cursor: "pointer" }} icon={faFilter} />
                 </div>
@@ -238,9 +238,9 @@ const Search = () => {
                                         className="search-filter">{sortTmp.title}
                                     </p>
                                     {sort === sortTmp.id && sortTmp.dir === 1 ?
-                                        <FontAwesomeIcon className="ms-2" icon="sort-up" /> :
+                                        <FontAwesomeIcon className="ml-2" icon="sort-up" /> :
                                         sort === sortTmp.id && sortTmp.dir === -1 ?
-                                            <FontAwesomeIcon className="ms-2" icon="sort-down" /> : ""}
+                                            <FontAwesomeIcon className="ml-2" icon="sort-down" /> : ""}
                                 </div>)
                             })
                         }
@@ -260,12 +260,12 @@ const Search = () => {
                         return <Film isSearch={true} key={film.id}
                             film={film} index={index}
                             handleRedirect={() => setRedirect(film.id)} >
-                            <div className="pt-2">
+                            <div>
                                 <p className="mb-1 author-nick-search">
                                     <span>{film.author_name} &#183; {film.views} views &#183; {time}</span>
                                 </p>
 
-                                <span className="d-none d-sm-inline  author-nick-search">
+                                <span className="d-none d-sm-inline author-nick-search">
                                     <TextTruncate className="mb-0"
                                         line={2} text={film.description} />
                                 </span>

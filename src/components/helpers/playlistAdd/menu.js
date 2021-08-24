@@ -11,8 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { playlistButtonMaxFetchCount } from '../../../config';
 import RippleButton from '../rippleButton';
 
-function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isRecommendations, filmDispatch }) {
-
+function PlaylistDropdownMenu({ filmID, isRecommendations, filmDispatch }) {
 
     const { createToast } = useContext(ToastContext);
 
@@ -21,6 +20,10 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isRecommendations, 
     const [state, dispatch] = useReducer(playlistDropdownMenuReducer, playlistDropdownMenuInitialState);
 
     const { playlists, title, isPublic, isLoading, isAllFetched, isCreating, isAdding, playlistToUpgrade, error } = state
+
+    const handlePlaylistClose = () => {
+        document.getElementById(`closePlaylistMenuButton${filmID}`).click()
+    }
 
     const handleOnPlaylistDropdownMenuBottom = useCallback(() => {
         if (!isLoading && !isAllFetched && !isCreating && !isAdding) {
@@ -69,7 +72,6 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isRecommendations, 
                     })
                     createToast(`Created playlist ${title}`)
                     handlePlaylistClose()
-
                 })
                 .catch(err => {
                     console.error(err)
@@ -90,7 +92,7 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isRecommendations, 
 
         if (isCreating) creatPlaylist()
 
-    }, [isCreating, title, isPublic, createToast, handlePlaylistClose, filmID,])
+    }, [isCreating, title, isPublic, createToast, filmID,])
 
     useEffect(() => {
         async function addToPlaylist() {
@@ -153,12 +155,11 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isRecommendations, 
 
     return (
 
-        <div onClick={e => e.stopPropagation()}
-            style={{ width: 240 + "px", left: '50px !important' }}>
+        <>
             <div className="row m-0 m-button button-ripple" >
-                <div className="col playlist-add-exit-text-width">Save to...</div>
-                <RippleButton className="button-ripple-24 playlist-add-icon-holder p-0 d-flex align-items-center text-center justify-content-center"
-                    onClick={() => setTimeout(handlePlaylistClose, 150)}>
+                <div className="col playlist-add-exit-text-width px-3">Save to...</div>
+                <RippleButton id={`closePlaylistMenuButton${filmID}`} className="button-ripple-24 playlist-add-icon-holder p-0 d-flex align-items-center text-center justify-content-center"
+                    onClick={() => { }}>
                     <FontAwesomeIcon icon="times" />
                 </RippleButton>
             </div>
@@ -169,16 +170,17 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isRecommendations, 
                 }}>
                 {
                     playlists.map((playlist, index) => {
-                        return (<div className="row m-0 playlist-form-group" key={playlist.id} >
+                        return (<div className="row m-0 playlist-form-group form-group" key={playlist.id} >
                             <div className="col-10 col-sm-10 p-0">
                                 <div id={playlist.id} className="form-check">
                                     <input type="checkbox"
-                                        id={`add-playlist-${playlist.id}`}
+                                        id={`formCheckAddToPlaylist${playlist.id}`}
                                         className="form-check-input"
                                         onChange={() => handleAddToPlaylist(playlist)}
                                         checked={playlist.contains} />
-                                    <label className="form-check-label" htmlFor={`add-playlist-${playlist.id}`}>
-                                        <p className="playlist-check-label">
+                                    <label className="form-check-label"
+                                        htmlFor={`formCheckAddToPlaylist${playlist.id}`}>
+                                        <p className="playlist-check-label" onClick={e => e.stopPropagation()}>
                                             {playlist.title}
                                         </p>
                                     </label>
@@ -206,10 +208,10 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isRecommendations, 
                 }
             </div>
             <hr className="dropdown-divider" />
-            <div className="row m-0 p-0">
+            <div className="row m-0 px-3">
                 <span className="m-0">Create a new playlist</span>
             </div>
-            <div className="row m-0 p-0">
+            <div className="row m-0 px-3">
                 <form onSubmit={handleSubmit}>
                     <div className="input-group mb-2 mt-2" >
                         <input type="text" className="form-control" aria-label="playlistNameInput"
@@ -221,7 +223,7 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isRecommendations, 
                         </div>
                     </div>
                     <div className="mb-2 mt-2">
-                        <select className="form-select"
+                        <select className="form-control"
                             onChange={(e) => handleChange('isPublic', e.target.value === 'public')}>
                             <option value="private">Private</option>
                             <option value="public">Public</option>
@@ -235,7 +237,7 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isRecommendations, 
 
                         {
                             isCreating &&
-                            <div className="spinner-grow ms-2" />
+                            <div className="spinner-grow ml-2" />
                         }
                     </div>
 
@@ -243,7 +245,7 @@ function PlaylistDropdownMenu({ filmID, handlePlaylistClose, isRecommendations, 
 
             </div>
 
-        </div >
+        </>
 
 
     )

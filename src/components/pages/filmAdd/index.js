@@ -117,11 +117,11 @@ const FilmAdd = () => {
 
     return (
         <div className="row mt-4 pb-5 mx-2">
-            <div className="col-12 col-sm-6 mb-4">
-                <div className="col-12 mb-4">
-                    <div className="embed-responsive embed-responsive-16by9 z-depth-1-half">
+            <div className="col-12 col-md-6 mb-4">
+                <div className="col-12 mb-4 p-0">
+                    <div>
                         <div
-                            className="position-relative justify-content-center d-flex align-items-center embed-responsive-item text-center box has-advanced-upload">
+                            className="position-relative justify-content-center d-flex align-items-center text-center box has-advanced-upload">
 
                             <div className="embed-responsive embed-responsive-16by9 ">
                                 <video muted={true} autoPlay={true} className="embed-responsive-item" loop={true}
@@ -156,11 +156,11 @@ const FilmAdd = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-12">
+                <div className="col-12 p-0">
                     <div>
-                        <div className="position-relative justify-content-center d-flex align-items-center embed-responsive-item text-center box has-advanced-upload">
+                        <div className="position-relative justify-content-center d-flex align-items-center text-center box has-advanced-upload">
                             <div className="embed-responsive embed-responsive-16by9 ">
-                                <img alt="" src={thumbnail.preview ? thumbnail.preview : "data:image/gif;base64,R0lGODlhAQABAPAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="} />
+                                <img className="embed-responsive-item" alt="" src={thumbnail.preview ? thumbnail.preview : "data:image/gif;base64,R0lGODlhAQABAPAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="} />
                             </div>
                             <input id="thumbnail" accept="image/jpg, image/png, image/jpeg"
                                 onChange={event => handleFileChoose(event, 'thumbnail')}
@@ -189,7 +189,7 @@ const FilmAdd = () => {
 
                 </div>
             </div>
-            <div className="col-12 col-sm-6 mb-2">
+            <div className="col-12 col-md-6 mb-2">
 
                 <div className="mb-3">
                     <Input placeholder="Title"
@@ -228,7 +228,7 @@ const FilmAdd = () => {
 
                         {
                             isSending &&
-                            <div className="spinner-grow ms-2" />
+                            <div className="spinner-grow ml-2" />
 
                         }
                     </div>

@@ -169,14 +169,14 @@ const FilmPreview = (props) => {
 
     const TruncateButton = (title) => {
         return (<span>
-            <button className="btn btn-link p-0 m-0 mb-1 title fw-bold"
+            <button className="btn btn-link p-0 m-0 mb-1 title font-weight-bold"
                 onClick={handleTruncate}>{title}</button>
         </span>)
     }
     return (
 
-        <div>
-            <div className="col-12 col-sm-12 preview-margins">
+        <div className="p-0">
+            <div className="col-12 col-sm-12 preview-margins p-0">
                 <div ref={playerRef}>
                     <Player
                         playsInline
@@ -186,26 +186,25 @@ const FilmPreview = (props) => {
             </div>
             {
                 film &&
-                <div className="px-2 px-md-0">
-                    <div className="col-12 col-sm-12 mt-4">
+                <div className="px-0">
+                    <div className="col-12 col-sm-12 mt-4 p-0">
                         <div className="row p-0 m-0">
                             <div className="col-12 col-sm-12 p-0">
-                                {!film.title && <p className="fw-bold"><br /></p>}
-                                <p className="fw-bold">{film.title}</p>
+                                {!film.title && <p className="font-weight-bold"><br /></p>}
+                                <p className="font-weight-bold">{film.title}</p>
                             </div>
                             <div className="col-4 col-sm-4 p-0">
                                 <p><FontAwesomeIcon icon={faEye} /> &ensp;{film.views}</p>
                             </div>
                             <div className="col-4 col-sm-4 text-right d-flex justify-content-end">
-                                <p style={{ cursor: "pointer" }}
-                                    className={isLiked ? 'film-picked-thumb-color' : ''}
+                                <p className={`${isLiked ? 'film-picked-thumb-color' : ''} cursor-pointer noselect`}
                                     onClick={() => handleLike('like')}>
                                     <FontAwesomeIcon icon={faThumbsUp} />
                                     &ensp;{film.likes}
                                 </p>
                             </div>
                             <div className="col-4 col-sm-4">
-                                <p style={{ cursor: "pointer" }} className={isDisliked ? 'film-picked-thumb-color' : ''}
+                                <p  className={`${isDisliked ? 'film-picked-thumb-color' : ''} cursor-pointer noselect`}
                                     onClick={() => handleLike('dislike')}>
                                     <FontAwesomeIcon icon={faThumbsDown} />
                                     &ensp;{film.dislikes}
@@ -223,7 +222,7 @@ const FilmPreview = (props) => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-12 col-sm-12 mt-4 mb-2 divider" />
+                    <div className="col-12 col-sm-12 mt-4 mb-2 divider p-0" />
                 </div>
             }
         </div>

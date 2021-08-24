@@ -18,6 +18,7 @@ import { initialSearchState, searchReducer } from './reducer';
 import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
 import useWindowsWidth from '../../../helpers/hooks/useWindowsWidth';
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import $ from 'jquery'
 
 import {
     Menu,
@@ -61,6 +62,7 @@ function NavbarComponent(props) {
     })
 
     useEffect(() => {
+        $('#navbar-collapse-menu').collapse('hide')
     }, [location])
 
     useEffect(() => {
@@ -127,7 +129,7 @@ function NavbarComponent(props) {
     };
 
     const handleAddFilm = () => history.push(`${process.env.REACT_APP_PATH_NAME}add`)
-  
+
     const handleShowPlaylists = () => history.push(`${process.env.REACT_APP_PATH_NAME}playlists`)
 
     const handleSearchSubmit = (e) => {
@@ -224,8 +226,8 @@ function NavbarComponent(props) {
 
             <div className="col-6 order-2 col-sm-2 order-sm-last text-right d-md-none m-button">
                 <button type="button" className="navbar-toggler m-button"
-                    aria-controls="responsive-navbar-nav" data-bs-toggle="collapse"
-                    data-bs-target="#responsive-navbar-nav" aria-expanded="false" aria-label="toggle-navigation" >
+                    aria-controls="navbar-collapse-menu" data-toggle="collapse"
+                    data-target="#navbar-collapse-menu" aria-expanded="false" aria-label="toggle-navigation" >
                     <span className="navbar-toggler-icon"></span>
                 </button>
             </div>
@@ -336,7 +338,8 @@ function NavbarComponent(props) {
 
 
 
-            <div className="collapse navbar-collapse justify-content-end col-12 order-last col-sm-12 order-sm-last col-md-3 order-md-last" id="responsive-navbar-nav">
+            <div className="collapse navbar-collapse justify-content-end col-12 order-last col-sm-12 order-sm-last col-md-3 order-md-last p-0"
+                id="navbar-collapse-menu">
 
                 <div className="navbar-nav d-block d-sm-block d-md-flex align-items-center">
                     <div className="nav-item px-2 my-2 px-md-1 my-md-0">
@@ -371,10 +374,10 @@ function NavbarComponent(props) {
 
                             ) :
                             (
-                                <a className="nav-link cursor-pointer pr-2 pl-2"
-                                    onClick={() => handleLogin()}>
-                                    Login
-                                </a>
+                                <div className="nav-item pr-2 pl-2">
+                                    <span className="d-inline cursor-pointer nav-link p-0"
+                                        onClick={() => handleLogin()}>Login</span>
+                                </div>
                             )
                     }
                 </div>

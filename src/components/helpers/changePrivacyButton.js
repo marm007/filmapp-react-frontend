@@ -36,6 +36,8 @@ const ChangePrivacyButton = ({ isPublic, id, isProfile, dispatchPrivacyUpdate, f
     }, [dispatchPrivacyUpdate, isChanging, isPublic, id, filmDispatch])
 
     const handleChangePrivacy = (e) => {
+        e.preventDefault()
+        console.log('dldalad')
         e.stopPropagation()
         if (!isChanging) setIsChanging(true)
     }
