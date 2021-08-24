@@ -76,12 +76,12 @@ function App() {
             {
                 <div className="toast-root">
                     <div className="toast bg-secondary"
-                        id="mainToast" data-bs-autohide="false"
+                        id="mainToast" data-autohide="false"
                         role="alert" aria-live="assertive" aria-atomic="true">
                         <div className="toast-header">
                             <strong className="mr-auto">{toast.header}</strong>
                         </div>
-                        <div className="toast-body">
+                        <div className="toast-body" style={{color: 'white'}}>
                             {toast.message}
                         </div>
                     </div>

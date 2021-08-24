@@ -20,7 +20,7 @@ const ToastProvider = ({ children }) => {
         }
 
         if (toast.isPrevoius) {
-            toastElement.hide()
+            toastElement.toast('hide')
 
             if (toastShow.current) {
                 console.log('toastShow', toastAutoHide.current)
@@ -30,19 +30,19 @@ const ToastProvider = ({ children }) => {
 
             toastShow.current = setTimeout(() => {
                 console.log('ladladll')
-                toastElement.show()
+                toastElement.toast('show')
                 setToast({ header: header, message: message, isPrevoius: true })
                 toastAutoHide.current = setTimeout(() => {
                     console.log('ccsda')
-                    toastElement.hide()
+                    toastElement.toast('hide')
                 }, hideAnimTimeout)
             }, showAnimTimeout)
 
         } else {
-            toastElement.show()
+            toastElement.toast('show')
             setToast({ header: header, message: message, isPrevoius: true })
             toastShow.current = setTimeout(() => {
-                toastElement.hide()
+                toastElement.toast('hide')
             }, hideAnimTimeout)
         }
     }
