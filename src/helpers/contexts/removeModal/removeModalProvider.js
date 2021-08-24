@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react'
 import RemoveModalContext from './removeModalContext'
-import $ from 'jquery'
 
 const RemoveModalProvider = ({ children }) => {
 
@@ -9,7 +8,7 @@ const RemoveModalProvider = ({ children }) => {
     const modal = useRef()
 
     const showModal = (id, type, title) => {
-        modal.current = $('#removeModal')
+        modal.current = window.$('#removeModal')
         modal.current.modal('show')
         setRemoveModalData({ show: true, isRemoving: false, id: id, type: type, title: title })
     }

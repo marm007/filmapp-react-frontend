@@ -1,6 +1,6 @@
 import React, { useContext, lazy, Suspense } from 'react';
 
-import 'jquery';
+import $ from 'jquery';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -36,6 +36,12 @@ import UserProvider from './helpers/contexts/user/userProvider';
 import ErrorBoundary from './components/helpers/errorBoundary';
 
 import { isMobile } from 'react-device-detect'
+
+
+window.jQuery = $;
+window.$ = $;
+global.jQuery = $;
+
 
 library.add(faPlay, faSortDown, faSortUp, faTrashAlt, faTimes, faGlobeEurope, faLock);
 

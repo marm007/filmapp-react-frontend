@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react'
 import ToastContext from './toastContext'
-import $ from 'jquery'
 
 const ToastProvider = ({ children }) => {
     const showAnimTimeout = 850
@@ -12,7 +11,7 @@ const ToastProvider = ({ children }) => {
     const toastShow = useRef(null)
 
     const createToast = (message, header = 'Playlist') => {
-        let toastElement = $('#mainToast')
+        let toastElement = window.$('#mainToast')
 
         if (toastAutoHide.current) {
             console.log('hide', toastAutoHide.current)

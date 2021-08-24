@@ -8,8 +8,6 @@ import { faEllipsisV } from '@fortawesome/free-solid-svg-icons'
 
 import './playlistAdd.css'
 
-import $ from 'jquery'
-
 function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
 
     const menuRef = useRef()
@@ -37,7 +35,7 @@ function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
 
         if (ref) {
 
-            const element = $(`#playlistDropdown${filmID}`)
+            const element = window.$(`#playlistDropdown${filmID}`)
             console.log('dldaladl')
 
             element.on('show.bs.dropdown', handleOpenMenu)

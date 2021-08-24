@@ -18,7 +18,6 @@ import { initialSearchState, searchReducer } from './reducer';
 import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
 import useWindowsWidth from '../../../helpers/hooks/useWindowsWidth';
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
-import $ from 'jquery'
 
 import {
     Menu,
@@ -62,7 +61,7 @@ function NavbarComponent(props) {
     })
 
     useEffect(() => {
-        $('#navbar-collapse-menu').collapse('hide')
+        window.$('#navbar-collapse-menu').collapse('hide')
     }, [location])
 
     useEffect(() => {

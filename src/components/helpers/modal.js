@@ -1,10 +1,9 @@
 import { useEffect, useRef } from "react"
-import $ from "jquery"
 
 const Modal = ({ id, title, children, onClose, footer, hide }) => {
   const modalRef = useRef(null)
   useEffect(() => {
-    modalRef.current = $(`#${id}`)
+    modalRef.current = window.$(`#${id}`)
 
     if (!hide) {
       modalRef.current.modal('show')
