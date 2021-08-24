@@ -21,9 +21,6 @@ function PlaylistDropdownMenu({ filmID, isRecommendations, filmDispatch }) {
 
     const { playlists, title, isPublic, isLoading, isAllFetched, isCreating, isAdding, playlistToUpgrade, error } = state
 
-    const handlePlaylistClose = () => {
-        document.getElementById(`closePlaylistMenuButton${filmID}`).click()
-    }
 
     const handleOnPlaylistDropdownMenuBottom = useCallback(() => {
         if (!isLoading && !isAllFetched && !isCreating && !isAdding) {
@@ -61,6 +58,9 @@ function PlaylistDropdownMenu({ filmID, isRecommendations, filmDispatch }) {
     }, [filmID, playlists, isLoading])
 
     useEffect(() => {
+        const handlePlaylistClose = () => {
+            document.getElementById(`closePlaylistMenuButton${filmID}`).click()
+        }
 
         async function creatPlaylist() {
             const body = { title: title, is_public: isPublic, films_id: [filmID] };
@@ -92,7 +92,7 @@ function PlaylistDropdownMenu({ filmID, isRecommendations, filmDispatch }) {
 
         if (isCreating) creatPlaylist()
 
-    }, [isCreating, title, isPublic, createToast, filmID,])
+    }, [isCreating, title, isPublic, createToast, filmID])
 
     useEffect(() => {
         async function addToPlaylist() {

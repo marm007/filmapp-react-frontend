@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react"
 import $ from "jquery"
-import modal from "bootstrap/js/dist/modal"
 
 const Modal = ({ id, title, children, onClose, footer, hide }) => {
   const modalRef = useRef(null)
