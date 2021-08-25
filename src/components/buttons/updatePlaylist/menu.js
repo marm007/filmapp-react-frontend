@@ -190,7 +190,7 @@ function PlaylistDropdownMenu({ filmID, isRecommendations, filmDispatch }) {
                             <ChangePrivacyButton
                                 id={playlist.id}
                                 isPublic={playlist.is_public}
-                                isProfile={false}
+                                isPlaylist={true}
                                 filmDispatch={filmDispatch}
                                 dispatchPrivacyUpdate={dispatch} />
 
@@ -213,7 +213,7 @@ function PlaylistDropdownMenu({ filmID, isRecommendations, filmDispatch }) {
             </div>
             <div className="row m-0 px-3">
                 <form onSubmit={handleSubmit}>
-                    <div className="input-group mb-2 mt-2" >
+                    <div className="form-group mb-2 mt-2" >
                         <input type="text" className="form-control" aria-label="playlistNameInput"
                             placeholder="Enter playlist title..." ref={titleInputRef}
                             onChange={(e) => handleChange('title', e.target.value)}
@@ -222,7 +222,7 @@ function PlaylistDropdownMenu({ filmID, isRecommendations, filmDispatch }) {
                             {error}
                         </div>
                     </div>
-                    <div className="mb-2 mt-2">
+                    <div className="form-group mb-2 mt-2">
                         <select className="form-control"
                             onChange={(e) => handleChange('isPublic', e.target.value === 'public')}>
                             <option value="private">Private</option>

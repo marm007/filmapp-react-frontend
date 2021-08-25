@@ -71,7 +71,8 @@ function NavbarComponent(props) {
                 .then(({ data }) => {
                     const options = data.map((film) => ({
                         ...film,
-                        img: `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small_webp`
+                        imgNormal: `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small`,
+                        imgWebp: `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small_webp`
                     }));
 
                     dispatch({
@@ -93,7 +94,8 @@ function NavbarComponent(props) {
                 .then(({ data }) => {
                     const options = data.map((film) => ({
                         ...film,
-                        img: `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small_webp`
+                        imgNormal: `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small`,
+                        imgWebp: `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail?width=small_webp`
                     }));
                     dispatch({
                         type: 'success-search',
@@ -296,11 +298,16 @@ function NavbarComponent(props) {
                                                     });
 
                                                 }}>
+                                                <picture>
+                                                    <source type="image/webp" src={result.imgWebp} />
+                                                    <source type="image/jpeg" src={result.imgNormal} />
                                                     <img
                                                         className="p-0 search-menu-image"
                                                         alt=""
-                                                        src={result.img}
+                                                        src={result.imgNormal}
                                                     />
+                                                </picture>
+                                                  
                                                     <span className="entry__text">{result.title}</span>
                                                 </div>
                                             </AsyncMenuItem>
@@ -350,7 +357,6 @@ function NavbarComponent(props) {
                                     className="avatar-menu-items"
                                     align={onMediumScreen ? "start" : "end"}
                                     viewScroll="close"
-                                    offsetY={12}
                                     position="initial"
                                     direction="bottom"
                                     menuButton={

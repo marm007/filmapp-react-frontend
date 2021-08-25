@@ -54,7 +54,7 @@ function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
                 type="button"
                 data-toggle="dropdown"
                 data-boundary="window"
-                className="btn btn-link m-button button-ripple dropdown-toggle p-0 text-dark">
+                className="btn btn-link button-ripple dropdown-toggle p-0 text-dark">
                 <div
                     className="col playlist-add-icon-holder p-0 button-ripple button-ripple-24">
                     <FontAwesomeIcon style={{ opacity: (isOpen ? 1 : "") }}

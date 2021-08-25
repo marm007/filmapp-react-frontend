@@ -193,16 +193,13 @@ const Search = () => {
 
     return (
         <>
-            <RippleButton className="mt-3 mx-4 search-button p-0"
-                onClick={() => setIsOpen(!isOpen)}>
-                <div
-                    aria-controls="filter-collapse"
-                    aria-expanded={isOpen}
-                    data-toggle="collapse"
-                    data-target="#searchCollapse"
-                    className="px-4 py-2">
+            <RippleButton className="mt-3 mx-4 search-button  px-4 py-2"
+                role="button"
+                aria-controls="searchCollapse"
+                aria-expanded="false"
+                data-toggle="collapse"
+                data-target="#searchCollapse">
                     <FontAwesomeIcon style={{ cursor: "pointer" }} icon={faFilter} />
-                </div>
             </RippleButton>
             <div className="collapse" id="searchCollapse">
                 <div id="filter-collapse" className="row mx-2">

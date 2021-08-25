@@ -231,7 +231,7 @@ const PlaylistContainer = (props) => {
                                 <ChangePrivacyButton
                                     id={playlist.id}
                                     isPublic={playlist.is_public}
-                                    isProfile={false}
+                                    isPlaylist={true}
                                     dispatchPrivacyUpdate={dispatch} />
                             }
                             {
