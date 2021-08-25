@@ -13,7 +13,7 @@ import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListe
 import UserContext from '../../../helpers/contexts/user/userContext';
 import FilmContext from '../../../helpers/contexts/film/filmContext';
 import RemoveModalContext from '../../../helpers/contexts/removeModal/removeModalContext';
-import RippleButton from '../../helpers/rippleButton';
+import RippleButton from '../../buttons/rippleButton';
 
 const Comments = (props) => {
 

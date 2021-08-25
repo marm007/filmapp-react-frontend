@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import RemoveModalContext from "../../helpers/contexts/removeModal/removeModalContext";
-import Modal from "../helpers/modal";
+import Modal from "../models/modal";
 
 const RemoveModal = () => {
     const { removeModalData, remove, clear } = useContext(RemoveModalContext)

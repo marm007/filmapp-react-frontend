@@ -8,15 +8,15 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 
 import { filmPlaylistInitialState, filmPlaylistReducer } from './reducers/playlistReducer';
 
-import BlurredImageComponent from '../../helpers/blurredImage';
+import BlurredImageComponent from '../../models/blurredImage';
 
 import * as playlistApi from '../../../services/playlistService'
 
 import FilmContext from '../../../helpers/contexts/film/filmContext';
 import UserContext from '../../../helpers/contexts/user/userContext';
 import RemoveModalContext from '../../../helpers/contexts/removeModal/removeModalContext';
-import RemoveButton from '../../helpers/removeButton';
-import ChangePrivacyButton from '../../helpers/changePrivacyButton';
+import RemoveButton from '../../buttons/removeButton';
+import ChangePrivacyButton from '../../buttons/changePrivacyButton';
 
 import image_not_found from '../../../images/image_not_found.png'; // Tell Webpack this JS file uses this image
 

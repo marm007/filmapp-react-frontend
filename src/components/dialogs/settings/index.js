@@ -3,7 +3,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import UserContext from "../../../helpers/contexts/user/userContext";
 import { settingsInitialState, settingsReducer } from "./reducer";
 import * as userApi from '../../../services/userService'
-import Modal from "../../helpers/modal";
+import Modal from "../../models/modal";
 
 const Settings = () => {
 

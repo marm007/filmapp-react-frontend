@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, useCallback, useContext } from 'react';
 
 import { recommendationsReducer, recommendationsInitialState } from './reducers/recommendationsReducer'
 
-import Film from '../../helpers/film';
+import Film from '../../models/film';
 
 import * as filmApi from '../../../services/filmService'
 
@@ -12,7 +12,7 @@ import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListe
 import FilmContext from '../../../helpers/contexts/film/filmContext';
 
 import RecommendationsSkeleton from './recommendationsSkeleton'
-import FilmSkeleton from '../../helpers/film/skeleton';
+import FilmSkeleton from '../../models/film/skeleton';
 
 import useWindowsWidth from '../../../helpers/hooks/useWindowsWidth';
 

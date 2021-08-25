@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import Input from '../../helpers/input';
+import Input from '../../models/input';
 
 import { CHOOSE_FILM, CHOOSE_THUMBNAIL, filmAddInitialState, filmAddReducer } from './reducer';
 

@@ -13,15 +13,15 @@ import { pageMaxFetchCount } from '../../../config';
 
 import { parseSearchDate } from '../../../helpers'
 import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
-import RippleButton from '../../helpers/rippleButton';
+import RippleButton from '../../buttons/rippleButton';
 
 import "./search.css";
 
-import FilmSkeleton from '../../helpers/film/skeleton';
+import FilmSkeleton from '../../models/film/skeleton';
 import SearchSkeleton from './skeleton';
 
 import useWindowsWidth from '../../../helpers/hooks/useWindowsWidth';
-import Film from '../../helpers/film';
+import Film from '../../models/film';
 
 let filters = [
     { id: 'last_hour', title: 'Last hour' },

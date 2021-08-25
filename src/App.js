@@ -7,11 +7,11 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 import './App.css';
 
-import PrivateRoute from './components/helpers/privateRoute'
+import PrivateRoute from './components/models/privateRoute'
 
 //import SettingsComponent from './components/settings'
 
-import RemoveModal from './components/modals/removeObject'
+import RemoveModal from './components/dialogs/removeObject'
 
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 
@@ -31,9 +31,9 @@ import { Switch } from "react-router";
 
 import ToastContext from './helpers/contexts/toast/toastContext'
 
-import WithAxios from "./components/helpers/withAxios";
+import WithAxios from "./components/models/withAxios";
 import UserProvider from './helpers/contexts/user/userProvider';
-import ErrorBoundary from './components/helpers/errorBoundary';
+import ErrorBoundary from './components/models/errorBoundary';
 
 import { isMobile } from 'react-device-detect'
 
@@ -47,7 +47,7 @@ library.add(faPlay, faSortDown, faSortUp, faTrashAlt, faTimes, faGlobeEurope, fa
 
 const pathName = process.env.REACT_APP_PATH_NAME
 
-const NavbarComponent = lazy(() => import('./components/helpers/navbar'))
+const NavbarComponent = lazy(() => import('./components/models/navbar'))
 
 const ProfileComponent = lazy(() => import('./components/pages/profile'))
 const HomeComponent = lazy(() => import('./components/pages/home'))
@@ -58,11 +58,11 @@ const AddFilmComponent = lazy(() => import('./components/pages/filmAdd'))
 const NotFoundComponent = lazy(() => import('./components/pages/notFound'))
 
 
-const LoginComponent = lazy(() => import('./components/modals/login'))
-const ResetPasswordComponent = lazy(() => import('./components/modals/resetPassword'))
-const ForgotPasswordComponent = lazy(() => import('./components/modals/forgotPassword'))
-const RegisterComponent = lazy(() => import('./components/modals/register'))
-const SettingsComponent = lazy(() => import('./components/modals/settings'))
+const LoginComponent = lazy(() => import('./components/dialogs/login'))
+const ResetPasswordComponent = lazy(() => import('./components/dialogs/resetPassword'))
+const ForgotPasswordComponent = lazy(() => import('./components/dialogs/forgotPassword'))
+const RegisterComponent = lazy(() => import('./components/dialogs/register'))
+const SettingsComponent = lazy(() => import('./components/dialogs/settings'))
 
 const MobileStyle = lazy(() => import('./helpers/css/mobileStyle'))
 const DesktopStyle = lazy(() => import('./helpers/css/desktopStyle'))

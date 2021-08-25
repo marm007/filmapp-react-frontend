@@ -3,8 +3,8 @@ import { useHistory } from 'react-router-dom';
 
 import { homePageReducer, initialState } from './reducer';
 
-import Film from '../../helpers/film'
-import Skeleton from '../../helpers/film/skeleton';
+import Film from '../../models/film'
+import Skeleton from '../../models/film/skeleton';
 
 import * as filmApi from '../../../services/filmService'
 

@@ -3,8 +3,8 @@ import { useHistory } from 'react-router-dom';
 
 import { initialProfileState, profileReducer } from './reducer';
 
-import Film from '../../helpers/film';
-import Playlist from '../../helpers/playlist';
+import Film from '../../models/film';
+import Playlist from '../../models/playlist';
 
 import * as userApi from '../../../services/userService'
 import * as playlistApi from '../../../services/playlistService'
@@ -17,7 +17,7 @@ import RemoveModalContext from '../../../helpers/contexts/removeModal/removeModa
 import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
 
 import image_not_found from '../../../images/image_not_found.png'; // Tell Webpack this JS file uses this image
-import Skeleton from '../../helpers/film/skeleton'
+import Skeleton from '../../models/film/skeleton'
 import 'core-js/modules/esnext.promise.all-settled'
 
 const Profile = () => {
