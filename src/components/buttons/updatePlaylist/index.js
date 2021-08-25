@@ -63,10 +63,10 @@ function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
                 </div>
             </button>
 
-            <div className="dropdown-menu"
+            <div className="dropdown-menu playlist-dropdown-menu"
                 id={`playlistDropdownMenu${filmID}`}
                 aria-labelledby={`playlistAddButtonLabel${filmID}`}
-                style={{ maxWidth: 210 + "px"}}>
+               >
                 {isOpen && <PlaylistDropdownMenu
                     isRecommendations={isRecommendations}
                     filmDispatch={filmDispatch}
