@@ -35,3 +35,8 @@
 .playlist-add-icon-mobile {
     opacity: 0.7;
 }
+
+.dropdown-sizes {
+    width: 26px;
+    height: 26px;
+}

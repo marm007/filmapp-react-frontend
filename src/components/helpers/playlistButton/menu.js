@@ -178,7 +178,7 @@ function PlaylistDropdownMenu({ filmID, isRecommendations, filmDispatch }) {
                                         className="form-check-input"
                                         onChange={() => handleAddToPlaylist(playlist)}
                                         checked={playlist.contains} />
-                                    <label className="form-check-label"
+                                    <label className="form-check-label w-100"
                                         htmlFor={`formCheckAddToPlaylist${playlist.id}`}>
                                         <p className="playlist-check-label" onClick={e => e.stopPropagation()}>
                                             {playlist.title}

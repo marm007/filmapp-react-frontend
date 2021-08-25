@@ -14,7 +14,7 @@ const NotFound = () => {
     }, [history, location])
 
     return (
-        <div className="col-12 col-sm-12 mt-4 px-4 embed-responsive embed-responsive-16by9">
+        <div className="col-12 col-sm-12 mt-4 px-4">
             <div className="embed-responsive embed-responsive-16by9 ">
                 <img className="embed-responsive-item" src={error_404} alt="" />
             </div>

@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useEffect, useState } from "react"
-import * as playlistApi from '../../services/playlistService'
-import RippleButton from "./rippleButton"
+import * as playlistApi from '../../../services/playlistService'
+import RippleButton from "../rippleButton"
 
 const ChangePrivacyButton = ({ isPublic, id, isProfile, dispatchPrivacyUpdate, filmDispatch }) => {
 
@@ -52,11 +52,10 @@ const ChangePrivacyButton = ({ isPublic, id, isProfile, dispatchPrivacyUpdate, f
 
     return isProfile ?
         (
-            <div className="col text-center justify-content-center d-flex align-items-center p-0 flex-grow-0"
+            <div className="col text-center justify-content-center d-flex align-items-center p-0 flex-grow-0 button-ripple-24-container"
             >
                 <div
-                    className="col remove-holder p-0 m-0 flex-grow-0"
-                    style={{ height: '24px', width: '24' }}>
+                    className="col remove-holder p-0 m-0 flex-grow-0 button-ripple-24-container">
                     {privacyButton}
                 </div>
             </div>

@@ -16,17 +16,11 @@ function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
 
     const [isOpen, setIsOpen] = useState(false)
 
-    const handlePlaylistClose = () => {
-
-    }
-
     const handleOpenMenu = () => {
-        console.log('open')
         setIsOpen(true)
     }
 
-    const handleCloseMenu = (e) => {
-        console.log('close')
+    const handleCloseMenu = () => {
         setIsOpen(false)
     }
 
@@ -40,10 +34,16 @@ function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
 
             element.on('show.bs.dropdown', handleOpenMenu)
             element.on('hide.bs.dropdown', handleCloseMenu)
+            window.$(`playlistAddButtonLabel${filmID}`).on('click', (e) => {
+                console.log('kfdkdfkdfkdfkfdk')
+            })
 
             return () => {
                 element.off('show.bs.dropdown', handleOpenMenu)
                 element.off('hide.bs.dropdown', handleCloseMenu)
+                window.$(`playlistAddButtonLabel${filmID}`).off('click', (e) => {
+                    console.log('kfdkdfkdfkdfkfdk')
+                })
             }
 
         }
@@ -53,21 +53,19 @@ function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
 
         <div ref={menuRef}
             id={`playlistDropdown${filmID}`}
-            className="p-0 dropdown" style={{ width: '26px', height: '26px' }} >
+            className="p-0 dropdown dropdown-sizes" >
+
             <button
+                onMouseDown={addRipple}
                 id={`playlistAddButtonLabel${filmID}`}
-                style={{ color: "black" }}
                 type="button"
                 data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false"
-                className="btn btn-link m-button button-ripple dropdown-toggle p-0">
-                <div style={{ display: 'inline-block', width: '100%', height: '100%' }}>
-                    <div onClick={addRipple}
-                        className="col playlist-add-icon-holder p-0 button-ripple button-ripple-24">
-                        <FontAwesomeIcon style={{ opacity: (isOpen ? 1 : "") }}
-                            className="playlist-add-icon" icon={faEllipsisV} />
-                        {ripples}
-                    </div>
+                className="btn btn-link m-button button-ripple dropdown-toggle p-0 text-dark">
+                <div
+                    className="col playlist-add-icon-holder p-0 button-ripple button-ripple-24">
+                    <FontAwesomeIcon style={{ opacity: (isOpen ? 1 : "") }}
+                        className="playlist-add-icon" icon={faEllipsisV} />
+                    {ripples}
                 </div>
             </button>
 
@@ -78,8 +76,7 @@ function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
                 {isOpen && <PlaylistDropdownMenu
                     isRecommendations={isRecommendations}
                     filmDispatch={filmDispatch}
-                    filmID={filmID}
-                    handlePlaylistClose={handlePlaylistClose} />
+                    filmID={filmID} />
                 }
             </div>
         </div >

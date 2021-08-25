@@ -24,11 +24,11 @@ const Playlist = ({ playlist, handleRedirect, handleRemove, isProfile, dispatchP
                     <BlurredImageComponent
                         image={playlist.img} />
 
-                    <div style={{ width: '100%', margin: 0 }} className="row play-middle">
-                        <div className="col-5 col-sm-5" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+                    <div className="row play-middle w-100 m-0">
+                        <div className="col-5 col-sm-5 pr-1 d-flex justify-content-end align-items-center">
                             <FontAwesomeIcon icon="play" />
                         </div>
-                        <div className="col-7 col-sm-7" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+                        <div className="col-7 col-sm-7 pl-1 d-flex justify-content-start align-items-center">
                             <small className="font-weight-bold" >Play all</small>
                         </div>
                     </div>

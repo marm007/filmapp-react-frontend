@@ -118,6 +118,11 @@
     color: black
 }
 
+.button-ripple-24-container {
+    width: 24px;
+    height: 24px;
+}
+
 .button-ripple-div-next-width {
     flex: 0 0 auto !important;
     width: calc(100% - 26px) !important;        

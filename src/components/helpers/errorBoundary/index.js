@@ -22,7 +22,7 @@ class ErrorBoundary extends React.Component {
                 <div className="text-center">
                     <div className="col-12 col-sm-12 my-4 px-4">
 
-                        <div className="embed-responsive embed-responsive-16by9" style={{ 'paddingTop': '35%' }}>
+                        <div className="embed-responsive embed-responsive-16by9">
                             <img className="embed-responsive-item" src={error_500} alt="" />
                         </div>
                     </div>

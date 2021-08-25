@@ -81,7 +81,7 @@ function App() {
                         <div className="toast-header">
                             <strong className="mr-auto">{toast.header}</strong>
                         </div>
-                        <div className="toast-body" style={{color: 'white'}}>
+                        <div className="toast-body text-light">
                             {toast.message}
                         </div>
                     </div>

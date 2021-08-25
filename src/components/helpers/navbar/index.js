@@ -12,7 +12,6 @@ import { AsyncTypeahead, Menu as AsyncMenu, MenuItem as AsyncMenuItem } from 're
 import UserContext from '../../../helpers/contexts/user/userContext'
 
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import './navbar.css';
 import { initialSearchState, searchReducer } from './reducer';
 
 import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
@@ -23,6 +22,8 @@ import {
     Menu,
     MenuItem,
 } from '@szhsin/react-menu';
+
+import './navbar.css';
 import '@szhsin/react-menu/dist/index.css';
 
 function NavbarComponent(props) {
@@ -233,7 +234,7 @@ function NavbarComponent(props) {
 
             <div className="col-12 order-3 col-sm-8 order-sm-2 col-md-5 order-md-5" >
                 <form id="search-form" className="row row-cols-lg-auto align-items-center">
-                    <div className="row m-0" style={{ width: 100 + '%' }}>
+                    <div className="row m-0 w-100">
                         <div className="col-12 col-sm-10 p-0 mt-2 m-sm-0">
                             <AsyncTypeahead
                                 ref={typeaheadRef}
@@ -297,14 +298,9 @@ function NavbarComponent(props) {
 
                                                 }}>
                                                     <img
-                                                        className="p-0"
+                                                        className="p-0 search-menu-image"
                                                         alt=""
                                                         src={result.img}
-                                                        style={{
-                                                            height: '24px',
-                                                            marginRight: '10px',
-                                                            width: '24px',
-                                                        }}
                                                     />
                                                     <span className="entry__text">{result.title}</span>
                                                 </div>
@@ -316,7 +312,7 @@ function NavbarComponent(props) {
                                         {!isLoading && !isSearching && results.length === 0 && <a role="option" className="dropdown-item disabled" href="#">No matches found.</a>}
                                         {isSearching && <a role="option" className="dropdown-item disabled" href="#">Searching...</a>}
                                         {
-                                            <div style={{ height: 8 + 'px' }} className="d-flex justify-content-center">
+                                            <div className="d-flex justify-content-center search-menu-spinner">
                                                 {isLoading && !isAllFetched && <div className="spinner-border" />}
                                             </div>
                                         }

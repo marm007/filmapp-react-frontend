@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import RippleButton from './rippleButton'
+import RippleButton from '../rippleButton'
 
 const RemoveButton = ({ handleRemove }) => {
     return (
