@@ -73,7 +73,6 @@ const FilmAdd = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('lflalfa')
 
         dispatch({ type: 'submit' })
 

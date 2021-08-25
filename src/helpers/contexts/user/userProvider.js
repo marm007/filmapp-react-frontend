@@ -1,17 +1,14 @@
 import { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
 import UserContext from './userContext';
 import jwt_decode from "jwt-decode";
+import usePathChangeListener from '../../hooks/usePathChangeListener';
 
 const UserProvider = ({ children }) => {
-    let { pathname } = useLocation()
 
+    usePathChangeListener()
+    
     const [user, setUser] = useState({ name: '', id: null, auth: false, isInitialLoaded: false });
-
-    useEffect(() => {
-        window.scrollTo(0, 0)
-    }, [pathname])
-
+    
     useEffect(() => {
         function getMe() {
             const token = localStorage.getItem('accessToken')

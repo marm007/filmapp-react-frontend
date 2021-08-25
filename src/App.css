@@ -128,6 +128,16 @@
     width: calc(100% - 26px) !important;        
 }
 
+.button-ripple-div-next-width-2x {
+    flex: 0 0 auto !important;
+    width: calc(100% - 52px)  !important
+}
+
+.button-ripple-div-next-width-3x {
+    flex: 0 0 auto !important;
+    width: calc(100% - 78px)  !important
+}
+
 .form-select.no-validate:valid {
     border-color: #ced4da;
     padding-right: .75rem;

@@ -203,8 +203,8 @@ const FilmPreview = (props) => {
                                     &ensp;{film.likes}
                                 </p>
                             </div>
-                            <div className="col-4 col-sm-4">
-                                <p  className={`${isDisliked ? 'film-picked-thumb-color' : ''} cursor-pointer noselect`}
+                            <div className="col-4 col-sm-4 d-flex justify-content-start">
+                                <p className={`${isDisliked ? 'film-picked-thumb-color' : ''} cursor-pointer noselect`}
                                     onClick={() => handleLike('dislike')}>
                                     <FontAwesomeIcon icon={faThumbsDown} />
                                     &ensp;{film.dislikes}

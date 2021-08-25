@@ -9,7 +9,7 @@ import './App.css';
 
 import PrivateRoute from './components/models/privateRoute'
 
-//import SettingsComponent from './components/settings'
+//import UserUpdateDialog from './components/settings'
 
 import RemoveModal from './components/dialogs/removeObject'
 
@@ -24,7 +24,8 @@ import {
     faTrashAlt,
     faTimes,
     faGlobeEurope,
-    faLock
+    faLock,
+    faEdit
 } from '@fortawesome/free-solid-svg-icons'
 
 import { Switch } from "react-router";
@@ -37,13 +38,12 @@ import ErrorBoundary from './components/pages/errorBoundary';
 
 import { isMobile } from 'react-device-detect'
 
-
 window.jQuery = $;
 window.$ = $;
 global.jQuery = $;
 
 
-library.add(faPlay, faSortDown, faSortUp, faTrashAlt, faTimes, faGlobeEurope, faLock);
+library.add(faPlay, faSortDown, faSortUp, faTrashAlt, faTimes, faGlobeEurope, faLock, faEdit);
 
 const pathName = process.env.REACT_APP_PATH_NAME
 
@@ -58,11 +58,13 @@ const AddFilmComponent = lazy(() => import('./components/pages/filmAdd'))
 const NotFoundComponent = lazy(() => import('./components/pages/notFound'))
 
 
-const LoginComponent = lazy(() => import('./components/dialogs/login'))
-const ResetPasswordComponent = lazy(() => import('./components/dialogs/resetPassword'))
-const ForgotPasswordComponent = lazy(() => import('./components/dialogs/forgotPassword'))
-const RegisterComponent = lazy(() => import('./components/dialogs/register'))
-const SettingsComponent = lazy(() => import('./components/dialogs/settings'))
+const LoginDialog = lazy(() => import('./components/dialogs/login'))
+const ResetPasswordDialog = lazy(() => import('./components/dialogs/resetPassword'))
+const ForgotPasswordDialog = lazy(() => import('./components/dialogs/forgotPassword'))
+const RegisterDialog = lazy(() => import('./components/dialogs/register'))
+const UserUpdateDialog = lazy(() => import('./components/dialogs/updateUser'))
+const FilmUpdateDialog = lazy(() => import('./components/dialogs/updateFilm'))
+const PlaylistUpdateDialog = lazy(() => import('./components/dialogs/updatePlaylist'))
 
 const MobileStyle = lazy(() => import('./helpers/css/mobileStyle'))
 const DesktopStyle = lazy(() => import('./helpers/css/desktopStyle'))
@@ -95,20 +97,28 @@ function App() {
 
                             <Suspense fallback={<></>}>
                                 {isMobile ? <MobileStyle /> : <DesktopStyle />}
+
                                 <PrivateRoute exact path={[`${pathName}settings`, `${pathName}profile/settings`, `${pathName}film/:id/settings`, `${pathName}search/settings`, `${pathName}add/settings`, `${pathName}playlists/settings`]}
-                                    component={SettingsComponent} />
+                                    component={UserUpdateDialog} />
+
+                                <PrivateRoute exact path={[`${pathName}profile/update-film/:id`]}
+                                    component={FilmUpdateDialog} />
+
+
+                                <PrivateRoute exact path={[`${pathName}profile/update-playlist/:id`]}
+                                    component={PlaylistUpdateDialog} />
 
                                 <Route exact path={[`${pathName}login`, `${pathName}film/:id/login`, `${pathName}search/login`, `${pathName}add/login`, `${pathName}playlists/login`]}
-                                    render={(props) => <LoginComponent {...props} />} />
+                                    render={(props) => <LoginDialog {...props} />} />
 
                                 <Route exact path={[`${pathName}register`, `${pathName}film/:id/register`, `${pathName}search/register`, `${pathName}add/register`, `${pathName}playlists/register`]}
-                                    render={(props) => <RegisterComponent {...props} />} />
+                                    render={(props) => <RegisterDialog {...props} />} />
 
                                 <Route exact path={[`${pathName}reset/:token`, `${pathName}film/:id/reset/:token`, `${pathName}search/reset/:token`, `${pathName}add/reset/:token`, `${pathName}playlists/reset/:token`]}
-                                    render={(props) => <ResetPasswordComponent {...props} />} />
+                                    render={(props) => <ResetPasswordDialog {...props} />} />
 
                                 <Route exact path={[`${pathName}forgot`, `${pathName}film/:id/forgot`, `${pathName}search/forgot`, `${pathName}add/forgot`, `${pathName}playlists/forgot`]}
-                                    render={(props) => <ForgotPasswordComponent {...props} />} />
+                                    render={(props) => <ForgotPasswordDialog {...props} />} />
 
                             </Suspense>
 
@@ -134,7 +144,7 @@ function App() {
                                     <PrivateRoute exact path={[`${pathName}add`, `${pathName}add/settings`]}
                                         component={AddFilmComponent} />
 
-                                    <PrivateRoute exact path={[`${pathName}profile`, `${pathName}profile/settings`]}
+                                    <PrivateRoute exact path={[`${pathName}profile`, `${pathName}profile/settings`, `${pathName}profile/update-film/:id`, `${pathName}profile/update-playlist/:id`]}
                                         component={ProfileComponent} />
 
                                     <Route exact path="*" render={(props) => <NotFoundComponent {...props} />} />
@@ -145,7 +155,6 @@ function App() {
                         </ErrorBoundary>
                     </WithAxios>
                 </UserProvider>
-
             </Router>
             <RemoveModal />
         </div >

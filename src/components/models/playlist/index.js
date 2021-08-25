@@ -4,6 +4,7 @@ import TextTruncate from "react-text-truncate";
 import BlurredImageComponent from "../blurredImage";
 import RemoveButton from '../../buttons/remove';
 import ChangePrivacyButton from '../../buttons/changePrivacy';
+import EditButton from '../../buttons/edit';
 
 const Playlist = ({ playlist, handleRedirect, handleRemove, isProfile, dispatchPrivacyUpdate }) => {
 
@@ -35,21 +36,22 @@ const Playlist = ({ playlist, handleRedirect, handleRemove, isProfile, dispatchP
                 </div>
 
                 <div className="row m-0 mt-1">
-                    <div className={`p-0 col-${colWidth} col-sm-${colWidth}`}>
+                    <div className={`p-0 col ${isProfile ? 'button-ripple-div-next-width-3x' : 'col-12'}`}>
                         <TextTruncate line={1} text={playlist.title}
                             className="mb-1 mt-1 title " />
                     </div>
 
 
                     {
-                        isProfile && <div className="col-4 col-sm-4 p-0 d-flex justify-content-end">
+                        isProfile && <>
                             <ChangePrivacyButton
                                 id={playlist.id}
                                 isPublic={playlist.is_public}
                                 isProfile={true}
                                 dispatchPrivacyUpdate={dispatchPrivacyUpdate} />
                             <RemoveButton handleRemove={handleRemove} />
-                        </div>
+                            <EditButton isPlaylist={true} id={playlist.id} />
+                        </>
                     }
                 </div>
                 <p className="mb-0 author-nick">

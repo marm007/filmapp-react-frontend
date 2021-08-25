@@ -30,20 +30,13 @@ function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
         if (ref) {
 
             const element = window.$(`#playlistDropdown${filmID}`)
-            console.log('dldaladl')
 
             element.on('show.bs.dropdown', handleOpenMenu)
             element.on('hide.bs.dropdown', handleCloseMenu)
-            window.$(`playlistAddButtonLabel${filmID}`).on('click', (e) => {
-                console.log('kfdkdfkdfkdfkfdk')
-            })
 
             return () => {
                 element.off('show.bs.dropdown', handleOpenMenu)
                 element.off('hide.bs.dropdown', handleCloseMenu)
-                window.$(`playlistAddButtonLabel${filmID}`).off('click', (e) => {
-                    console.log('kfdkdfkdfkdfkfdk')
-                })
             }
 
         }
@@ -60,6 +53,7 @@ function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
                 id={`playlistAddButtonLabel${filmID}`}
                 type="button"
                 data-toggle="dropdown"
+                data-boundary="window"
                 className="btn btn-link m-button button-ripple dropdown-toggle p-0 text-dark">
                 <div
                     className="col playlist-add-icon-holder p-0 button-ripple button-ripple-24">
@@ -69,10 +63,10 @@ function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
                 </div>
             </button>
 
-            <div className="dropdown-menu dropdown-menu-right"
+            <div className="dropdown-menu"
                 id={`playlistDropdownMenu${filmID}`}
                 aria-labelledby={`playlistAddButtonLabel${filmID}`}
-                style={{ width: 240 + "px", left: '50px !important' }}>
+                style={{ maxWidth: 210 + "px"}}>
                 {isOpen && <PlaylistDropdownMenu
                     isRecommendations={isRecommendations}
                     filmDispatch={filmDispatch}

@@ -12,6 +12,7 @@ import { useContext, useEffect, useState } from 'react';
 import UserContext from '../../../helpers/contexts/user/userContext';
 
 import getFilmClass from './helper'
+import EditButton from '../../buttons/edit';
 
 const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommendations, isSearch, filmDispatch, children }) => {
     const isSmallScreen = useWindowsWidth((isRecommendations ? 768 : 576))
@@ -44,7 +45,7 @@ const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommen
                 <div className={filmCSS[3]}>
 
                     <div className={filmCSS[4]}>
-                        <div className={`${user.auth ? 'button-ripple-div-next-width' : 'col-12'} col p-0 pr-2 cursor-pointer`}
+                        <div className={`${user.auth ? `${isProfile ? 'button-ripple-div-next-width-2x' : 'button-ripple-div-next-width'}` : 'col-12'} col p-0 pr-2 cursor-pointer`}
                             onClick={() => handleRedirect(film.id)}>
 
                             <TextTruncate line={1} text={film.title}
@@ -59,9 +60,11 @@ const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommen
                         </div>
 
                         {
-                            isProfile ?
-                                <RemoveButton handleRemove={handleRemove} /> :
-                                user.auth ?
+                            isProfile ? <>
+                                <RemoveButton handleRemove={handleRemove} />
+                                <EditButton id={film.id} />
+                            </>
+                                : user.auth ?
                                     <PlaylistAddButtonComponent
                                         isRecommendations={isRecommendations}
                                         filmDispatch={filmDispatch}

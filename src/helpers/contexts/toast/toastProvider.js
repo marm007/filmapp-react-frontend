@@ -14,7 +14,6 @@ const ToastProvider = ({ children }) => {
         let toastElement = window.$('#mainToast')
 
         if (toastAutoHide.current) {
-            console.log('hide', toastAutoHide.current)
             clearTimeout(toastAutoHide.current)
             toastAutoHide.current = null
         }
@@ -23,17 +22,13 @@ const ToastProvider = ({ children }) => {
             toastElement.toast('hide')
 
             if (toastShow.current) {
-                console.log('toastShow', toastAutoHide.current)
-
                 clearTimeout(toastShow.current)
             }
 
             toastShow.current = setTimeout(() => {
-                console.log('ladladll')
                 toastElement.toast('show')
                 setToast({ header: header, message: message, isPrevoius: true })
                 toastAutoHide.current = setTimeout(() => {
-                    console.log('ccsda')
                     toastElement.toast('hide')
                 }, hideAnimTimeout)
             }, showAnimTimeout)

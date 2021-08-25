@@ -112,7 +112,6 @@ function NavbarComponent(props) {
         if (event && event.target && event.target.className &&
             event.target.className === "rbt-input-main form-control rbt-input  focus") {
             let keyCode = event.keyCode || event.charCode;
-            console.log(keyCode)
 
             switch (keyCode) {
                 case 13:

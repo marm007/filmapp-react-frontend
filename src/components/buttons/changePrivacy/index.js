@@ -37,30 +37,16 @@ const ChangePrivacyButton = ({ isPublic, id, isProfile, dispatchPrivacyUpdate, f
 
     const handleChangePrivacy = (e) => {
         e.preventDefault()
-        console.log('dldalad')
         e.stopPropagation()
         if (!isChanging) setIsChanging(true)
     }
 
-    const privacyButton = (
-        <RippleButton
-            className="button-ripple-24 p-0"
-            onClick={handleChangePrivacy}>
-            <FontAwesomeIcon icon={isPublic ? "globe-europe" : "lock"} />
-        </RippleButton>
-    )
 
-    return isProfile ?
-        (
-            <div className="col text-center justify-content-center d-flex align-items-center p-0 flex-grow-0 button-ripple-24-container"
-            >
-                <div
-                    className="col remove-holder p-0 m-0 flex-grow-0 button-ripple-24-container">
-                    {privacyButton}
-                </div>
-            </div>
-        ) :
-        privacyButton
+    return <RippleButton
+        className="button-ripple-24 remove-holder p-0"
+        onClick={handleChangePrivacy}>
+        <FontAwesomeIcon icon={isPublic ? "globe-europe" : "lock"} />
+    </RippleButton>
 }
 
 export default ChangePrivacyButton

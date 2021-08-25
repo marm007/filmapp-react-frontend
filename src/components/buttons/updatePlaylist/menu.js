@@ -170,7 +170,7 @@ function PlaylistDropdownMenu({ filmID, isRecommendations, filmDispatch }) {
                 }}>
                 {
                     playlists.map((playlist, index) => {
-                        return (<div className="row m-0 playlist-form-group form-group" key={playlist.id} >
+                        return (<div className="row m-0 playlist-form-group form-group mb-1" key={playlist.id} >
                             <div className="col-10 col-sm-10 p-0">
                                 <div id={playlist.id} className="form-check">
                                     <input type="checkbox"

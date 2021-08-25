@@ -74,7 +74,7 @@ function Home() {
     };
 
     return (
-        <div className="row mt-5 mx-2">
+        <div className="row mt-5 mx-2" id="homePage">
             {
                 films ? films.map((film, index) => <Film key={film.id} film={film} index={index} handleRedirect={handleRedirect} />)
                     : ([...Array(20)].map((_, index) => (
