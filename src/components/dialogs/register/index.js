@@ -1,13 +1,13 @@
 import React, { useReducer, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import Modal from '../models/modal';
-import Input from '../models/input';
+import Modal from '../../models/modal';
+import Input from '../../models/input';
 
-import { authInitialState, authReducer } from './reducer';
+import { authInitialState, authReducer } from '../reducer';
 
-import * as authApi from '../../services/authService'
-import UserContext from '../../helpers/contexts/user/userContext'
+import * as authApi from '../../../services/authService'
+import UserContext from '../../../helpers/contexts/user/userContext'
 
 const Register = () => {
 

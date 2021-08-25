@@ -33,7 +33,7 @@ import ToastContext from './helpers/contexts/toast/toastContext'
 
 import WithAxios from "./components/models/withAxios";
 import UserProvider from './helpers/contexts/user/userProvider';
-import ErrorBoundary from './components/models/errorBoundary';
+import ErrorBoundary from './components/pages/errorBoundary';
 
 import { isMobile } from 'react-device-detect'
 

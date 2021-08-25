@@ -1,12 +1,12 @@
 import React, { useReducer, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import Modal from '../models/modal';
-import Input from '../models/input';
+import Modal from '../../models/modal';
+import Input from '../../models/input';
 
-import { authInitialState, authReducer } from './reducer';
+import { authInitialState, authReducer } from '../reducer';
 
-import * as authApi from '../../services/authService'
+import * as authApi from '../../../services/authService'
 
 const ForgotPassword = () => {
     let history = useHistory()

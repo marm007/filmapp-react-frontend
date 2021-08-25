@@ -13,7 +13,7 @@ import { pageMaxFetchCount } from '../../../config';
 
 import { parseSearchDate } from '../../../helpers'
 import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
-import RippleButton from '../../buttons/rippleButton';
+import RippleButton from '../../buttons/ripple';
 
 import "./search.css";
 

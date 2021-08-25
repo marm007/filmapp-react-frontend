@@ -6,10 +6,10 @@ import * as playlistApi from '../../../services/playlistService'
 import ToastContext from '../../../helpers/contexts/toast/toastContext';
 import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
 import { playlistDropdownMenuReducer, playlistDropdownMenuInitialState } from './reducer'
-import ChangePrivacyButton from '../changePrivacyButton';
+import ChangePrivacyButton from '../changePrivacy';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { playlistButtonMaxFetchCount } from '../../../config';
-import RippleButton from '../rippleButton';
+import RippleButton from '../ripple';
 
 function PlaylistDropdownMenu({ filmID, isRecommendations, filmDispatch }) {
 

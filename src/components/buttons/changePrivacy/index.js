@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useEffect, useState } from "react"
 import * as playlistApi from '../../../services/playlistService'
-import RippleButton from "../rippleButton"
+import RippleButton from "../ripple"
 
 const ChangePrivacyButton = ({ isPublic, id, isProfile, dispatchPrivacyUpdate, filmDispatch }) => {
 

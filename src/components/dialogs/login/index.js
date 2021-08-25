@@ -1,13 +1,13 @@
 import React, { useEffect, useContext, useReducer } from 'react';
 import { useHistory, useLocation } from 'react-router-dom'
 
-import Modal from '../models/modal';
-import Input from '../models/input';
+import Modal from '../../models/modal';
+import Input from '../../models/input';
 
-import * as authApi from '../../services/authService'
+import * as authApi from '../../../services/authService'
 
-import UserContext from '../../helpers/contexts/user/userContext'
-import { authInitialState, authReducer } from './reducer';
+import UserContext from '../../../helpers/contexts/user/userContext'
+import { authInitialState, authReducer } from '../reducer';
 
 const Login = () => {
 
