@@ -11,6 +11,7 @@ const RemoveModal = () => {
 
     return (
         <Modal id="removeModal" title={`Delete ${removeModalData.type}`}
+            isRemove={true}
             onClose={handleClose} hide={true}
             footer={<button type="button" className="btn btn-primary"
                 onClick={handleRemove}>

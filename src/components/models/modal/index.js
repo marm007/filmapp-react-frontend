@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 
-const Modal = ({ id, title, children, onClose, footer, hide }) => {
+const Modal = ({ id, title, children, onClose, footer, hide, isRemove }) => {
   const modalRef = useRef(null)
   useEffect(() => {
     modalRef.current = window.$(`#${id}`)
@@ -20,7 +20,7 @@ const Modal = ({ id, title, children, onClose, footer, hide }) => {
 
   return (
     <div className="modal fade" id={id} tabIndex="-1">
-      <div className="modal-dialog modal-dialog-centered modal-lg">
+      <div className={`modal-dialog modal-dialog-centered ${isRemove ? '' : 'modal-lg'}`}>
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">{title}</h5>
