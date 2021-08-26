@@ -184,8 +184,8 @@ const Profile = () => {
         showModal(resource.id, resource.isPlaylist ? 'playlist' : 'film', resource.title)
     };
 
-    const handleRedirectFilm = (id) => {
-        history.push({ pathname: `${process.env.REACT_APP_PATH_NAME}film/` + id });
+    const handleRedirectFilm = (film) => {
+        history.push({ pathname: `${process.env.REACT_APP_PATH_NAME}film/` + film.id, state: { film } });
     }
 
     const handleRedirectPlaylist = (record) => {
@@ -210,12 +210,12 @@ const Profile = () => {
                     } else {
                         return <Film key={record.id} isProfile={true}
                             film={record} index={index}
-                            handleRedirect={() => handleRedirectFilm(record.id)}
+                            handleRedirect={() => handleRedirectFilm(record)}
                             handleRemove={(e) => handleRemove(e, record)} />
                     }
-                })  : ([...Array(20)].map((_, index) => (
-                        <Skeleton key={index} />
-                    )))
+                }) : ([...Array(20)].map((_, index) => (
+                    <Skeleton key={index} />
+                )))
             }
 
             {

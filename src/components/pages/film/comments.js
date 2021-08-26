@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { commentsReducer, commentsInitialState } from './reducers/commentsReducer';
 
 import * as commentApi from '../../../services/commentService'
+import * as filmApi from '../../../services/filmService'
 
 import { commentsMaxFetchCount } from "../../../config"
 
@@ -14,13 +15,17 @@ import UserContext from '../../../helpers/contexts/user/userContext';
 import FilmContext from '../../../helpers/contexts/film/filmContext';
 import RemoveModalContext from '../../../helpers/contexts/removeModal/removeModalContext';
 import RippleButton from '../../buttons/ripple';
+import { useParams } from 'react-router-dom';
 
-const Comments = (props) => {
+const Comments = () => {
+
+    let { id } = useParams()
 
     const { showModal, clear, removeModalData } = useContext(RemoveModalContext)
 
     const { user } = useContext(UserContext);
 
+    // eslint-disable-next-line no-unused-vars
     const [filmState, filmDispatch] = useContext(FilmContext)
 
     const [state, dispatch] = useReducer(commentsReducer, commentsInitialState)
@@ -32,7 +37,6 @@ const Comments = (props) => {
         isLoading,
         isAllFetched,
         isAdding,
-        id,
         isRemoving,
         toRemove,
         isSorting,
@@ -52,13 +56,6 @@ const Comments = (props) => {
     useBottomScrollListener(handleOnCommentsBottom)
 
     useEffect(() => {
-        dispatch({
-            type: 'clear',
-            id: props.match.params.id
-        })
-    }, [props.match.params.id])
-
-    useEffect(() => {
         if (filmState.error) {
             dispatch({
                 type: 'error',
@@ -68,16 +65,27 @@ const Comments = (props) => {
     }, [filmState.error])
 
     useEffect(() => {
-        function getCommentsFromContext() {
-            dispatch({
-                type: 'initial-success',
-                comments: filmState.comments,
-                commentsCount: filmState.commentsCount,
-            })
+        const getInitialComments = async () => {
+            await filmApi.indexDetails(id)
+                .then(res => {
+                    dispatch({
+                        type: 'initial-success',
+                        comments: res.data.comments,
+                        commentsCount: res.data.comments_count,
+                    })
+                })
+                .catch(err => {
+                    console.error(err)
+                    dispatch({
+                        type: 'error',
+                        payload: 'Something went wrong!'
+                    })
+                })
         }
 
-        if (filmState.comments && filmState.commentsCount !== null) getCommentsFromContext()
-    }, [filmState.comments, filmState.commentsCount, filmDispatch])
+        if (filmState.isPreviewLoaded) getInitialComments()
+
+    }, [id, filmState.isPreviewLoaded])
 
     useEffect(() => {
         async function loadComments() {
@@ -94,6 +102,7 @@ const Comments = (props) => {
                     })
                 })
         }
+
         async function loadSortedComments() {
             await commentApi.sort(id, { [sort.id]: sort.dir, skip: comments.length, limit: commentsMaxFetchCount })
                 .then(res => {
@@ -108,13 +117,13 @@ const Comments = (props) => {
                     })
                 })
         }
+
         if (isLoading && isInitialLoaded && !isAdding &&
             comments && id && !isSorting) {
-            if (!sort)
-                loadComments()
-            else
-                loadSortedComments()
+            if (!sort) loadComments()
+            else loadSortedComments()
         }
+
     }, [isLoading, isAdding, id, comments, isInitialLoaded, isSorting, sort])
 
 
@@ -256,7 +265,7 @@ const Comments = (props) => {
             </div>
             <form onSubmit={(e) => (text && !isAdding) ? handleAddComment(e) : null}>
                 <div id="fiordur">
-                    <input type="text"  placeholder="Comment" value={text}
+                    <input type="text" placeholder="Comment" value={text}
                         onChange={e => dispatch({ type: 'field', fieldName: 'text', payload: e.target.value })}
                     />
                 </div>

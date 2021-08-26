@@ -4,7 +4,6 @@ export const commentsInitialState = {
     comments: null,
     commentsCount: null,
     text: '',
-    id: null,
     isLoading: false,
     isAllFetched: false,
     isInitialLoaded: false,
@@ -30,13 +29,12 @@ export function commentsReducer(state, action) {
         }
         case 'clear': {
             return {
-                ...commentsInitialState,
-                id: action.id
+                ...commentsInitialState
             }
         }
         case 'load': {
             return !state.isLoading && !state.isAllFetched && state.isInitialLoaded && !state.isAdding &&
-                !state.error && state.id && !state.isSorting ?
+                !state.error && !state.isSorting ?
                 {
                     ...state,
                     isLoading: true

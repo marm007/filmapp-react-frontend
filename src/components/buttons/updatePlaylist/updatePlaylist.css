@@ -42,6 +42,16 @@
 }
 
 .playlist-dropdown-menu {
-    max-width: 210px !important;
-    left: -2px !important
+    width: 220px !important;
+    height: 320px !important;
+}
+
+.playlist-dropdown-menu-position {
+    left: -15px !important
+}
+
+.playlist-dropdown-content {
+    height: 5rem;
+    overflow-y: scroll;
+    min-height: 3rem;
 }

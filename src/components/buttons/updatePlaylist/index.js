@@ -6,7 +6,7 @@ import useRipple from "useripple"
 
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons'
 
-import './playlistAdd.css'
+import './updatePlaylist.css'
 
 function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
 
@@ -46,7 +46,7 @@ function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
 
         <div ref={menuRef}
             id={`playlistDropdown${filmID}`}
-            className="p-0 dropdown dropdown-sizes" >
+            className={`p-0 dropdown dropdown-sizes`} >
 
             <button
                 onMouseDown={addRipple}
@@ -63,10 +63,10 @@ function PlaylistAddButton({ isRecommendations, filmDispatch, filmID }) {
                 </div>
             </button>
 
-            <div className="dropdown-menu playlist-dropdown-menu"
+            <div className={`dropdown-menu playlist-dropdown-menu ${isRecommendations ? 'dropdown-menu-right' : 'playlist-dropdown-menu-position'}`}
                 id={`playlistDropdownMenu${filmID}`}
                 aria-labelledby={`playlistAddButtonLabel${filmID}`}
-               >
+            >
                 {isOpen && <PlaylistDropdownMenu
                     isRecommendations={isRecommendations}
                     filmDispatch={filmDispatch}

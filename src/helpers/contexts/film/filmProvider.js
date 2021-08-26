@@ -3,8 +3,6 @@ import FilmContext from "./filmContext"
 
 const filmInitialState = {
     isPreviewLoaded: false,
-    comments: null,
-    commentsCount: null,
     playerHeight: null,
     reloadPlaylist: false,
     error: null
@@ -22,16 +20,7 @@ const filmReducer = (state, action) => {
             return {
                 ...state,
                 isPreviewLoaded: true,
-                comments: action.comments,
-                commentsCount: action.commentsCount,
                 error: null
-            }
-        }
-        case 'reset-comments': {
-            return {
-                ...state,
-                comments: null,
-                commentsCount: null
             }
         }
         default:

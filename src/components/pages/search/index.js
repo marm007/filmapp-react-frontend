@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState, useCallback } from 'react';
+import React, { useEffect, useReducer, useCallback } from 'react';
 import { useLocation, useHistory } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
@@ -41,8 +41,6 @@ const Search = () => {
     const [state, dispatch] = useReducer(searchReducer, searchInitialState)
 
     const { films, isLoading, isAllFetched, search, sort, filter, dir, sorts, error, isInitialLoaded } = state
-
-    const [isOpen, setIsOpen] = useState(false)
 
     const handleSearchOnBottom = useCallback(() => {
         if (!isLoading && !isAllFetched && !error && isInitialLoaded) {
@@ -121,8 +119,8 @@ const Search = () => {
 
     }, [dir, films, filter, isLoading, search, sort])
 
-    const setRedirect = (filmID) => {
-        history.push(`${process.env.REACT_APP_PATH_NAME}film/` + filmID);
+    const setRedirect = (film) => {
+        history.push({ pathname: `${process.env.REACT_APP_PATH_NAME}film/` + film.id, state: { film } });
     };
 
 
@@ -199,7 +197,7 @@ const Search = () => {
                 aria-expanded="false"
                 data-toggle="collapse"
                 data-target="#searchCollapse">
-                    <FontAwesomeIcon style={{ cursor: "pointer" }} icon={faFilter} />
+                <FontAwesomeIcon className="cursor-pointer" icon={faFilter} />
             </RippleButton>
             <div className="collapse" id="searchCollapse">
                 <div id="filter-collapse" className="row mx-2">
@@ -256,7 +254,7 @@ const Search = () => {
                         film.img = `${process.env.REACT_APP_API_URL}films/${film.id}/thumbnail`
                         return <Film isSearch={true} key={film.id}
                             film={film} index={index}
-                            handleRedirect={() => setRedirect(film.id)} >
+                            handleRedirect={() => setRedirect(film)} >
                             <div>
                                 <p className="mb-1 author-nick-search">
                                     <span>{film.author_name} &#183; {film.views} views &#183; {time}</span>

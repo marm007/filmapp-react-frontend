@@ -4,15 +4,15 @@ import { useHistory } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import RippleButton from "../ripple"
 
-const EditButton = ({ isPlaylist, id }) => {
+const EditButton = ({ isPlaylist, id, title, description }) => {
     let history = useHistory()
 
     const handleEditClick = (e) => {
         e.stopPropagation()
         if (isPlaylist) {
-            history.push(`profile/update-playlist/${id}`)
+            history.push({ pathname: `profile/update-playlist/${id}`, state: { title } })
         } else {
-            history.push(`profile/update-film/${id}`)
+            history.push({ pathname: `profile/update-film/${id}`, state: { title, description } })
         }
     }
 

@@ -31,8 +31,16 @@ const UpdatePlaylist = () => {
                     })
                 })
         }
+        console.log(history.location.state)
 
-        getInitialPlaylist()
+        if (history.location.state && history.location.state.title) {
+            dispatch({
+                type: 'initial-success',
+                payload: history.location.state.title
+            })
+        } else {
+            getInitialPlaylist()
+        }
 
     }, [id, history])
 
@@ -61,7 +69,7 @@ const UpdatePlaylist = () => {
     }
 
     const handleSumbit = (e) => {
-        e.preventDefautl()
+        e.preventDefault()
         dispatch({
             type: 'submit'
         })
@@ -75,7 +83,7 @@ const UpdatePlaylist = () => {
 
     return (
         <Modal id="updatatePlaylistModal" title="Update" onClose={modalClose}>
-            <form onSubmit={isSending ? handleSumbit : null}>
+            <form onSubmit={isSending ? null : handleSumbit}>
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
                     <Input type="text" name="title" value={title}
@@ -91,6 +99,10 @@ const UpdatePlaylist = () => {
                         disabled={!isInitialLoaded ||
                             (isInitialLoaded && title === initialPlaylist.title)}
                         type="submit">Save</button>
+                    {
+                        isSending &&
+                        <div className="ml-2 spinner-grow" />
+                    }
                 </div>
             </form>
             {

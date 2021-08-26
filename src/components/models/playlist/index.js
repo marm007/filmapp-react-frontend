@@ -8,8 +8,6 @@ import EditButton from '../../buttons/edit';
 
 const Playlist = ({ playlist, handleRedirect, handleRemove, isProfile, dispatchPrivacyUpdate }) => {
 
-    const colWidth = isProfile ? 8 : 10
-
     const [style, setStyle] = useState("mb-4 play-outer-container remove-container")
 
     useEffect(() => {
@@ -50,7 +48,7 @@ const Playlist = ({ playlist, handleRedirect, handleRemove, isProfile, dispatchP
                                 isProfile={true}
                                 dispatchPrivacyUpdate={dispatchPrivacyUpdate} />
                             <RemoveButton handleRemove={handleRemove} />
-                            <EditButton isPlaylist={true} id={playlist.id} />
+                            <EditButton isPlaylist={true} id={playlist.id} title={playlist.title} />
                         </>
                     }
                 </div>

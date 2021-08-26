@@ -116,11 +116,10 @@ const FilmAdd = () => {
 
     return (
         <div className="row mt-4 pb-5 mx-2">
-            <div className="col-12 col-md-6 mb-4">
+            <div className="col-12 col-md-4 mb-4">
                 <div className="col-12 mb-4 p-0">
                     <div>
-                        <div
-                            className="position-relative justify-content-center d-flex align-items-center text-center box has-advanced-upload">
+                        <div className="position-relative justify-content-center d-flex align-items-center text-center box has-advanced-upload">
 
                             <div className="embed-responsive embed-responsive-16by9 ">
                                 <video muted={true} autoPlay={true} className="embed-responsive-item" loop={true}
@@ -145,8 +144,8 @@ const FilmAdd = () => {
 
                             {
                                 film.preview &&
-                                <FontAwesomeIcon className="film-add-item-middle fa-3x"
-                                    style={{ color: "#ffffff" }} icon="times"
+                                <FontAwesomeIcon className="film-add-item-middle fa-3x text-white"
+                                    icon="times"
                                     onClick={() => {
                                         dispatch({ type: 'file-clear', isFilm: true })
                                     }} />
@@ -178,7 +177,7 @@ const FilmAdd = () => {
 
                             {
                                 thumbnail.preview &&
-                                <FontAwesomeIcon className="film-add-item-middle fa-3x" style={{ color: "#ffffff" }} icon="times"
+                                <FontAwesomeIcon className="film-add-item-middle fa-3x text-white" icon="times"
                                     onClick={() => {
                                         dispatch({ type: 'file-clear', isFilm: false })
                                     }} />

@@ -15,8 +15,11 @@ import RecommendationsSkeleton from './recommendationsSkeleton'
 import FilmSkeleton from '../../models/film/skeleton';
 
 import useWindowsWidth from '../../../helpers/hooks/useWindowsWidth';
+import { useParams } from 'react-router-dom';
 
-const FilmsRecommendations = (props) => {
+const FilmsRecommendations = ({ handleRedirect }) => {
+
+    let { id } = useParams()
 
     const isSmallScreen = useWindowsWidth(768);
 
@@ -25,7 +28,8 @@ const FilmsRecommendations = (props) => {
 
     const [state, dispatch] = useReducer(recommendationsReducer, recommendationsInitialState)
 
-    const { films, isLoading, isAllFetched, isInitialLoaded, id, error } = state
+    const { films, isLoading, isAllFetched, isInitialLoaded, error } = state
+
 
     const handleRecommendationsOnBottom = useCallback(() => {
         if (!isLoading && !isAllFetched && isInitialLoaded && !error && id) {
@@ -39,7 +43,7 @@ const FilmsRecommendations = (props) => {
 
     useEffect(() => {
         async function initialLoad() {
-            await filmApi.all({ exclude: props.match.params.id, limit: recommendationsMaxFetchCount })
+            await filmApi.all({ exclude: id, limit: recommendationsMaxFetchCount })
                 .then(res => {
                     let films = res.data;
 
@@ -50,8 +54,7 @@ const FilmsRecommendations = (props) => {
 
                     dispatch({
                         type: 'initial-success',
-                        films: films,
-                        id: props.match.params.id
+                        films: films
                     })
 
 
@@ -66,7 +69,7 @@ const FilmsRecommendations = (props) => {
         if (filmState.isPreviewLoaded) {
             initialLoad()
         }
-    }, [props.match.params.id, filmState.isPreviewLoaded])
+    }, [id, filmState.isPreviewLoaded])
 
     useEffect(() => {
         if (filmState.error) {
@@ -102,7 +105,9 @@ const FilmsRecommendations = (props) => {
         <div className="row m-0">
 
             {
-                films ? films.map((film, index) => <Film key={film.id} film={film} index={index} isRecommendations={true} filmDispatch={filmDispatch} handleRedirect={() => props.handleRedirect(film.id)} />)
+                films ? films.map((film, index) => <Film key={film.id} film={film}
+                    index={index} isRecommendations={true} filmDispatch={filmDispatch}
+                    handleRedirect={() => handleRedirect(film)} />)
                     : ([...Array(20)].map((_, index) => isSmallScreen ?
                         (<FilmSkeleton key={index} isRecommendations={true} />) :
                         (<RecommendationsSkeleton key={index} />)

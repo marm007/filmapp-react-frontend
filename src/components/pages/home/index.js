@@ -69,14 +69,15 @@ function Home() {
         if (isLoading && isInitialLoaded && films) getAllFilms()
     }, [isLoading, isInitialLoaded, films])
 
-    const handleRedirect = (id) => {
-        history.push({ pathname: `${process.env.REACT_APP_PATH_NAME}film/` + id });
+    const handleRedirect = (film) => {
+        history.push({ pathname: `${process.env.REACT_APP_PATH_NAME}film/` + film.id, state: { film } });
     };
 
     return (
         <div className="row mt-5 mx-2" id="homePage">
             {
-                films ? films.map((film, index) => <Film key={film.id} film={film} index={index} handleRedirect={handleRedirect} />)
+                films ? films.map((film, index) => <Film key={film.id}
+                    film={film} index={index} handleRedirect={() => handleRedirect(film)} />)
                     : ([...Array(20)].map((_, index) => (
                         <Skeleton key={index} />
                     )))

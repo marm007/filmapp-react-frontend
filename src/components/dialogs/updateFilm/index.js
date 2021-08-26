@@ -32,13 +32,22 @@ const UpdateFilm = () => {
                 })
         }
 
-        getInitialFilm()
+        if (history.location.state && history.location.state.title &&
+            history.location.state.description) {
+            dispatch({
+                type: 'initial-success',
+                title: history.location.state.title,
+                description: history.location.state.description
+            })
+        } else {
+            getInitialFilm()
+        }
 
     }, [id, history])
 
     useEffect(() => {
         const updateFilm = async () => {
-            await filmApi.update(id, { title, description })
+            await filmApi.partialUpdate(id, { title, description })
                 .then(res => {
                     dispatch({
                         type: 'success'
@@ -61,7 +70,7 @@ const UpdateFilm = () => {
     }
 
     const handleSumbit = (e) => {
-        e.preventDefautl()
+        e.preventDefault()
         dispatch({
             type: 'submit'
         })
@@ -75,7 +84,7 @@ const UpdateFilm = () => {
 
     return (
         <Modal id="updatateFilmModal" title="Update" onClose={modalClose}>
-            <form onSubmit={isSending ? handleSumbit : null}>
+            <form onSubmit={isSending ? null : handleSumbit}>
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
                     <Input type="text" name="title" value={title}
@@ -100,6 +109,10 @@ const UpdateFilm = () => {
                         disabled={!isInitialLoaded ||
                             (isInitialLoaded && description === initialFilm.description && title === initialFilm.title)}
                         type="submit">Save</button>
+                    {
+                        isSending &&
+                        <div className="ml-2 spinner-grow" />
+                    }
                 </div>
             </form>
             {

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useCallback, useReducer } from 'react';
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import queryString from "query-string";
 import TextTruncate from "react-text-truncate";
@@ -20,9 +20,10 @@ import ChangePrivacyButton from '../../buttons/changePrivacy';
 
 import image_not_found from '../../../images/image_not_found.png'; // Tell Webpack this JS file uses this image
 
-const PlaylistContainer = (props) => {
+const PlaylistContainer = ({ handleRedirect }) => {
 
     const { showModal, clear, removeModalData } = useContext(RemoveModalContext)
+    let { id } = useParams()
 
     let location = useLocation()
 
@@ -82,7 +83,7 @@ const PlaylistContainer = (props) => {
                     let filmId = null
 
                     Array.prototype.forEach.call(res.data.films, (film, index) => {
-                        if (film && film.id === props.match.params.id) {
+                        if (film && film.id === id) {
                             filmIndex = index + 1
                             filmId = film.id
                         }
@@ -110,7 +111,7 @@ const PlaylistContainer = (props) => {
 
         if (filmState.reloadPlaylist && playlist) handleReloadPlaylist()
 
-    }, [filmState.reloadPlaylist, playlist, filmDispatch, props.match.params.id])
+    }, [filmState.reloadPlaylist, playlist, filmDispatch, id])
 
 
 
@@ -128,7 +129,7 @@ const PlaylistContainer = (props) => {
                 let filmId = null
 
                 Array.prototype.forEach.call(res.data.films, (film, index) => {
-                    if (film && film.id === props.match.params.id) {
+                    if (film && film.id === id) {
                         filmIndex = index + 1
                         filmId = film.id
                     }
@@ -147,7 +148,7 @@ const PlaylistContainer = (props) => {
             })
         }
         if (!error && filmState.isPreviewLoaded) handleGetPlaylist()
-    }, [props.match.params.id, location.search, error, filmState.isPreviewLoaded])
+    }, [id, location.search, error, filmState.isPreviewLoaded])
 
 
     useEffect(() => {
@@ -253,14 +254,14 @@ const PlaylistContainer = (props) => {
                         onScrollY={() => { }}>
                         {
                             playlist.films.map((film, index) => {
-                                return(
+                                return (
                                     <div className="row m-0 p-0 pr-2 remove-container" key={film.id}>
                                         <div className={`${index === playlist.films.length - 1 ?
                                             "mt-3 mb-3 " :
                                             "mt-3"} button-ripple-div-next-width col`}
                                             onClick={() => {
                                                 if (!film.isNonExisting)
-                                                    props.handleRedirect(film.id)
+                                                    handleRedirect(film)
                                             }}>
                                             <div className="row m-0 p-0 play-outer-container">
                                                 <div

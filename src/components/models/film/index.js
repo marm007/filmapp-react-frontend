@@ -34,7 +34,7 @@ const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommen
             <div className={filmCSS[1]}>
 
                 <div className={filmCSS[2]}
-                    onClick={() => handleRedirect(film.id)}>
+                    onClick={() => handleRedirect()}>
                     <div className="play-container">
                         <BlurredImageComponent
                             image={film.img} />
@@ -46,7 +46,7 @@ const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommen
 
                     <div className={filmCSS[4]}>
                         <div className={`${user.auth ? `${isProfile ? 'button-ripple-div-next-width-2x' : 'button-ripple-div-next-width'}` : 'col-12'} col p-0 pr-2 cursor-pointer`}
-                            onClick={() => handleRedirect(film.id)}>
+                            onClick={() => handleRedirect()}>
 
                             <TextTruncate line={1} text={film.title}
                                 className={filmCSS[5]} />
@@ -62,7 +62,7 @@ const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommen
                         {
                             isProfile ? <>
                                 <RemoveButton handleRemove={handleRemove} />
-                                <EditButton id={film.id} />
+                                <EditButton id={film.id} title={film.title} description={film.description} />
                             </>
                                 : user.auth ?
                                     <PlaylistAddButtonComponent

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useContext, useReducer } from 'react';
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 import { Player } from 'video-react';
@@ -15,10 +15,11 @@ import FilmContext from '../../../helpers/contexts/film/filmContext'
 import UserContext from '../../../helpers/contexts/user/userContext';
 import 'core-js/modules/esnext.promise.all-settled'
 
-const FilmPreview = (props) => {
+const FilmPreview = () => {
 
     let history = useHistory()
     let location = useLocation()
+    let { id } = useParams()
 
     const { user } = useContext(UserContext)
 
@@ -62,12 +63,15 @@ const FilmPreview = (props) => {
 
     useEffect(() => {
         async function handleGetFilm() {
-            let requests = [filmApi.index(props.match.params.id), filmApi.view(props.match.params.id)]
+            const isFilmRequest = history.location.state === undefined || history.location.state.film === undefined
+
+            let requests = [filmApi.view(id)]
+            if (isFilmRequest) requests.push(filmApi.index(id))
             if (user.auth) requests.push(userApi.me({ details: true }))
 
-            const [filmResponse, filmViewResponse, userResponse] = await Promise.allSettled(requests);
+            const [filmViewResponse, filmResponse, userResponse] = await Promise.allSettled(requests);
 
-            if (filmResponse.status === "rejected" || filmViewResponse.status === "rejected") {
+            if ((isFilmRequest && filmResponse.status === "rejected") || filmViewResponse.status === "rejected") {
                 filmDispatch({
                     type: 'field',
                     fieldName: 'error',
@@ -75,14 +79,12 @@ const FilmPreview = (props) => {
                 })
                 return
             }
+            console.log('is', isFilmRequest)
 
-
-            const filmData = filmResponse.value.data
+            const filmData = isFilmRequest ? filmResponse.value.data : history.location.state.film
 
             filmDispatch({
-                type: 'success',
-                comments: filmData.comments,
-                commentsCount: filmData.comments_count
+                type: 'success'
             })
 
             const film = {
@@ -91,14 +93,14 @@ const FilmPreview = (props) => {
                 video: `${process.env.REACT_APP_API_URL}films/${filmData.id}/video`,
                 views: filmViewResponse.value.data.views
             }
+
             let isLiked = false
             let isDisliked = false
 
-
             if (userResponse && userResponse.status === "fulfilled") {
                 const details = userResponse.value.data.details
-                isLiked = details.liked.indexOf(props.match.params.id) > -1
-                isDisliked = details.disliked.indexOf(props.match.params.id) > -1
+                isLiked = details.liked.indexOf(id) > -1
+                isDisliked = details.disliked.indexOf(id) > -1
             }
 
             dispatch({
@@ -110,7 +112,7 @@ const FilmPreview = (props) => {
 
         }
         handleGetFilm()
-    }, [props.match.params.id, filmDispatch, user.auth])
+    }, [id, filmDispatch, user.auth, history.location.state])
 
     useEffect(() => {
         async function handleLike() {

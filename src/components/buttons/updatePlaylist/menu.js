@@ -164,10 +164,7 @@ function PlaylistDropdownMenu({ filmID, isRecommendations, filmDispatch }) {
                 </RippleButton>
             </div>
             <hr className="dropdown-divider" />
-            <div ref={scrollRef}
-                style={{
-                    maxHeight: 100 + 'px', overflowY: 'scroll', minHeight: 3 + 'rem'
-                }}>
+            <div ref={scrollRef} className="playlist-dropdown-content">
                 {
                     playlists.map((playlist, index) => {
                         return (<div className="row m-0 playlist-form-group form-group mb-1" key={playlist.id} >
@@ -199,10 +196,7 @@ function PlaylistDropdownMenu({ filmID, isRecommendations, filmDispatch }) {
                 }
 
                 {
-                    !isAllFetched && <div style={{
-                        height: 3 + 'rem'
-                    }}
-                        className="fetch-spinner d-flex justify-content-center align-items-center">
+                    !isAllFetched && <div className="fetch-spinner d-flex justify-content-center align-items-center h-100">
                         {isLoading && <div className="spinner-border" />}
                     </div>
                 }
