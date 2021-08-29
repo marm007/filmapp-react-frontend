@@ -11,7 +11,8 @@ export const settingsInitialState = {
     isSubmitted: false,
     isSending: false,
     error: '',
-    success: ''
+    isSuccess: false,
+    success: '',
 }
 
 export const settingsReducer = (state, action) => {
@@ -26,6 +27,8 @@ export const settingsReducer = (state, action) => {
         case 'initial-success': {
             return {
                 ...state,
+                email: action.email,
+                name: action.name,
                 initialUser: {
                     email: action.email,
                     name: action.name
@@ -51,7 +54,8 @@ export const settingsReducer = (state, action) => {
                 ...state,
                 isSubmitted: false,
                 isSending: false,
-                success: 'Changes saved successfully!',
+                isSuccess: true,
+                success: action.payload ? action.payload : 'Changes saved successfully!',
                 error: null
             }
         }
@@ -60,6 +64,7 @@ export const settingsReducer = (state, action) => {
                 ...state,
                 isSending: false,
                 isSubmitted: false,
+                isSuccess: false,
                 error: action.payload
             }
         }

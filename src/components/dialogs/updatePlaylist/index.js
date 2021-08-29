@@ -1,12 +1,17 @@
-import React, { useEffect, useReducer } from 'react'
+import React, { useContext, useEffect, useReducer } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import Input from '../../models/input'
 import Modal from '../../models/modal'
 import { updatePlaylistInitialState, updatePlaylistReducer } from './reducer'
 
 import * as playlistApi from '../../../services/playlistService'
+import { handleCloseModalWindow } from '../../../helpers'
+import UpdateContext from '../../../helpers/contexts/updateModal/updateContext'
 
 const UpdatePlaylist = () => {
+
+    const { setToUpdate } = useContext(UpdateContext)
+
     let history = useHistory()
     let { id } = useParams();
 
@@ -52,7 +57,9 @@ const UpdatePlaylist = () => {
                         type: 'success'
                     })
 
-                    setTimeout(() => history.goBack(), 500)
+                    setToUpdate(true, res.data)
+
+                    setTimeout(() => handleCloseModalWindow(history, '/update-playlist'), 500)
                 })
                 .catch(err => {
                     dispatch({
@@ -62,10 +69,10 @@ const UpdatePlaylist = () => {
         }
 
         if (isSending) updatePlaylist()
-    }, [id, history, isSending, title])
+    }, [id, history, isSending, title, setToUpdate])
 
     const modalClose = () => {
-        history.goBack()
+        handleCloseModalWindow(history, '/update-playlist')
     }
 
     const handleSumbit = (e) => {

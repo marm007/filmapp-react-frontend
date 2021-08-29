@@ -43,7 +43,7 @@
 
 .playlist-dropdown-menu {
     width: 220px !important;
-    height: 320px !important;
+    max-height: 350px !important;
 }
 
 .playlist-dropdown-menu-position {

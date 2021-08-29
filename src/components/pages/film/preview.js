@@ -63,15 +63,12 @@ const FilmPreview = () => {
 
     useEffect(() => {
         async function handleGetFilm() {
-            const isFilmRequest = history.location.state === undefined || history.location.state.film === undefined
 
-            let requests = [filmApi.view(id)]
-            if (isFilmRequest) requests.push(filmApi.index(id))
+            let requests = [filmApi.view(id), filmApi.index(id)]
             if (user.auth) requests.push(userApi.me({ details: true }))
-
             const [filmViewResponse, filmResponse, userResponse] = await Promise.allSettled(requests);
 
-            if ((isFilmRequest && filmResponse.status === "rejected") || filmViewResponse.status === "rejected") {
+            if (filmResponse.status === "rejected" || filmViewResponse.status === "rejected") {
                 filmDispatch({
                     type: 'field',
                     fieldName: 'error',
@@ -79,9 +76,8 @@ const FilmPreview = () => {
                 })
                 return
             }
-            console.log('is', isFilmRequest)
 
-            const filmData = isFilmRequest ? filmResponse.value.data : history.location.state.film
+            const filmData = filmResponse.value.data
 
             filmDispatch({
                 type: 'success'

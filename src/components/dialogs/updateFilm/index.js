@@ -1,12 +1,17 @@
-import React, { useEffect, useReducer } from 'react'
+import React, { useContext, useEffect, useReducer } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import Input from '../../models/input'
 import Modal from '../../models/modal'
 import { updateFilmInitialState, updateFilmReducer } from './reducer'
 
 import * as filmApi from '../../../services/filmService'
+import { handleCloseModalWindow } from '../../../helpers'
+import UpdateContext from '../../../helpers/contexts/updateModal/updateContext'
 
 const UpdateFilm = () => {
+
+    const { setToUpdate } = useContext(UpdateContext)
+
     let history = useHistory()
     let { id } = useParams();
 
@@ -52,8 +57,10 @@ const UpdateFilm = () => {
                     dispatch({
                         type: 'success'
                     })
+                    
+                    setToUpdate(false, res.data)
 
-                    setTimeout(() => history.goBack(), 500)
+                    setTimeout(() => handleCloseModalWindow(history, '/update-film'), 500)
                 })
                 .catch(err => {
                     dispatch({
@@ -63,10 +70,10 @@ const UpdateFilm = () => {
         }
 
         if (isSending) updateFilm()
-    }, [description, id, history, isSending, title])
+    }, [description, id, history, isSending, title, setToUpdate])
 
     const modalClose = () => {
-        history.goBack()
+        handleCloseModalWindow(history, '/update-film')
     }
 
     const handleSumbit = (e) => {

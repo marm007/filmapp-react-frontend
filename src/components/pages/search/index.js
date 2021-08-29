@@ -9,7 +9,7 @@ import { searchReducer, searchInitialState } from './reducer'
 
 import * as filmApi from '../../../services/filmService'
 
-import { pageMaxFetchCount } from '../../../config';
+import { searchPageMaxFetchCount } from '../../../config';
 
 import { parseSearchDate } from '../../../helpers'
 import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
@@ -71,7 +71,7 @@ const Search = () => {
         }
 
         async function getFilms() {
-            await filmApi.search({ ...params, limit: pageMaxFetchCount })
+            await filmApi.search({ ...params, limit: searchPageMaxFetchCount, searchPage: true })
                 .then(res => {
                     dispatch({
                         type: 'initial-success',
@@ -99,7 +99,8 @@ const Search = () => {
                 filter: filter,
                 dir: dir,
                 skip: films.length,
-                limit: pageMaxFetchCount
+                limit: searchPageMaxFetchCount,
+                searchPage: true
             })
                 .then(res => {
                     dispatch({

@@ -5,3 +5,5 @@ export const playlistButtonMaxFetchCount = 10
 
 export const pageInitialMaxFetchCount = 40
 export const pageMaxFetchCount = 20
+
+export const searchPageMaxFetchCount = 10

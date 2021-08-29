@@ -8,6 +8,7 @@ import { authInitialState, authReducer } from '../reducer';
 
 import * as authApi from '../../../services/authService'
 import UserContext from '../../../helpers/contexts/user/userContext'
+import { handleCloseModalWindow } from '../../../helpers';
 
 const Register = () => {
 
@@ -27,7 +28,7 @@ const Register = () => {
                     })
                     setTimeout(() => {
                         login(res.data.user.name, res.data.user.id, res.data.token, res.data.refreshToken)
-                        history.goBack()
+                        handleCloseModalWindow(history, '/register', true)
                     }, 1500)
                 })
                 .catch(err => {
@@ -66,7 +67,7 @@ const Register = () => {
     }
 
     const modalClose = () => {
-        history.goBack();
+        handleCloseModalWindow(history, '/register')
     };
 
 
@@ -78,7 +79,7 @@ const Register = () => {
                     <label className="form-label" htmlFor="nick">Nick</label>
                     <Input isInvalid={isSubmitted && !nick} type="text" name="nick" value={nick}
                         onChange={e => dispatch({ type: 'field', fieldName: 'nick', payload: e.target.value })} />
-                   
+
                     <div className="invalid-feedback">
                         Nick is required
                     </div>
@@ -89,7 +90,7 @@ const Register = () => {
                     <Input
                         isInvalid={(isSubmitted && !email)}
                         type="email" name="email" value={email} onChange={e => dispatch({ type: 'field', fieldName: 'email', payload: e.target.value })} />
-                   
+
                     <div className="invalid-feedback">
                         Email is required
                     </div>
@@ -100,7 +101,7 @@ const Register = () => {
                     <Input isInvalid={isSubmitted && (password.length < 6)} type="password"
                         name="password" value={password}
                         onChange={e => dispatch({ type: 'field', fieldName: 'password', payload: e.target.value })} />
-                   
+
                     <div className="invalid-feedback">
                         {
                             password.length === 0 ? "Password is required" : "Password too short (min 6 chars)"
@@ -118,7 +119,7 @@ const Register = () => {
 
                 {
                     isError &&
-                    <div  className="alert alert-danger mt-2">
+                    <div className="alert alert-danger mt-2">
                         {error ? error : 'Error while registtering.'}
                     </div>
                 }

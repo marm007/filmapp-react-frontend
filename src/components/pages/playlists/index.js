@@ -33,7 +33,7 @@ function PlaylistsPage() {
 
     useEffect(() => {
         async function fetchInitialPlaylists() {
-            await playlistApi.show({ limit: pageInitialMaxFetchCount })
+            await playlistApi.show({ limit: pageInitialMaxFetchCount, playlistPage: true })
                 .then(res => {
                     const result = res.data;
 
@@ -62,7 +62,7 @@ function PlaylistsPage() {
 
     useEffect(() => {
         async function fetchPlaylists() {
-            await playlistApi.show({ skip: playlistsCount, limit: pageMaxFetchCount })
+            await playlistApi.show({ skip: playlistsCount, limit: pageMaxFetchCount, playlistPage: true })
                 .then(res => {
                     const result = res.data;
 

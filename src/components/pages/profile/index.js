@@ -19,8 +19,11 @@ import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListe
 import image_not_found from '../../../images/image_not_found.png'; // Tell Webpack this JS file uses this image
 import Skeleton from '../../models/film/skeleton'
 import 'core-js/modules/esnext.promise.all-settled'
+import UpdateContext from '../../../helpers/contexts/updateModal/updateContext';
 
 const Profile = () => {
+
+    const { clearToUpdate, updateResource } = useContext(UpdateContext)
 
     const { user, clearUser } = useContext(UserContext)
 
@@ -53,7 +56,7 @@ const Profile = () => {
         async function fetchInitialData() {
 
             const [response] = await Promise.allSettled([
-                userApi.me({ skipFilms: 0, skipPlaylists: 0, limit: pageInitialMaxFetchCount })
+                userApi.me({ playlists: true, films: true, populatePlaylists: true, skipFilms: 0, skipPlaylists: 0, limit: pageInitialMaxFetchCount })
             ])
 
             let data = []
@@ -101,7 +104,7 @@ const Profile = () => {
     useEffect(() => {
         async function fetchData() {
             const [response] = await Promise.allSettled([
-                userApi.me({ skipFilms: filmsCount, skipPlaylists: playlistsCount, limit: pageMaxFetchCount })
+                userApi.me({ playlists: true, films: true, populatePlaylists: true, skipFilms: filmsCount, skipPlaylists: playlistsCount, limit: pageMaxFetchCount })
             ])
 
             let data = []
@@ -173,6 +176,20 @@ const Profile = () => {
             removeModalData.id === toRemove.id && removeModalData.title === toRemove.title &&
             removeModalData.type === (toRemove.isPlaylist ? 'playlist' : 'film')) remove()
     }, [isRemoving, removeModalData, toRemove, clear])
+
+    useEffect(() => {
+        const handleUpdateResource = () => {
+            dispatch({
+                type: 'update-resource',
+                resource: updateResource.resource,
+                isPlaylist: updateResource.isPlaylist
+            })
+
+            clearToUpdate()
+        }
+
+        if (updateResource.isPlaylist !== null && updateResource.resource !== null) handleUpdateResource()
+    }, [updateResource, clearToUpdate])
 
     const handleRemove = (e, resource) => {
         e.stopPropagation()

@@ -4,6 +4,8 @@ import UserContext from "../../../helpers/contexts/user/userContext";
 import { settingsInitialState, settingsReducer } from "./reducer";
 import * as userApi from '../../../services/userService'
 import Modal from "../../models/modal";
+import Input from "../../models/input";
+import { handleCloseModalWindow } from "../../../helpers";
 
 const Settings = () => {
 
@@ -14,7 +16,7 @@ const Settings = () => {
 
     const [state, dispatch] = useReducer(settingsReducer, settingsInitialState)
     // eslint-disable-next-line no-unused-vars
-    const { email, name, password, initialUser, isSubmitted, isSending, isInitialLoaded, success, error } = state
+    const { email, name, password, initialUser, isSubmitted, isSending, isInitialLoaded, success, isSuccess, error } = state
 
 
     useEffect(() => {
@@ -49,9 +51,9 @@ const Settings = () => {
     useEffect(() => {
         async function updateUserData() {
             let toUpdate = {}
-            if (password) toUpdate = { password: password }
-            if (email && email !== '' && email !== initialUser.email) toUpdate = { ...toUpdate, email: email }
-            if (name && name !== '' && name !== initialUser.name) toUpdate = { ...toUpdate, name: name }
+            if (password && password.length > 6) toUpdate = { password: password }
+            if (email) toUpdate = { ...toUpdate, email: email }
+            if (name) toUpdate = { ...toUpdate, name: name }
 
             await userApi.partialUpdate(toUpdate)
                 .then(res => {
@@ -60,13 +62,7 @@ const Settings = () => {
                     })
 
                     setTimeout(() => {
-                        let pathname = location.pathname.slice(0, -9)
-                        if (pathname === '') pathname = process.env.REACT_APP_PATH_NAME
-                        history.replace({
-                            pathname: pathname,
-                            search: location.search,
-                            state: location.state
-                        })
+                        handleCloseModalWindow(history, '/settings')
                         updateUser(res.data.accessToken)
                     }, 500)
                 })
@@ -79,7 +75,7 @@ const Settings = () => {
                 })
         }
         if (isSending) updateUserData()
-    }, [email, initialUser.email, initialUser.name, isSending, name, password, history, location, updateUser])
+    }, [email, isSending, name, password, history, location, updateUser])
 
 
     const handleSubmit = (e) => {
@@ -89,9 +85,9 @@ const Settings = () => {
             type: 'submit'
         })
 
-        if (password ||
-            (email && email !== '' && email !== initialUser.email) ||
-            (name && name !== '' && name !== initialUser.name)) {
+        if ((password && password.length >= 6) ||
+            email ||
+            name) {
             dispatch({
                 type: 'send'
             })
@@ -99,7 +95,7 @@ const Settings = () => {
     }
 
     const modalClose = () => {
-        history.goBack()
+        handleCloseModalWindow(history, '/settings')
     }
 
     return (
@@ -107,23 +103,38 @@ const Settings = () => {
             <form onSubmit={isSending ? null : handleSubmit}>
                 <div>
                     <label className="form-label" htmlFor="name">Name</label>
-                    <input className="form-control" type="text" name="name"
-                        value={name} placeholder={initialUser.name}
+                    <Input type="text" name="name"
+                        value={name}
+                        isInvalid={isSubmitted && !name}
                         onChange={e => dispatch({ type: 'field', fieldName: 'name', payload: e.target.value })} />
+                    <div className="invalid-feedback">
+                        Name cannot be empty
+                    </div>
                 </div>
-                <div className="mt-2">
+                <div className="mt-2 form-group">
                     <label className="form-label" htmlFor="email">Email</label>
-                    <input className="form-control" type="email" name="email"
-                        value={email} placeholder={initialUser.email}
+                    <Input type="email" name="email"
+                        value={email}
+                        isInvalid={isSubmitted && !email}
                         onChange={e => dispatch({ type: 'field', fieldName: 'email', payload: e.target.value })} />
+                    <div className="invalid-feedback">
+                        Email cannot be empty
+                    </div>
                 </div>
-                <div className="mt-2">
+                <div className="mt-2 form-group">
                     <label className="form-label" htmlFor="password">Password</label>
-                    <input className="form-control" type="password" name="password"
+                    <Input type="password" name="password" isInvalid={isSubmitted && (password && password.length < 6)}
                         value={password} onChange={e => dispatch({ type: 'field', fieldName: 'password', payload: e.target.value })} />
+                    <div className="invalid-feedback">
+                        Password must be at least 6 characters long!
+                    </div>
                 </div>
                 <div className="d-flex align-items-center mt-2">
-                    <button disabled={isSending || !isInitialLoaded} type="submit" className="btn btn-primary">
+                    <button type="submit" className="btn btn-primary"
+                        disabled={isSending || !isInitialLoaded ||
+                            (isInitialLoaded && email === initialUser.email && name === initialUser.name &&
+                                (!password || (password && password.length < 6)))}
+                    >
                         Change
                     </button>
 
@@ -140,7 +151,7 @@ const Settings = () => {
                 </div>
             }
             {
-                success &&
+                isSuccess &&
                 <div className="alert alert-success mt-2 mb-0">
                     {success}
                 </div>

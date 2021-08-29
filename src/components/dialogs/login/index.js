@@ -8,6 +8,7 @@ import * as authApi from '../../../services/authService'
 
 import UserContext from '../../../helpers/contexts/user/userContext'
 import { authInitialState, authReducer } from '../reducer';
+import { handleCloseModalWindow } from '../../../helpers';
 
 const Login = () => {
 
@@ -17,29 +18,17 @@ const Login = () => {
     let location = useLocation()
 
     const [state, dispatch] = useReducer(authReducer, authInitialState)
-    const { email, password, isSubmitted, isSending, isError, error } = state
+    const { email, password, isSubmitted, isSending, isError, isSuccess, error } = state
 
     useEffect(() => {
         async function sendData() {
             await authApi.login({ email, password })
                 .then(res => {
-                    login(res.data.user.name, res.data.user.id, res.data.token, res.data.refreshToken)
-                    //history.replace(location.pathname.slice(0, -6))
-
-                    let pathname = location.pathname.slice(0, -6)
-                    if (pathname === '') pathname = process.env.REACT_APP_PATH_NAME
-
-                    history.replace({
-                        pathname: pathname,
-                        search: location.search,
-                        state: location.state
+                    dispatch({
+                        type: 'success'
                     })
-
-                    //if (!location.state) {
-                    // history.goBack();
-                    //} else {
-                    //   history.replace(location.state.from)
-                    //}
+                    login(res.data.user.name, res.data.user.id, res.data.token, res.data.refreshToken)
+                    setTimeout(() => handleCloseModalWindow(history, '/login', true), 1500)
                 })
                 .catch(err => {
                     let errorMessage = null;
@@ -69,7 +58,7 @@ const Login = () => {
     }
 
     const handleForgotPassword = () => {
-        history.goBack();
+        handleCloseModalWindow(history, '/login')
 
         setTimeout(function () {
             history.push(`${location.pathname.slice(0, -5)}forgot${location.search}`);
@@ -77,15 +66,11 @@ const Login = () => {
     };
 
     const modalClose = () => {
-        //if (!location.state) {
-            history.goBack();
-        //} else {
-        //    history.push(process.env.REACT_APP_PATH_NAME)
-        //}
+        handleCloseModalWindow(history, '/login')
     };
 
     const handleRegister = () => {
-        history.goBack();
+        handleCloseModalWindow(history, '/login')
 
         setTimeout(function () {
             history.push(`${location.pathname.slice(0, -5)}register${location.search}`);
@@ -129,8 +114,15 @@ const Login = () => {
 
             {
                 isError &&
-                <div className="alert-danger mt-2 mb-0">
+                <div className="alert alert-danger mt-2 mb-0">
                     {error ? error : 'Error while logging in.'}
+                </div>
+            }
+
+            {
+                isSuccess &&
+                <div className="alert alert-success mt-2 mb-0">
+                    You are now logged in.
                 </div>
             }
 

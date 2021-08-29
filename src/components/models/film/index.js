@@ -6,7 +6,7 @@ import PlaylistAddButtonComponent from "../../buttons/updatePlaylist";
 
 import RemoveButton from '../../buttons/remove';
 
-import '../../pages/film/film.css'
+import './film.css'
 import useWindowsWidth from '../../../helpers/hooks/useWindowsWidth';
 import { useContext, useEffect, useState } from 'react';
 import UserContext from '../../../helpers/contexts/user/userContext';
@@ -43,7 +43,6 @@ const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommen
                 </div>
 
                 <div className={filmCSS[3]}>
-
                     <div className={filmCSS[4]}>
                         <div className={`${user.auth ? `${isProfile ? 'button-ripple-div-next-width-2x' : 'button-ripple-div-next-width'}` : 'col-12'} col p-0 pr-2 cursor-pointer`}
                             onClick={() => handleRedirect()}>
@@ -58,21 +57,24 @@ const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommen
                             </div>
                             }
                         </div>
-
-                        {
-                            isProfile ? <>
-                                <RemoveButton handleRemove={handleRemove} />
-                                <EditButton id={film.id} title={film.title} description={film.description} />
-                            </>
-                                : user.auth ?
-                                    <PlaylistAddButtonComponent
-                                        isRecommendations={isRecommendations}
-                                        filmDispatch={filmDispatch}
-                                        index={index}
-                                        filmID={film.id} /> : null
-                        }
+                        <div className={`${user.auth ? `${isProfile ? 'click-under-buttons-container-x2' : 'click-under-buttons-container'}` : 'click-under-buttons-container'}`}>
+                            {
+                                isProfile ? <>
+                                    <RemoveButton handleRemove={handleRemove} />
+                                    <EditButton id={film.id} title={film.title} description={film.description} />
+                                </>
+                                    : user.auth ?
+                                        <PlaylistAddButtonComponent
+                                            isRecommendations={isRecommendations}
+                                            filmDispatch={filmDispatch}
+                                            index={index}
+                                            filmID={film.id} /> : null
+                            }
+                            <div className="col col-12 m-0 p-0 click-under-buttons"
+                                onClick={() => handleRedirect()}>
+                            </div>
+                        </div>
                     </div>
-
                 </div>
             </div>
         </div >

@@ -45,6 +45,18 @@ export function profileReducer(state, action) {
                 data: [...new Set([...state.data, ...action.data])]
             }
         }
+        case 'update-resource': {
+            return state.data ? {
+                ...state,
+                data: state.data.map(record => {
+                    if (Boolean(record.isPlaylist) === action.isPlaylist && record.id === action.resource.id) {
+                        return { ...record, title: action.resource.title }
+                    }
+
+                    return record
+                })
+            } : state
+        }
         case 'remove': {
             return {
                 ...state,

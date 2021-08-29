@@ -32,7 +32,7 @@ function Home() {
 
     useEffect(() => {
         async function fetchData() {
-            await filmApi.all({ limit: pageInitialMaxFetchCount }).then(res => {
+            await filmApi.all({ preview: true, limit: pageInitialMaxFetchCount }).then(res => {
                 let response = res.data;
 
                 response.forEach(film => {
@@ -51,7 +51,7 @@ function Home() {
 
     useEffect(() => {
         async function getAllFilms() {
-            await filmApi.all({ skip: films.length, limit: pageMaxFetchCount })
+            await filmApi.all({ preview: true, skip: films.length, limit: pageMaxFetchCount })
                 .then(res => {
                     let response = res.data;
 

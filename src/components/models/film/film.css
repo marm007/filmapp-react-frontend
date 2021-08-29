@@ -1,0 +1,12 @@
+.click-under-buttons-container {
+    width: 26px;
+}
+
+.click-under-buttons-container-x2 {
+    width: 52px;
+}
+
+
+.click-under-buttons {
+    height: calc(100% - 26px);
+}

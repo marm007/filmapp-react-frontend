@@ -7,7 +7,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 import './App.css';
 
-import PrivateRoute from './components/models/privateRoute'
+import PrivateRoute from './components/pages/privateRoute'
 
 //import UserUpdateDialog from './components/settings'
 
@@ -34,6 +34,7 @@ import ToastContext from './helpers/contexts/toast/toastContext'
 
 import WithAxios from "./components/models/withAxios";
 import UserProvider from './helpers/contexts/user/userProvider';
+import UpdateProvider from './helpers/contexts/updateModal/updateProvider';
 import ErrorBoundary from './components/pages/errorBoundary';
 
 import { isMobile } from 'react-device-detect'
@@ -47,7 +48,7 @@ library.add(faPlay, faSortDown, faSortUp, faTrashAlt, faTimes, faGlobeEurope, fa
 
 const pathName = process.env.REACT_APP_PATH_NAME
 
-const NavbarComponent = lazy(() => import('./components/models/navbar'))
+const NavbarComponent = lazy(() => import('./components/pages/navbar'))
 
 const ProfileComponent = lazy(() => import('./components/pages/profile'))
 const HomeComponent = lazy(() => import('./components/pages/home'))
@@ -94,64 +95,65 @@ function App() {
                 <UserProvider>
                     <WithAxios>
                         <ErrorBoundary>
+                            <UpdateProvider>
+                                <Suspense fallback={<></>}>
+                                    {isMobile ? <MobileStyle /> : <DesktopStyle />}
 
-                            <Suspense fallback={<></>}>
-                                {isMobile ? <MobileStyle /> : <DesktopStyle />}
+                                    <PrivateRoute exact path={[`${pathName}settings`, `${pathName}profile/settings`, `${pathName}film/:id/settings`, `${pathName}search/settings`, `${pathName}add/settings`, `${pathName}playlists/settings`]}
+                                        component={UserUpdateDialog} />
 
-                                <PrivateRoute exact path={[`${pathName}settings`, `${pathName}profile/settings`, `${pathName}film/:id/settings`, `${pathName}search/settings`, `${pathName}add/settings`, `${pathName}playlists/settings`]}
-                                    component={UserUpdateDialog} />
-
-                                <PrivateRoute exact path={[`${pathName}profile/update-film/:id`]}
-                                    component={FilmUpdateDialog} />
+                                    <PrivateRoute exact path={[`${pathName}profile/update-film/:id`]}
+                                        component={FilmUpdateDialog} />
 
 
-                                <PrivateRoute exact path={[`${pathName}profile/update-playlist/:id`]}
-                                    component={PlaylistUpdateDialog} />
+                                    <PrivateRoute exact path={[`${pathName}profile/update-playlist/:id`]}
+                                        component={PlaylistUpdateDialog} />
 
-                                <Route exact path={[`${pathName}login`, `${pathName}film/:id/login`, `${pathName}search/login`, `${pathName}add/login`, `${pathName}playlists/login`]}
-                                    render={(props) => <LoginDialog {...props} />} />
+                                    <Route exact path={[`${pathName}login`, `${pathName}film/:id/login`, `${pathName}search/login`, `${pathName}add/login`, `${pathName}playlists/login`]}
+                                        render={(props) => <LoginDialog {...props} />} />
 
-                                <Route exact path={[`${pathName}register`, `${pathName}film/:id/register`, `${pathName}search/register`, `${pathName}add/register`, `${pathName}playlists/register`]}
-                                    render={(props) => <RegisterDialog {...props} />} />
+                                    <Route exact path={[`${pathName}register`, `${pathName}film/:id/register`, `${pathName}search/register`, `${pathName}add/register`, `${pathName}playlists/register`]}
+                                        render={(props) => <RegisterDialog {...props} />} />
 
-                                <Route exact path={[`${pathName}reset/:token`, `${pathName}film/:id/reset/:token`, `${pathName}search/reset/:token`, `${pathName}add/reset/:token`, `${pathName}playlists/reset/:token`]}
-                                    render={(props) => <ResetPasswordDialog {...props} />} />
+                                    <Route exact path={[`${pathName}reset/:token`, `${pathName}film/:id/reset/:token`, `${pathName}search/reset/:token`, `${pathName}add/reset/:token`, `${pathName}playlists/reset/:token`]}
+                                        render={(props) => <ResetPasswordDialog {...props} />} />
 
-                                <Route exact path={[`${pathName}forgot`, `${pathName}film/:id/forgot`, `${pathName}search/forgot`, `${pathName}add/forgot`, `${pathName}playlists/forgot`]}
-                                    render={(props) => <ForgotPasswordDialog {...props} />} />
+                                    <Route exact path={[`${pathName}forgot`, `${pathName}film/:id/forgot`, `${pathName}search/forgot`, `${pathName}add/forgot`, `${pathName}playlists/forgot`]}
+                                        render={(props) => <ForgotPasswordDialog {...props} />} />
 
-                            </Suspense>
+                                </Suspense>
 
-                            <Suspense fallback={<div className="suspense-loader"> <div className="spinner-border" /></div>}>
+                                <Suspense fallback={<div className="suspense-loader"> <div className="spinner-border" /></div>}>
 
-                                <Route render={() => <NavbarComponent />} />
+                                    <Route render={() => <NavbarComponent />} />
 
-                                <Switch>
-                                    <Route exact path={[`${pathName}film/:id`, `${pathName}film/:id/login`, `${pathName}film/:id/register`, `${pathName}film/:id/reset/:token`,
-                                    `${pathName}film/:id/forgot`, `${pathName}film/:id/settings`]}
-                                        render={(props) => <FilmComponent {...props} />} />
+                                    <Switch>
+                                        <Route exact path={[`${pathName}film/:id`, `${pathName}film/:id/login`, `${pathName}film/:id/register`, `${pathName}film/:id/reset/:token`,
+                                        `${pathName}film/:id/forgot`, `${pathName}film/:id/settings`]}
+                                            render={(props) => <FilmComponent {...props} />} />
 
-                                    <Route exact path={[`${pathName}`, `${pathName}login`, `${pathName}register`, `${pathName}settings`,
-                                    `${pathName}reset/:token`, `${pathName}forgot`]}
-                                        render={(props) => <HomeComponent {...props} />} />
+                                        <Route exact path={[`${pathName}`, `${pathName}login`, `${pathName}register`, `${pathName}settings`,
+                                        `${pathName}reset/:token`, `${pathName}forgot`]}
+                                            render={(props) => <HomeComponent {...props} />} />
 
-                                    <Route exact path={[`${pathName}search`, `${pathName}search/login`, `${pathName}search/settings`, `${pathName}search/register`, `${pathName}search/reset/:token`, `${pathName}search/forgot`]}
-                                        render={(props) => <SearchComponent {...props} />} />
+                                        <Route exact path={[`${pathName}search`, `${pathName}search/login`, `${pathName}search/settings`, `${pathName}search/register`, `${pathName}search/reset/:token`, `${pathName}search/forgot`]}
+                                            render={(props) => <SearchComponent {...props} />} />
 
-                                    <Route exact path={[`${pathName}playlists`, `${pathName}playlists/login`, `${pathName}playlists/settings`, `${pathName}playlists/register`, `${pathName}playlists/reset/:token`,
-                                    `${pathName}playlists/forgot`]} render={(props) => <PlaylistsPage {...props} />} />
+                                        <Route exact path={[`${pathName}playlists`, `${pathName}playlists/login`, `${pathName}playlists/settings`, `${pathName}playlists/register`, `${pathName}playlists/reset/:token`,
+                                        `${pathName}playlists/forgot`]} render={(props) => <PlaylistsPage {...props} />} />
 
-                                    <PrivateRoute exact path={[`${pathName}add`, `${pathName}add/settings`]}
-                                        component={AddFilmComponent} />
+                                        <PrivateRoute exact path={[`${pathName}add`, `${pathName}add/settings`]}
+                                            component={AddFilmComponent} />
 
-                                    <PrivateRoute exact path={[`${pathName}profile`, `${pathName}profile/settings`, `${pathName}profile/update-film/:id`, `${pathName}profile/update-playlist/:id`]}
-                                        component={ProfileComponent} />
+                                        <PrivateRoute exact path={[`${pathName}profile`, `${pathName}profile/settings`, `${pathName}profile/update-film/:id`, `${pathName}profile/update-playlist/:id`]}
+                                            component={ProfileComponent} />
 
-                                    <Route exact path="*" render={(props) => <NotFoundComponent {...props} />} />
+                                        <Route exact path="*" render={(props) => <NotFoundComponent {...props} />} />
 
-                                </Switch>
+                                    </Switch>
 
-                            </Suspense>
+                                </Suspense>
+                            </UpdateProvider>
                         </ErrorBoundary>
                     </WithAxios>
                 </UserProvider>

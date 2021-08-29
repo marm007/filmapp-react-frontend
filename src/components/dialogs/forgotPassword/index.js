@@ -7,6 +7,7 @@ import Input from '../../models/input';
 import { authInitialState, authReducer } from '../reducer';
 
 import * as authApi from '../../../services/authService'
+import { handleCloseModalWindow } from '../../../helpers';
 
 const ForgotPassword = () => {
     let history = useHistory()
@@ -56,7 +57,7 @@ const ForgotPassword = () => {
     };
 
     const modalClose = () => {
-        history.goBack();
+        handleCloseModalWindow(history, '/forgot')
     };
 
 

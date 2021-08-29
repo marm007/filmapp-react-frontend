@@ -67,7 +67,7 @@ function NavbarComponent(props) {
 
     useEffect(() => {
         async function getAllSearchedFilms() {
-            await filmApi.search({ search: title, skip: options.length })
+            await filmApi.search({ search: title, skip: options.length, searchPage: true })
                 .then(({ data }) => {
                     const options = data.map((film) => ({
                         ...film,
@@ -90,7 +90,7 @@ function NavbarComponent(props) {
 
     useEffect(() => {
         async function getAllSearchedFilms() {
-            await filmApi.search({ search: title })
+            await filmApi.search({ search: title, searchPage: true })
                 .then(({ data }) => {
                     const options = data.map((film) => ({
                         ...film,
@@ -212,8 +212,8 @@ function NavbarComponent(props) {
     return (
 
         <nav
-            className="navbar navbar-expand-md navbar-light bg-light py-2 px-4">
-            <div className="col-5 col-sm-2 col-md-4 order-first order-sm-first order-md-first pb-2">
+            className="navbar navbar-expand-md navbar-light bg-light py-2 px-3">
+            <div className="col-5 col-sm-2 col-md-4 order-first order-sm-first order-md-first pb-2 px-0">
                 <div className="navbar-brand d-flex align-items-center"
                     onClick={() => history.push(process.env.REACT_APP_PATH_NAME)}>
                     <img alt=""
@@ -225,7 +225,7 @@ function NavbarComponent(props) {
                 </div>
             </div>
 
-            <div className="col-6 order-2 col-sm-2 order-sm-last text-right d-md-none m-button">
+            <div className="col-6 order-2 col-sm-2 order-sm-last text-right d-md-none m-button px-0">
                 <button type="button" className="navbar-toggler m-button"
                     aria-controls="navbar-collapse-menu" data-toggle="collapse"
                     data-target="#navbar-collapse-menu" aria-expanded="false" aria-label="toggle-navigation" >
@@ -298,16 +298,16 @@ function NavbarComponent(props) {
                                                     });
 
                                                 }}>
-                                                <picture>
-                                                    <source type="image/webp" src={result.imgWebp} />
-                                                    <source type="image/jpeg" src={result.imgNormal} />
-                                                    <img
-                                                        className="p-0 search-menu-image"
-                                                        alt=""
-                                                        src={result.imgNormal}
-                                                    />
-                                                </picture>
-                                                  
+                                                    <picture>
+                                                        <source type="image/webp" src={result.imgWebp} />
+                                                        <source type="image/jpeg" src={result.imgNormal} />
+                                                        <img
+                                                            className="p-0 search-menu-image"
+                                                            alt=""
+                                                            src={result.imgNormal}
+                                                        />
+                                                    </picture>
+
                                                     <span className="entry__text">{result.title}</span>
                                                 </div>
                                             </AsyncMenuItem>

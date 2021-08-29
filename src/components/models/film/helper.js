@@ -2,8 +2,8 @@ const recommendationsNormal = [
     'col-12 mb-4 container-px',
     'row p-0 m-0 play-outer-container remove-container p-0',
     'col-6 m-0 p-0',
-    'col-6 col-sm-6',
-    'row mx-0 mb-0',
+    'col-6 col-sm-6 pr-0',
+    'row mx-0 mb-0 h-100',
     'mb-1 title'
 ]
 
@@ -21,7 +21,7 @@ const searchNormal = [
     'row p-0 m-0 play-outer-container remove-container p-0',
     'col-6 col-sm-4 p-0',
     'col-6 col-sm-8',
-    'row mx-0 mb-0',
+    'row mx-0 mb-0 h-100',
     'mb-1 title'
 ]
 

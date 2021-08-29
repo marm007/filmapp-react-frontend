@@ -70,3 +70,23 @@ export const parseSearchDate = (film) => {
 
     return time;
 };
+
+
+export const handleCloseModalWindow = (history, toSplit, replace = false) => {
+
+    let pathname = history.location.pathname.split(toSplit)[0]
+
+    const historyObject = {
+        pathname: pathname === '' ? process.env.REACT_APP_PATH_NAME : pathname,
+        search: history.location.search,
+        state: history.location.state
+    }
+
+    if (replace) {
+        history.replace(historyObject)
+    }
+    else {
+        history.push(historyObject)
+    }
+
+}

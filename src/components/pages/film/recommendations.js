@@ -43,7 +43,7 @@ const FilmsRecommendations = ({ handleRedirect }) => {
 
     useEffect(() => {
         async function initialLoad() {
-            await filmApi.all({ exclude: id, limit: recommendationsMaxFetchCount })
+            await filmApi.all({ exclude: id, limit: recommendationsMaxFetchCount, preview: true })
                 .then(res => {
                     let films = res.data;
 
@@ -82,7 +82,7 @@ const FilmsRecommendations = ({ handleRedirect }) => {
 
     useEffect(() => {
         async function fetchData() {
-            await filmApi.all({ exclude: id, skip: films.length, limit: recommendationsMaxFetchCount }).then(res => {
+            await filmApi.all({ exclude: id, skip: films.length, limit: recommendationsMaxFetchCount, preview: true }).then(res => {
                 let films = res.data;
 
                 films.forEach(film => {
