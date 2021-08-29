@@ -1,1 +1,0 @@
-{"version":3,"sources":["helpers/css/mobileStyle.js"],"names":["DesktopStyle"],"mappings":"yHAAA,8BAKeA,UAFM,kBAAO,+B","file":"static/js/21.99597924.chunk.js","sourcesContent":["import React from 'react'\nimport './mobile.css'\n\nconst DesktopStyle = () => (<></>)\n\nexport default DesktopStyle"],"sourceRoot":""}
