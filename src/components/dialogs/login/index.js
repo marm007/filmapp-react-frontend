@@ -28,7 +28,7 @@ const Login = () => {
                         type: 'success'
                     })
                     login(res.data.user.name, res.data.user.id, res.data.token, res.data.refreshToken)
-                    setTimeout(() => handleCloseModalWindow(history, '/login', true), 1500)
+                    setTimeout(() => handleCloseModalWindow(history, '/login', true), 1000)
                 })
                 .catch(err => {
                     let errorMessage = null;

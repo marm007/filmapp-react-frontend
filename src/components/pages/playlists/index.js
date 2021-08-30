@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useCallback } from 'react';
+import React, { useEffect, useReducer, useCallback, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { playlistsPageReducer, initialState } from './reducer'
@@ -7,14 +7,18 @@ import Skeleton from '../../models/film/skeleton';
 import Playlist from '../../models/playlist';
 
 import * as playlistApi from '../../../services/playlistService'
+import * as userApi from '../../../services/userService'
 
 import { pageInitialMaxFetchCount, pageMaxFetchCount } from '../../../config';
 
 import useBottomScrollListener from '../../../helpers/hooks/useBottomScrollListener';
+import UserContext from '../../../helpers/contexts/user/userContext';
 
 const pathName = process.env.REACT_APP_PATH_NAME;
 
 function PlaylistsPage() {
+
+    const { user } = useContext(UserContext);
 
     let history = useHistory()
 
@@ -33,6 +37,7 @@ function PlaylistsPage() {
 
     useEffect(() => {
         async function fetchInitialPlaylists() {
+            await userApi.me().then(res => {}).catch(err => console.error(err))
             await playlistApi.show({ limit: pageInitialMaxFetchCount, playlistPage: true })
                 .then(res => {
                     const result = res.data;
@@ -42,7 +47,7 @@ function PlaylistsPage() {
                     filtered.forEach(playlist => {
                         playlist.img = `${process.env.REACT_APP_API_URL}films/${playlist.film_id}/thumbnail`
                     });
-
+                    console.log(res.data)
                     dispatch({
                         type: 'initial-success',
                         playlists: filtered,
@@ -54,14 +59,16 @@ function PlaylistsPage() {
                     console.error(err)
                 })
         }
-
+        console.log('auth',user.auth)
         dispatch({ type: 'clear' })
         fetchInitialPlaylists()
 
-    }, [])
+    }, [user.auth])
 
     useEffect(() => {
         async function fetchPlaylists() {
+        console.log('auth','aldalld')
+
             await playlistApi.show({ skip: playlistsCount, limit: pageMaxFetchCount, playlistPage: true })
                 .then(res => {
                     const result = res.data;

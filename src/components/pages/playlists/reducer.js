@@ -1,4 +1,4 @@
-import { pageInitialMaxFetchCount, pageMaxFetchCount  } from '../../../config'
+import { pageInitialMaxFetchCount, pageMaxFetchCount } from '../../../config'
 
 
 export const initialState = {
@@ -45,6 +45,12 @@ export const playlistsPageReducer = (state, action) => {
                 playlistsCount: state.playlistsCount + action.responseCount,
                 error: null
             }
+        }
+        case 'user-logout': {
+            return state.playlists ? {
+                ...state,
+                playlists: state.playlists.filter(playlist => playlist.is_public)
+            } : state
         }
         case 'clear': {
             return initialState

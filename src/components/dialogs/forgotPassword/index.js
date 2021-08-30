@@ -77,7 +77,7 @@ const ForgotPassword = () => {
 
                 {
                     isSuccess &&
-                    <div className="alert alert-danger mt-2">
+                    <div className="alert alert-success mt-2">
                         Email with link to reset password has been sent.
                     </div>
                 }
