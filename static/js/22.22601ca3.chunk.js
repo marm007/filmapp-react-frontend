@@ -1,0 +1,2 @@
+(this.webpackJsonpfilmapp_frontened=this.webpackJsonpfilmapp_frontened||[]).push([[22],{508:function(n,t,e){"use strict";e.r(t);e(1),e(693);var p=e(2);t.default=function(){return Object(p.jsx)(p.Fragment,{})}},693:function(n,t,e){}}]);
+//# sourceMappingURL=22.22601ca3.chunk.js.map
