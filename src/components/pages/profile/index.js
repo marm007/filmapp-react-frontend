@@ -3,23 +3,23 @@ import { useHistory } from 'react-router-dom';
 
 import { initialProfileState, profileReducer } from './reducer';
 
-import Film from '../film-row';
-import Playlist from '../playlist';
+import Film from '../../film-row';
+import Playlist from '../../playlist';
 
-import { me } from '../../services/userService'
-import { remove as removePlaylist } from '../../services/playlistService'
-import { remove as removeFilm } from '../../services/filmService'
+import { me } from '../../../services/userService'
+import { remove as removePlaylist } from '../../../services/playlistService'
+import { remove as removeFilm } from '../../../services/filmService'
 
-import { pageInitialMaxFetchCount, pageMaxFetchCount } from '../../config';
+import { pageInitialMaxFetchCount, pageMaxFetchCount } from '../../../config';
 
-import UserContext from '../../contexts/user/userContext';
-import RemoveModalContext from '../../contexts/removeModal/removeModalContext';
-import useBottomScrollListener from '../../hooks/use-bottom-scroll-listener';
+import UserContext from '../../../contexts/user/userContext';
+import RemoveModalContext from '../../../contexts/removeModal/removeModalContext';
+import useBottomScrollListener from '../../../hooks/use-bottom-scroll-listener';
 
-import Skeleton from '../../skeletons/film'
-import UpdateContext from '../../contexts/updateModal/updateContext';
+import Skeleton from '../../../skeletons/film'
+import UpdateContext from '../../../contexts/updateModal/updateContext';
 
-import image_not_found from '../../images/image_not_found.png'; 
+import image_not_found from '../../../images/image_not_found.png'; 
 import 'core-js/modules/esnext.promise.all-settled'
 
 const Profile = () => {

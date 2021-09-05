@@ -16,11 +16,11 @@ import useBottomScrollListener from '../../hooks/use-bottom-scroll-listener';
 import RippleButton from '../buttons/ripple';
 
 
-import FilmSkeleton from '../film-row/skeleton';
-import SearchSkeleton from './skeleton';
+import FilmSkeleton from '../../skeletons/film';
+import SearchSkeleton from '../../skeletons/search';
 
 import useWindowsWidth from '../../hooks/use-window-width';
-import Film from '../film-row';
+import Film from '../film-fluid';
 
 import "./style.css";
 

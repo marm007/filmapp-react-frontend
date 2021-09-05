@@ -22,11 +22,13 @@ const UpdatePlaylist = () => {
         isSending,
         isError,
         error,
-        isSuccess }, dispatch] = useReducer(updateReducer, updateInitialState)
+        isSuccess }, dispatch] = useReducer(updateReducer,
+            { ...updateInitialState, update: { title: '' }, initial: { title: '' } })
 
 
     useEffect(() => {
         const getInitialPlaylist = async () => {
+
             await index(id)
                 .then(res => {
                     dispatch({
@@ -42,7 +44,7 @@ const UpdatePlaylist = () => {
         if (history.location.state && history.location.state.title) {
             dispatch({
                 type: 'initial-success',
-                payload: history.location.state.title
+                payload: { title: history.location.state.title }
             })
         } else {
             getInitialPlaylist()
@@ -55,7 +57,7 @@ const UpdatePlaylist = () => {
         event.preventDefault()
         dispatch({ type: 'submit' })
 
-        if (update?.title) {
+        if (update.title) {
             dispatch({ type: 'send' })
 
             return partialUpdate(id, { title: update.title })
@@ -77,8 +79,8 @@ const UpdatePlaylist = () => {
             <form onSubmit={isSending ? null : handleSumbit}>
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
-                    <Input type="text" name="title" value={update?.title}
-                        isInvalid={isSumbitted && !update?.title}
+                    <Input type="text" name="title" value={update.title}
+                        isInvalid={isSumbitted && !update.title}
                         onChange={e => dispatch({ type: 'update', fieldName: 'title', payload: e.target.value })}
                     />
                     <div className="invalid-feedback">
@@ -88,7 +90,7 @@ const UpdatePlaylist = () => {
                 <div className="form-group">
                     <button className="btn btn-primary"
                         disabled={!isInitialLoaded ||
-                            (isInitialLoaded && update?.title === initial?.title)}
+                            (isInitialLoaded && update.title === initial.title)}
                         type="submit">Save</button>
                     {
                         isSending &&

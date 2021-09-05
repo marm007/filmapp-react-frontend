@@ -1,7 +1,5 @@
 import Skeleton from 'react-loading-skeleton';
 
-import '../../pages/film/film.css'
-
 const FilmSkeleton = ({ isRecommendations }) => {
 
     return (

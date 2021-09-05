@@ -7,7 +7,10 @@ import { faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 
 export default function RateFilm({ filmId, data }) {
 
+
     let history = useHistory()
+
+    const [isRating, setIsRating] = useState(false)
 
     const [rateData, setRateData] = useState({ likes: '', dislikes: '', isLiked: false, isDisliked: false })
 
@@ -17,7 +20,9 @@ export default function RateFilm({ filmId, data }) {
     }, [data])
 
     async function handleRateClick(action) {
-        if (action === null) return
+        if (action === null || isRating) return
+
+        setIsRating(true)
 
         try {
             const likeResult = await like(filmId, { action })
@@ -28,9 +33,11 @@ export default function RateFilm({ filmId, data }) {
             const isDisliked = details.disliked.indexOf(filmId) > -1
 
             setRateData({ isLiked, isDisliked, likes: likeResult.data.likes, dislikes: likeResult.data.dislikes })
+            setIsRating(false)
 
         } catch (err) {
             console.error(err)
+            setIsRating(false)
             if (err.response && err.response.status === 401) {
                 history.push(`${history.location.pathname}/login`);
             }

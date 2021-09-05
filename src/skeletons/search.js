@@ -2,7 +2,6 @@ import Skeleton from 'react-loading-skeleton';
 
 const SearchSkeleton = () => {
 
-
     return (
 
         <div className="col-12 col-sm-12 col-lg-8 m-0 mb-1 container-px">

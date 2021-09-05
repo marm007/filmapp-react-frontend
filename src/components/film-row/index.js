@@ -1,39 +1,28 @@
+import { useContext } from 'react';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TextTruncate from "react-text-truncate";
 
 import BlurredImageComponent from "../blurred-image";
+
 import PlaylistAddButtonComponent from "../buttons/update-playlist";
-
 import RemoveButton from '../buttons/remove';
-
-import './style.css'
-import useWindowsWidth from '../../hooks/use-window-width';
-import { useContext, useEffect, useState } from 'react';
-import UserContext from '../../contexts/user/userContext';
-
-import getFilmClass from './helper'
 import EditButton from '../buttons/edit';
 
-const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommendations, isSearch, filmDispatch, children }) => {
-    const isSmallScreen = useWindowsWidth((isRecommendations ? 768 : 576))
+import UserContext from '../../contexts/user/userContext';
 
-    const [filmCSS, setFilmCSS] = useState(getFilmClass(isRecommendations, isSearch, isSmallScreen))
+import './style.css'
+
+const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommendations, filmDispatch, children }) => {
 
     const { user } = useContext(UserContext);
 
-
-    useEffect(() => {
-        setFilmCSS(getFilmClass(isRecommendations, isSearch, isSmallScreen))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isSmallScreen])
-
-
     return (
-        <div className={filmCSS[0]}>
+        <div className={`col-12 ${isRecommendations ? 'col-sm-12' : 'col-sm-6'} col-md-3 col-lg-2 mb-4 container-px`}>
 
-            <div className={filmCSS[1]}>
+            <div className={`col play-outer-container remove-container p-0`}>
 
-                <div className={filmCSS[2]}
+                <div className={`col-12 col-sm-12 p-0`}
                     onClick={() => handleRedirect()}>
                     <div className="play-container">
                         <BlurredImageComponent
@@ -42,13 +31,13 @@ const Film = ({ film, index, handleRedirect, handleRemove, isProfile, isRecommen
                     </div>
                 </div>
 
-                <div className={filmCSS[3]}>
-                    <div className={filmCSS[4]}>
+                <div className={`col-12 col-sm-12 p-0`}>
+                    <div className={`row mx-0 mb-0 mt-1`}>
                         <div className={`${user.auth ? `${isProfile ? 'button-ripple-div-next-width-2x' : 'button-ripple-div-next-width'}` : 'col-12'} col p-0 pr-2 cursor-pointer`}
                             onClick={() => handleRedirect()}>
 
                             <TextTruncate line={1} text={film.title}
-                                className={filmCSS[5]} />
+                                className={`mb-1 mt-1 title`} />
 
                             {children ? children : <div className="mb-0 author-nick">
                                 <span>{film.author_name}&nbsp;</span>

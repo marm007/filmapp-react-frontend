@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { homePageReducer, initialState } from './reducer';
 
 import Film from '../film-row'
-import Skeleton from '../film-row/skeleton';
+import Skeleton from '../../skeletons/film';
 
 import { all } from '../../services/filmService'
 

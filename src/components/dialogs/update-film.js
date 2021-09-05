@@ -22,7 +22,8 @@ const UpdateFilm = () => {
         isSending,
         isError,
         error,
-        isSuccess }, dispatch] = useReducer(updateReducer, updateInitialState)
+        isSuccess }, dispatch] = useReducer(updateReducer,
+            { ...updateInitialState, update: { title: '', description: '' }, initial: { title: '', description: '' } })
 
 
     useEffect(() => {
@@ -39,12 +40,10 @@ const UpdateFilm = () => {
                 })
         }
 
-        if (history.location.state && history.location.state.title &&
-            history.location.state.description) {
+        if (history.location.state && history.location.state.title && history.location.state.description) {
             dispatch({
                 type: 'initial-success',
-                title: history.location.state.title,
-                description: history.location.state.description
+                payload: { title: history.location.state.title, description: history.location.state.description }
             })
         } else {
             getInitialFilm()
@@ -57,7 +56,7 @@ const UpdateFilm = () => {
         event.preventDefault()
         dispatch({ type: 'submit' })
 
-        if (update?.title && update?.description) {
+        if (update.title && update.description) {
             dispatch({ type: 'send' })
 
             return partialUpdate(id, { title: update.title, description: update.description })
@@ -79,8 +78,8 @@ const UpdateFilm = () => {
             <form onSubmit={isSending ? null : handleSumbit}>
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
-                    <Input type="text" name="title" value={update?.title}
-                        isInvalid={isSumbitted && !update?.title}
+                    <Input type="text" name="title" value={update.title}
+                        isInvalid={isSumbitted && !update.title}
                         onChange={e => dispatch({ type: 'update', fieldName: 'title', payload: e.target.value })}
                     />
                     <div className="invalid-feedback">
@@ -89,8 +88,8 @@ const UpdateFilm = () => {
                 </div>
                 <div className="form-group">
                     <label htmlFor="description">Description</label>
-                    <Input type="textarea" name="description" value={update?.description}
-                        isInvalid={isSumbitted && !update?.description}
+                    <Input type="textarea" name="description" value={update.description}
+                        isInvalid={isSumbitted && !update.description}
                         onChange={e => dispatch({ type: 'update', fieldName: 'description', payload: e.target.value })} />
                     <div className="invalid-feedback">
                         Description cannot be empty
@@ -99,7 +98,7 @@ const UpdateFilm = () => {
                 <div className="form-group">
                     <button className="btn btn-primary"
                         disabled={!isInitialLoaded ||
-                            (isInitialLoaded && update?.description === initial?.description && update?.title === initial?.title)}
+                            (isInitialLoaded && update.description === initial.description && update.title === initial.title)}
                         type="submit">Save</button>
                     {
                         isSending &&

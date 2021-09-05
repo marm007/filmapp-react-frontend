@@ -2,8 +2,10 @@ import React, { useEffect, useReducer, useCallback, useContext } from 'react';
 
 import { recommendationsReducer, recommendationsInitialState } from './reducer'
 
-import Film from '../../film-row';
-import FilmSkeleton from '../../film-row/skeleton';
+import Film from '../../film-fluid';
+
+import FilmSkeleton from '../../../skeletons/film';
+import RecommendationsSkeleton from '../../../skeletons/recommendations'
 
 import * as filmApi from '../../../services/filmService'
 
@@ -11,8 +13,6 @@ import { recommendationsMaxFetchCount } from "../../../config"
 
 import useBottomScrollListener from '../../../hooks/use-bottom-scroll-listener';
 import FilmContext from '../../../contexts/film/filmContext';
-
-import RecommendationsSkeleton from '../recommendationsSkeleton'
 
 import useWindowsWidth from '../../../hooks/use-window-width';
 import { useParams } from 'react-router-dom';

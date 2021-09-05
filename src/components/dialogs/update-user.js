@@ -20,7 +20,12 @@ const Settings = () => {
         isInitialLoaded,
         success,
         isSuccess,
-        error }, dispatch] = useReducer(updateReducer, updateInitialState)
+        error }, dispatch] = useReducer(updateReducer,
+            {
+                ...updateInitialState,
+                update: { email: '', name: '', password: '' },
+                initial: { email: '', name: '', password: '' }
+            })
 
 
     useEffect(() => {
@@ -54,13 +59,13 @@ const Settings = () => {
 
         dispatch({ type: 'submit' })
 
-        if ((update.password && update?.password.length >= 6) ||
+        if ((update.password && update.password.length >= 6) ||
             update.email ||
             update.name) {
             dispatch({ type: 'send' })
 
             let toUpdate = {}
-            if (update.password && update?.password.length > 6) toUpdate = { password: update.password }
+            if (update.password && update.password.length > 6) toUpdate = { password: update.password }
             if (update.email) toUpdate = { ...toUpdate, email: update.email }
             if (update.name) toUpdate = { ...toUpdate, name: update.name }
 
@@ -90,7 +95,7 @@ const Settings = () => {
                 <div>
                     <label className="form-label" htmlFor="name">Name</label>
                     <Input type="text" name="name"
-                        value={update?.name}
+                        value={update.name}
                         isInvalid={isSubmitted && !update.name}
                         onChange={e => dispatch({ type: 'update', fieldName: 'name', payload: e.target.value })} />
                     <div className="invalid-feedback">
@@ -100,7 +105,7 @@ const Settings = () => {
                 <div className="mt-2 form-group">
                     <label className="form-label" htmlFor="email">Email</label>
                     <Input type="email" name="email"
-                        value={update?.email}
+                        value={update.email}
                         isInvalid={isSubmitted && !update.email}
                         onChange={e => dispatch({ type: 'update', fieldName: 'email', payload: e.target.value })} />
                     <div className="invalid-feedback">
@@ -110,7 +115,7 @@ const Settings = () => {
                 <div className="mt-2 form-group">
                     <label className="form-label" htmlFor="password">Password</label>
                     <Input type="password" name="password" isInvalid={isSubmitted && (update.password && update.password.length < 6)}
-                        value={update?.password} onChange={e => dispatch({ type: 'update', fieldName: 'password', payload: e.target.value })} />
+                        value={update.password} onChange={e => dispatch({ type: 'update', fieldName: 'password', payload: e.target.value })} />
                     <div className="invalid-feedback">
                         Password must be at least 6 characters long!
                     </div>
@@ -118,7 +123,7 @@ const Settings = () => {
                 <div className="d-flex align-items-center mt-2">
                     <button type="submit" className="btn btn-primary"
                         disabled={isSending || !isInitialLoaded ||
-                            (isInitialLoaded && update?.email === initial?.email && update?.name === initial?.name &&
+                            (isInitialLoaded && update.email === initial.email && update.name === initial.name &&
                                 (!update.password || (update.password && update.password.length < 6)))}
                     >
                         Change

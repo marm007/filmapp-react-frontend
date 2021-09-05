@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import { playlistsPageReducer, initialState } from './reducer'
 
-import Skeleton from '../film-row/skeleton';
+import Skeleton from '../../skeletons/film';
 import Playlist from '../playlist';
 
 import { show } from '../../services/playlistService'
