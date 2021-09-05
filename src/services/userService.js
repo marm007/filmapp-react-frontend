@@ -1,5 +1,5 @@
 import axios from '../helpers/axios'
-import authHeader from '../helpers/authHeader'
+import authHeader from '../helpers/auth-header'
 
 
 export const me = (params) => axios.get('users/me', { params, headers: authHeader() })

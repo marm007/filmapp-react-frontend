@@ -1,11 +1,3 @@
-export const checkIfPlaylistButtonClick = (target) => {
-    if ((target.tagName === 'path' && target.parentNode.className.animVal && target.parentNode.className.animVal.includes('playlist-add-icon')) ||
-        (target.tagName === 'svg' && target.className.animVal && target.className.animVal.includes('playlist-add-icon')) ||
-        (target.className && typeof target.className === 'string' && target.className.includes('playlist-add-icon-holder')))
-        return true
-    return false
-}
-
 export const displayCommentDate = (comment) => {
     let date = new Date(Date.parse(comment.createdAt));
     let time = (('0' + date.getDate()).slice(-2) + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-'
@@ -70,7 +62,6 @@ export const parseSearchDate = (film) => {
 
     return time;
 };
-
 
 export const handleCloseModalWindow = (history, toSplit, replace = false) => {
 

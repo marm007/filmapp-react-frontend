@@ -7,12 +7,6 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 import './App.css';
 
-import PrivateRoute from './components/pages/privateRoute'
-
-//import UserUpdateDialog from './components/settings'
-
-import RemoveModal from './components/dialogs/removeObject'
-
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 
 //  --------- icons ------------
@@ -30,12 +24,15 @@ import {
 
 import { Switch } from "react-router";
 
-import ToastContext from './helpers/contexts/toast/toastContext'
+import ToastContext from './contexts/toast/toastContext'
+import UserProvider from './contexts/user/userProvider';
+import UpdateProvider from './contexts/updateModal/updateProvider';
 
-import WithAxios from "./components/models/withAxios";
-import UserProvider from './helpers/contexts/user/userProvider';
-import UpdateProvider from './helpers/contexts/updateModal/updateProvider';
-import ErrorBoundary from './components/pages/errorBoundary';
+import RemoveModal from './pages/remove'
+
+import PrivateRoute from './helpers/private-route'
+import WithAxios from "./components/with-axios";
+import ErrorBoundary from './pages/error-boundary';
 
 import { isMobile } from 'react-device-detect'
 
@@ -48,27 +45,27 @@ library.add(faPlay, faSortDown, faSortUp, faTrashAlt, faTimes, faGlobeEurope, fa
 
 const pathName = process.env.REACT_APP_PATH_NAME
 
-const NavbarComponent = lazy(() => import('./components/pages/navbar'))
+const NavbarComponent = lazy(() => import('./components/navbar'))
 
-const ProfileComponent = lazy(() => import('./components/pages/profile'))
-const HomeComponent = lazy(() => import('./components/pages/home'))
-const FilmComponent = lazy(() => import('./components/pages/film'))
-const SearchComponent = lazy(() => import('./components/pages/search'))
-const PlaylistsPage = lazy(() => import('./components/pages/playlists'))
-const AddFilmComponent = lazy(() => import('./components/pages/filmAdd'))
-const NotFoundComponent = lazy(() => import('./components/pages/notFound'))
+const ProfileComponent = lazy(() => import('./pages/profile'))
+const HomeComponent = lazy(() => import('./pages/home'))
+const FilmPage = lazy(() => import('./pages/film'))
+const SearchComponent = lazy(() => import('./pages/search'))
+const PlaylistsPage = lazy(() => import('./pages/playlists'))
+const AddFilmComponent = lazy(() => import('./pages/add-film'))
+const NotFoundComponent = lazy(() => import('./pages/not-found'))
 
 
-const LoginDialog = lazy(() => import('./components/dialogs/login'))
-const ResetPasswordDialog = lazy(() => import('./components/dialogs/resetPassword'))
-const ForgotPasswordDialog = lazy(() => import('./components/dialogs/forgotPassword'))
-const RegisterDialog = lazy(() => import('./components/dialogs/register'))
-const UserUpdateDialog = lazy(() => import('./components/dialogs/updateUser'))
-const FilmUpdateDialog = lazy(() => import('./components/dialogs/updateFilm'))
-const PlaylistUpdateDialog = lazy(() => import('./components/dialogs/updatePlaylist'))
+const LoginDialog = lazy(() => import('./pages/login'))
+const ResetPasswordDialog = lazy(() => import('./pages/reset-password'))
+const ForgotPasswordDialog = lazy(() => import('./pages/forgot-password'))
+const RegisterDialog = lazy(() => import('./pages/register'))
+const UserUpdateDialog = lazy(() => import('./pages/update-user'))
+const FilmUpdateDialog = lazy(() => import('./pages/update-film'))
+const PlaylistUpdateDialog = lazy(() => import('./pages/update-playlist'))
 
-const MobileStyle = lazy(() => import('./helpers/css/mobileStyle'))
-const DesktopStyle = lazy(() => import('./helpers/css/desktopStyle'))
+const MobileStyle = lazy(() => import('./css/mobileStyle'))
+const DesktopStyle = lazy(() => import('./css/desktopStyle'))
 
 function App() {
 
@@ -130,7 +127,7 @@ function App() {
                                     <Switch>
                                         <Route exact path={[`${pathName}film/:id`, `${pathName}film/:id/login`, `${pathName}film/:id/register`, `${pathName}film/:id/reset/:token`,
                                         `${pathName}film/:id/forgot`, `${pathName}film/:id/settings`]}
-                                            render={(props) => <FilmComponent {...props} />} />
+                                            render={(props) => <FilmPage {...props} />} />
 
                                         <Route exact path={[`${pathName}`, `${pathName}login`, `${pathName}register`, `${pathName}settings`,
                                         `${pathName}reset/:token`, `${pathName}forgot`]}

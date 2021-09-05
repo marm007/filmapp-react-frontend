@@ -1,4 +1,4 @@
-import authHeader from '../helpers/authHeader'
+import authHeader from '../helpers/auth-header'
 import axios from '../helpers/axios'
 
 export const login = (data) => axios.post('auth', {}, {

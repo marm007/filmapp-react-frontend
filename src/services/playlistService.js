@@ -1,5 +1,5 @@
 import axios from '../helpers/axios'
-import authHeader from '../helpers/authHeader'
+import authHeader from '../helpers/auth-header'
 
 
 export const create = (body) => axios.post('playlists', body, { headers: authHeader() })

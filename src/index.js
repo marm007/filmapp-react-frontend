@@ -10,8 +10,8 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-import ToastProvider from "./helpers/contexts/toast/toastProvider";
-import RemoveModalProvider from "./helpers/contexts/removeModal/removeModalProvider";
+import ToastProvider from "./contexts/toast/toastProvider";
+import RemoveModalProvider from "./contexts/removeModal/removeModalProvider";
 
 ReactDOM.render(
     <ToastProvider>
