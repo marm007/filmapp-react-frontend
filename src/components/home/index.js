@@ -78,7 +78,7 @@ function Home() {
             {
                 films ? films.map((film, index) => <Film key={film.id}
                     film={film} index={index} handleRedirect={() => handleRedirect(film)} />)
-                    : ([...Array(20)].map((_, index) => (
+                    : ([...Array(24)].map((_, index) => (
                         <Skeleton key={index} />
                     )))
             }

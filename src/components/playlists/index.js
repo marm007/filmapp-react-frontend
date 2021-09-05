@@ -107,7 +107,7 @@ function PlaylistsPage() {
         <div className="row mt-5 mx-2">
             {
                 playlists ? playlists.map((playlist, index) => <Playlist key={playlist.id} playlist={playlist} index={index} handleRedirect={setRedirect} />)
-                    : ([...Array(20)].map((_, index) => (
+                    : ([...Array(24)].map((_, index) => (
                         <Skeleton key={index} />
                     )))
             }

@@ -102,7 +102,7 @@ const FilmsRecommendations = ({ handleRedirect }) => {
                 films ? films.map((film, index) => <Film key={film.id} film={film}
                     index={index} isRecommendations={true} filmDispatch={filmDispatch}
                     handleRedirect={() => handleRedirect(film)} />)
-                    : ([...Array(20)].map((_, index) => isSmallScreen ?
+                    : ([...Array(24)].map((_, index) => isSmallScreen ?
                         (<FilmSkeleton key={index} isRecommendations={true} />) :
                         (<RecommendationsSkeleton key={index} />)
                     ))

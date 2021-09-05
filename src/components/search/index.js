@@ -270,7 +270,7 @@ const Search = () => {
                             </div>
                         </Film>
                     })
-                        : ([...Array(20)].map((_, index) => isSmallScreen ? (
+                        : ([...Array(24)].map((_, index) => isSmallScreen ? (
                             <FilmSkeleton key={index} />) : (<SearchSkeleton key={index} />)
                         ))
                 }

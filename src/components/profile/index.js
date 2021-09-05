@@ -231,7 +231,7 @@ const Profile = () => {
                             handleRedirect={() => handleRedirectFilm(record)}
                             handleRemove={(e) => handleRemove(e, record)} />
                     }
-                }) : ([...Array(20)].map((_, index) => (
+                }) : ([...Array(24)].map((_, index) => (
                     <Skeleton key={index} />
                 )))
             }
