@@ -106,79 +106,81 @@ const FilmAdd = () => {
     }
 
     return (
-        <div className="row my-4 mx-2 h-100 container mx-auto">
-            <div className="col col-12 col-md-6 m-0 mb-4">
-                <div>
-                    <div className="position-relative justify-content-center d-flex align-items-center text-center box has-advanced-upload">
+        <div className="row my-4 mx-2 h-100 mx-auto">
+            <div className="col col-12 col-md-5">
+                <div className="row">
+                    <div className="col col-12 mx-auto mb-4">
+                        <div>
+                            <div className="position-relative justify-content-center d-flex align-items-center text-center box has-advanced-upload">
 
-                        <div className="embed-responsive embed-responsive-16by9 ">
-                            <video muted={true} autoPlay={true} className="embed-responsive-item" loop={true}
-                                src={film.preview ? film.preview : ""}>
-                            </video>
+                                <div className="embed-responsive embed-responsive-16by9 ">
+                                    <video muted={true} autoPlay={true} className="embed-responsive-item" loop={true}
+                                        src={film.preview ? film.preview : ""}>
+                                    </video>
+                                </div>
+
+                                <input id="film" accept="video/mp4, video/ogg"
+                                    onChange={event => handleFileChoose(event, 'film')}
+                                    type="file" ref={filmInputRef} className="inputfile" />
+                                <label htmlFor="film" className="position-absolute">
+                                    {
+                                        film.name === CHOOSE_FILM &&
+                                        <span>{film.name}</span>
+                                    }
+                                </label>
+
+                                {
+                                    film.preview &&
+                                    <div className="col card-img-overlay film-add-item-opacity" />
+                                }
+
+                                {
+                                    film.preview &&
+                                    <FontAwesomeIcon className="film-add-item-middle fa-3x text-white"
+                                        icon="times"
+                                        onClick={() => {
+                                            dispatch({ type: 'file-clear', isFilm: true })
+                                        }} />
+                                }
+
+                            </div>
                         </div>
+                    </div>
+                    <div className="col col-12 mx-auto mb-4 mb-md-0">
+                        <div>
+                            <div className="position-relative justify-content-center d-flex align-items-center text-center box has-advanced-upload">
+                                <div className="embed-responsive embed-responsive-16by9 ">
+                                    <img className="embed-responsive-item" alt="" src={thumbnail.preview ? thumbnail.preview : "data:image/gif;base64,R0lGODlhAQABAPAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="} />
+                                </div>
+                                <input id="thumbnail" accept="image/jpg, image/png, image/jpeg"
+                                    onChange={event => handleFileChoose(event, 'thumbnail')}
+                                    type="file" ref={thumbnailInputRef} className=" inputfile position-absolute" />
+                                <label htmlFor="thumbnail" className="position-absolute">
 
-                        <input id="film" accept="video/mp4, video/ogg"
-                            onChange={event => handleFileChoose(event, 'film')}
-                            type="file" ref={filmInputRef} className="inputfile" />
-                        <label htmlFor="film" className="position-absolute">
-                            {
-                                film.name === CHOOSE_FILM &&
-                                <span>{film.name}</span>
-                            }
-                        </label>
+                                    {
+                                        thumbnail.name === CHOOSE_THUMBNAIL &&
+                                        <span>{thumbnail.name}</span>
+                                    }
+                                </label>
+                                {
+                                    thumbnail.preview &&
+                                    <div className="col card-img-overlay film-add-item-opacity" />
+                                }
 
-                        {
-                            film.preview &&
-                            <div className="col card-img-overlay film-add-item-opacity" />
-                        }
-
-                        {
-                            film.preview &&
-                            <FontAwesomeIcon className="film-add-item-middle fa-3x text-white"
-                                icon="times"
-                                onClick={() => {
-                                    dispatch({ type: 'file-clear', isFilm: true })
-                                }} />
-                        }
-
+                                {
+                                    thumbnail.preview &&
+                                    <FontAwesomeIcon className="film-add-item-middle fa-3x text-white" icon="times"
+                                        onClick={() => {
+                                            dispatch({ type: 'file-clear', isFilm: false })
+                                        }} />
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div className="col col-12 col-md-6 m-0 mb-4">
-                <div>
-                    <div className="position-relative justify-content-center d-flex align-items-center text-center box has-advanced-upload">
-                        <div className="embed-responsive embed-responsive-16by9 ">
-                            <img className="embed-responsive-item" alt="" src={thumbnail.preview ? thumbnail.preview : "data:image/gif;base64,R0lGODlhAQABAPAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="} />
-                        </div>
-                        <input id="thumbnail" accept="image/jpg, image/png, image/jpeg"
-                            onChange={event => handleFileChoose(event, 'thumbnail')}
-                            type="file" ref={thumbnailInputRef} className=" inputfile position-absolute" />
-                        <label htmlFor="thumbnail" className="position-absolute">
-
-                            {
-                                thumbnail.name === CHOOSE_THUMBNAIL &&
-                                <span>{thumbnail.name}</span>
-                            }
-                        </label>
-                        {
-                            thumbnail.preview &&
-                            <div className="col card-img-overlay film-add-item-opacity" />
-                        }
-
-                        {
-                            thumbnail.preview &&
-                            <FontAwesomeIcon className="film-add-item-middle fa-3x text-white" icon="times"
-                                onClick={() => {
-                                    dispatch({ type: 'file-clear', isFilm: false })
-                                }} />
-                        }
-                    </div>
-                </div>
-
-            </div>
-            <div className="col col-12 col-md-12 m-0 ml-auto mr-auto mb-4 mb-md-0">
-
-                <div className="mb-3">
+            <div className="col col-12 col-md-7 m-0 ml-auto mr-auto mb-4 mb-md-0">
+                <div className="mb-3 input-group">
                     <Input placeholder="Title"
                         type="text"
                         isInvalid={isSubmitted && !title}

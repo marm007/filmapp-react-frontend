@@ -4,7 +4,7 @@ import AddFilmComponent from '../components/add-film'
 export default function AddFilm() {
 
     useEffect(() => {
-        document.title = "Add film"
+        document.title = "Add film - FilmApp"
     }, [])
 
     return <AddFilmComponent />

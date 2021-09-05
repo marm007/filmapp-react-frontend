@@ -83,11 +83,15 @@ const FilmPreview = () => {
             const [filmViewResponse, filmResponse, userResponse] = await Promise.allSettled(requests);
 
             if (filmResponse.status === "rejected" || filmViewResponse.status === "rejected") {
+
                 filmDispatch({
                     type: 'field',
                     fieldName: 'error',
                     payload: true
                 })
+
+                document.title = `FilmApp`
+
                 return
             }
 
@@ -115,7 +119,7 @@ const FilmPreview = () => {
 
             setRateData({ isLiked, isDisliked, likes: film.likes, dislikes: film.dislikes })
             setFilm(film)
-
+            document.title = `${film.title} - FilmApp`
         }
         handleGetFilm()
     }, [id, filmDispatch, user.auth, history.location.state])
