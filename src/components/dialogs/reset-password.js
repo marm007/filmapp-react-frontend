@@ -1,15 +1,13 @@
-import React, { useReducer } from 'react';
+import React, { useParams, useReducer } from 'react';
 import { useHistory } from 'react-router-dom';
-
-import Input from '../input';
-
 import { authInitialState, authReducer } from '../../reducers/auth-reducer';
-
-import { reset } from '../../services/authService'
+import { reset } from '../../services/authService';
+import Input from '../input';
 
 const ResetPassword = (props) => {
 
     let history = useHistory()
+    let { token } = useParams();
 
     const [state, dispatch] = useReducer(authReducer, authInitialState)
 
@@ -20,9 +18,9 @@ const ResetPassword = (props) => {
 
         dispatch({ type: 'submit' })
 
-        if (props.match.params.token && password && password.length >= 6) {
+        if (token && password && password.length >= 6) {
             dispatch({ type: 'send' })
-            return reset(props.match.params.token, { password: password })
+            return reset(token, { password: password })
                 .then(res => {
                     dispatch({
                         type: 'success'
